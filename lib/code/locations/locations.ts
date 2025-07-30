@@ -147,7 +147,7 @@ export class Locations {
       locationId: string;
     },
     requestBody: Models.UpdateLocationDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CreateLocationSuccessfulResponseDto> {
     let url = '/locations/{locationId}';
     const queryParams: Record<string, any> = {};
@@ -180,7 +180,7 @@ export class Locations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -204,7 +204,7 @@ export class Locations {
       locationId: string;
       deleteTwilioAccount: boolean;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.LocationDeletedSuccessfulResponseDto> {
     let url = '/locations/{locationId}';
     const queryParams: Record<string, any> = {};
@@ -239,7 +239,7 @@ export class Locations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -262,7 +262,7 @@ export class Locations {
     params: {
       locationId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.LocationTagsSuccessfulResponseDto> {
     let url = '/locations/{locationId}/tags';
     const queryParams: Record<string, any> = {};
@@ -294,7 +294,7 @@ export class Locations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -318,7 +318,7 @@ export class Locations {
       locationId: string;
     },
     requestBody: Models.tagBody,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.LocationTagSuccessfulResponseDto> {
     let url = '/locations/{locationId}/tags';
     const queryParams: Record<string, any> = {};
@@ -351,7 +351,7 @@ export class Locations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -375,7 +375,7 @@ export class Locations {
       locationId: string;
       tagId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.LocationTagSuccessfulResponseDto> {
     let url = '/locations/{locationId}/tags/{tagId}';
     const queryParams: Record<string, any> = {};
@@ -410,7 +410,7 @@ export class Locations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -435,7 +435,7 @@ export class Locations {
       tagId: string;
     },
     requestBody: Models.tagBody,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.LocationTagSuccessfulResponseDto> {
     let url = '/locations/{locationId}/tags/{tagId}';
     const queryParams: Record<string, any> = {};
@@ -471,7 +471,7 @@ export class Locations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -495,7 +495,7 @@ export class Locations {
       locationId: string;
       tagId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.LocationTagDeleteSuccessfulResponseDto> {
     let url = '/locations/{locationId}/tags/{tagId}';
     const queryParams: Record<string, any> = {};
@@ -530,7 +530,7 @@ export class Locations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -554,7 +554,7 @@ export class Locations {
       locationId: string;
     },
     requestBody: Models.TaskSearchParamsDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.LocationTaskListSuccessfulResponseDto> {
     let url = '/locations/{locationId}/tasks/search';
     const queryParams: Record<string, any> = {};
@@ -587,7 +587,7 @@ export class Locations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -611,7 +611,7 @@ export class Locations {
       locationId: string;
       model?: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CustomFieldsListSuccessfulResponseDto> {
     let url = '/locations/{locationId}/customFields';
     const queryParams: Record<string, any> = {};
@@ -646,7 +646,7 @@ export class Locations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -670,7 +670,7 @@ export class Locations {
       locationId: string;
     },
     requestBody: Models.CreateCustomFieldsDTO,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CustomFieldSuccessfulResponseDto> {
     let url = '/locations/{locationId}/customFields';
     const queryParams: Record<string, any> = {};
@@ -703,7 +703,7 @@ export class Locations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -727,7 +727,7 @@ export class Locations {
       locationId: string;
       id: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CustomFieldSuccessfulResponseDto> {
     let url = '/locations/{locationId}/customFields/{id}';
     const queryParams: Record<string, any> = {};
@@ -762,7 +762,7 @@ export class Locations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -787,7 +787,7 @@ export class Locations {
       id: string;
     },
     requestBody: Models.UpdateCustomFieldsDTO,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CustomFieldSuccessfulResponseDto> {
     let url = '/locations/{locationId}/customFields/{id}';
     const queryParams: Record<string, any> = {};
@@ -823,7 +823,7 @@ export class Locations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -847,7 +847,7 @@ export class Locations {
       locationId: string;
       id: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CustomFieldDeleteSuccessfulResponseDto> {
     let url = '/locations/{locationId}/customFields/{id}';
     const queryParams: Record<string, any> = {};
@@ -882,7 +882,7 @@ export class Locations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -906,7 +906,7 @@ export class Locations {
       locationId: string;
     },
     requestBody: any,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.FileUploadResponseDto> {
     let url = '/locations/{locationId}/customFields/upload';
     const queryParams: Record<string, any> = {};
@@ -939,7 +939,7 @@ export class Locations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -962,7 +962,7 @@ export class Locations {
     params: {
       locationId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CustomValuesListSuccessfulResponseDto> {
     let url = '/locations/{locationId}/customValues';
     const queryParams: Record<string, any> = {};
@@ -994,7 +994,7 @@ export class Locations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1018,7 +1018,7 @@ export class Locations {
       locationId: string;
     },
     requestBody: Models.customValuesDTO,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CustomValueIdSuccessfulResponseDto> {
     let url = '/locations/{locationId}/customValues';
     const queryParams: Record<string, any> = {};
@@ -1051,7 +1051,7 @@ export class Locations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1075,7 +1075,7 @@ export class Locations {
       locationId: string;
       id: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CustomValueIdSuccessfulResponseDto> {
     let url = '/locations/{locationId}/customValues/{id}';
     const queryParams: Record<string, any> = {};
@@ -1110,7 +1110,7 @@ export class Locations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1135,7 +1135,7 @@ export class Locations {
       id: string;
     },
     requestBody: Models.customValuesDTO,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CustomValueIdSuccessfulResponseDto> {
     let url = '/locations/{locationId}/customValues/{id}';
     const queryParams: Record<string, any> = {};
@@ -1171,7 +1171,7 @@ export class Locations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1195,7 +1195,7 @@ export class Locations {
       locationId: string;
       id: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CustomValueDeleteSuccessfulResponseDto> {
     let url = '/locations/{locationId}/customValues/{id}';
     const queryParams: Record<string, any> = {};
@@ -1230,7 +1230,7 @@ export class Locations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1250,7 +1250,7 @@ export class Locations {
    * Fetch the available timezones
    */
   async getTimezones(
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<any> {
     let url = '/locations/{locationId}/timezones';
     const queryParams: Record<string, any> = {};
@@ -1277,7 +1277,7 @@ export class Locations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1305,7 +1305,7 @@ export class Locations {
       originId: string;
       locationId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetTemplatesSuccessfulResponseDto> {
     let url = '/locations/{locationId}/templates';
     const queryParams: Record<string, any> = {};
@@ -1352,7 +1352,7 @@ export class Locations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1376,7 +1376,7 @@ export class Locations {
       locationId: string;
       id: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<any> {
     let url = '/locations/{locationId}/templates/{id}';
     const queryParams: Record<string, any> = {};
@@ -1411,7 +1411,7 @@ export class Locations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1442,7 +1442,7 @@ export class Locations {
    */
   async createLocation(
     requestBody: Models.CreateLocationDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CreateLocationSuccessfulResponseDto> {
     let url = '/locations/';
     const queryParams: Record<string, any> = {};
@@ -1470,7 +1470,7 @@ export class Locations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken

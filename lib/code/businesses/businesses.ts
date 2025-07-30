@@ -21,7 +21,7 @@ export class Businesses {
       businessId: string;
     },
     requestBody: Models.UpdateBusinessDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.UpdateBusinessResponseDto> {
     let url = '/businesses/{businessId}';
     const queryParams: Record<string, any> = {};
@@ -54,7 +54,7 @@ export class Businesses {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -77,7 +77,7 @@ export class Businesses {
     params: {
       businessId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.DeleteBusinessResponseDto> {
     let url = '/businesses/{businessId}';
     const queryParams: Record<string, any> = {};
@@ -109,7 +109,7 @@ export class Businesses {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -132,7 +132,7 @@ export class Businesses {
     params: {
       businessId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetBusinessByIdResponseDto> {
     let url = '/businesses/{businessId}';
     const queryParams: Record<string, any> = {};
@@ -164,7 +164,7 @@ export class Businesses {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -187,7 +187,7 @@ export class Businesses {
     params: {
       locationId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetBusinessByLocationResponseDto> {
     let url = '/businesses/';
     const queryParams: Record<string, any> = {};
@@ -219,7 +219,7 @@ export class Businesses {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -240,7 +240,7 @@ export class Businesses {
    */
   async createBusiness(
     requestBody: Models.CreateBusinessDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.UpdateBusinessResponseDto> {
     let url = '/businesses/';
     const queryParams: Record<string, any> = {};
@@ -268,7 +268,7 @@ export class Businesses {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken

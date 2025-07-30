@@ -996,7 +996,7 @@ export class Invoices {
    */
   async text2payInvoice(
     requestBody: Models.Text2PayDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.Text2PayInvoiceResponseDto> {
     let url = '/invoices/text2pay';
     const queryParams: Record<string, any> = {};
@@ -1024,7 +1024,7 @@ export class Invoices {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken

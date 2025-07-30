@@ -20,7 +20,7 @@ export class Calendars {
     params: {
       locationId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.AllGroupsSuccessfulResponseDTO> {
     let url = '/calendars/groups';
     const queryParams: Record<string, any> = {};
@@ -52,7 +52,7 @@ export class Calendars {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -73,7 +73,7 @@ export class Calendars {
    */
   async createCalendarGroup(
     requestBody: Models.GroupCreateDTO,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GroupCreateSuccessfulResponseDTO> {
     let url = '/calendars/groups';
     const queryParams: Record<string, any> = {};
@@ -101,7 +101,7 @@ export class Calendars {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -122,7 +122,7 @@ export class Calendars {
    */
   async validateGroupsSlug(
     requestBody: Models.ValidateGroupSlugPostBody,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.ValidateGroupSlugSuccessResponseDTO> {
     let url = '/calendars/groups/validate-slug';
     const queryParams: Record<string, any> = {};
@@ -150,7 +150,7 @@ export class Calendars {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -173,7 +173,7 @@ export class Calendars {
     params: {
       groupId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GroupSuccessfulResponseDTO> {
     let url = '/calendars/groups/{groupId}';
     const queryParams: Record<string, any> = {};
@@ -205,7 +205,7 @@ export class Calendars {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -229,7 +229,7 @@ export class Calendars {
       groupId: string;
     },
     requestBody: Models.GroupUpdateDTO,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GroupCreateSuccessfulResponseDTO> {
     let url = '/calendars/groups/{groupId}';
     const queryParams: Record<string, any> = {};
@@ -262,7 +262,7 @@ export class Calendars {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -286,7 +286,7 @@ export class Calendars {
       groupId: string;
     },
     requestBody: Models.GroupStatusUpdateParams,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GroupSuccessfulResponseDTO> {
     let url = '/calendars/groups/{groupId}/status';
     const queryParams: Record<string, any> = {};
@@ -319,7 +319,7 @@ export class Calendars {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -340,7 +340,7 @@ export class Calendars {
    */
   async createAppointment(
     requestBody: Models.AppointmentCreateSchema,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.AppointmentSchemaResponse> {
     let url = '/calendars/events/appointments';
     const queryParams: Record<string, any> = {};
@@ -368,7 +368,7 @@ export class Calendars {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -392,7 +392,7 @@ export class Calendars {
       eventId: string;
     },
     requestBody: Models.AppointmentEditSchema,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.AppointmentSchemaResponse> {
     let url = '/calendars/events/appointments/{eventId}';
     const queryParams: Record<string, any> = {};
@@ -425,7 +425,7 @@ export class Calendars {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -448,7 +448,7 @@ export class Calendars {
     params: {
       eventId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetCalendarEventSuccessfulResponseDTO> {
     let url = '/calendars/events/appointments/{eventId}';
     const queryParams: Record<string, any> = {};
@@ -480,7 +480,7 @@ export class Calendars {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -508,7 +508,7 @@ export class Calendars {
       startTime: string;
       endTime: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetCalendarEventsSuccessfulResponseDTO> {
     let url = '/calendars/events';
     const queryParams: Record<string, any> = {};
@@ -555,7 +555,7 @@ export class Calendars {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -583,7 +583,7 @@ export class Calendars {
       startTime: string;
       endTime: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetCalendarEventsSuccessfulResponseDTO> {
     let url = '/calendars/blocked-slots';
     const queryParams: Record<string, any> = {};
@@ -630,7 +630,7 @@ export class Calendars {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -651,7 +651,7 @@ export class Calendars {
    */
   async createBlockSlot(
     requestBody: Models.BlockSlotCreateRequestDTO,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.BlockedSlotSuccessfulResponseDto> {
     let url = '/calendars/events/block-slots';
     const queryParams: Record<string, any> = {};
@@ -679,7 +679,7 @@ export class Calendars {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -703,7 +703,7 @@ export class Calendars {
       eventId: string;
     },
     requestBody: Models.BlockSlotEditRequestDTO,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.BlockedSlotSuccessfulResponseDto> {
     let url = '/calendars/events/block-slots/{eventId}';
     const queryParams: Record<string, any> = {};
@@ -736,7 +736,7 @@ export class Calendars {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -764,7 +764,7 @@ export class Calendars {
       userId?: string;
       userIds?: string[];
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetSlotsSuccessfulResponseDto> {
     let url = '/calendars/{calendarId}/free-slots';
     const queryParams: Record<string, any> = {};
@@ -811,7 +811,7 @@ export class Calendars {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -835,7 +835,7 @@ export class Calendars {
       calendarId: string;
     },
     requestBody: Models.CalendarUpdateDTO,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CalendarByIdSuccessfulResponseDTO> {
     let url = '/calendars/{calendarId}';
     const queryParams: Record<string, any> = {};
@@ -868,7 +868,7 @@ export class Calendars {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -891,7 +891,7 @@ export class Calendars {
     params: {
       calendarId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CalendarByIdSuccessfulResponseDTO> {
     let url = '/calendars/{calendarId}';
     const queryParams: Record<string, any> = {};
@@ -923,7 +923,7 @@ export class Calendars {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -946,7 +946,7 @@ export class Calendars {
     params: {
       calendarId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CalendarDeleteSuccessfulResponseDTO> {
     let url = '/calendars/{calendarId}';
     const queryParams: Record<string, any> = {};
@@ -978,7 +978,7 @@ export class Calendars {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1002,7 +1002,7 @@ export class Calendars {
       eventId: string;
     },
     requestBody: Models.DeleteAppointmentSchema,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.DeleteEventSuccessfulResponseDto> {
     let url = '/calendars/events/{eventId}';
     const queryParams: Record<string, any> = {};
@@ -1035,7 +1035,7 @@ export class Calendars {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1060,7 +1060,7 @@ export class Calendars {
       offset: number;
       appointmentId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetNotesListSuccessfulResponseDto> {
     let url = '/calendars/appointments/{appointmentId}/notes';
     const queryParams: Record<string, any> = {};
@@ -1098,7 +1098,7 @@ export class Calendars {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1122,7 +1122,7 @@ export class Calendars {
       appointmentId: string;
     },
     requestBody: Models.NotesDTO,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetCreateUpdateNoteSuccessfulResponseDto> {
     let url = '/calendars/appointments/{appointmentId}/notes';
     const queryParams: Record<string, any> = {};
@@ -1155,7 +1155,7 @@ export class Calendars {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1179,7 +1179,7 @@ export class Calendars {
       appointmentId: string;
     },
     requestBody: Models.NotesDTO,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetCreateUpdateNoteSuccessfulResponseDto> {
     let url = '/calendars/appointments/{appointmentId}/notes/{noteId}';
     const queryParams: Record<string, any> = {};
@@ -1212,7 +1212,7 @@ export class Calendars {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1235,7 +1235,7 @@ export class Calendars {
     params: {
       appointmentId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.DeleteNoteSuccessfulResponseDto> {
     let url = '/calendars/appointments/{appointmentId}/notes/{noteId}';
     const queryParams: Record<string, any> = {};
@@ -1267,7 +1267,7 @@ export class Calendars {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1291,7 +1291,7 @@ export class Calendars {
       resourceType: string;
       id: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CalendarResourceByIdResponseDTO> {
     let url = '/calendars/resources/{resourceType}/{id}';
     const queryParams: Record<string, any> = {};
@@ -1326,7 +1326,7 @@ export class Calendars {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1351,7 +1351,7 @@ export class Calendars {
       id: string;
     },
     requestBody: Models.UpdateCalendarResourceDTO,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CalendarResourceResponseDTO> {
     let url = '/calendars/resources/{resourceType}/{id}';
     const queryParams: Record<string, any> = {};
@@ -1387,7 +1387,7 @@ export class Calendars {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1411,7 +1411,7 @@ export class Calendars {
       resourceType: string;
       id: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.ResourceDeleteResponseDTO> {
     let url = '/calendars/resources/{resourceType}/{id}';
     const queryParams: Record<string, any> = {};
@@ -1446,7 +1446,7 @@ export class Calendars {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1472,7 +1472,7 @@ export class Calendars {
       limit: number;
       skip: number;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CalendarResourceByIdResponseDTO[]> {
     let url = '/calendars/resources/{resourceType}';
     const queryParams: Record<string, any> = {};
@@ -1513,7 +1513,7 @@ export class Calendars {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1537,7 +1537,7 @@ export class Calendars {
       resourceType: string;
     },
     requestBody: Models.CreateCalendarResourceDTO,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CalendarResourceByIdResponseDTO> {
     let url = '/calendars/resources/{resourceType}';
     const queryParams: Record<string, any> = {};
@@ -1570,7 +1570,7 @@ export class Calendars {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1597,7 +1597,7 @@ export class Calendars {
       limit?: number;
       skip?: number;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CalendarNotificationResponseDTO[]> {
     let url = '/calendars/{calendarId}/notifications';
     const queryParams: Record<string, any> = {};
@@ -1641,7 +1641,7 @@ export class Calendars {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1665,7 +1665,7 @@ export class Calendars {
       calendarId: string;
     },
     requestBody: Models.CreateCalendarNotificationDTO[],
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CalendarNotificationResponseDTO[]> {
     let url = '/calendars/{calendarId}/notifications';
     const queryParams: Record<string, any> = {};
@@ -1698,7 +1698,7 @@ export class Calendars {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1722,7 +1722,7 @@ export class Calendars {
       calendarId: string;
       notificationId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CalendarNotificationResponseDTO> {
     let url = '/calendars/{calendarId}/notifications/{notificationId}';
     const queryParams: Record<string, any> = {};
@@ -1757,7 +1757,7 @@ export class Calendars {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1782,7 +1782,7 @@ export class Calendars {
       notificationId: string;
     },
     requestBody: Models.UpdateCalendarNotificationsDTO,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CalendarNotificationDeleteResponseDTO> {
     let url = '/calendars/{calendarId}/notifications/{notificationId}';
     const queryParams: Record<string, any> = {};
@@ -1818,7 +1818,7 @@ export class Calendars {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1842,7 +1842,7 @@ export class Calendars {
       calendarId: string;
       notificationId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CalendarNotificationDeleteResponseDTO> {
     let url = '/calendars/{calendarId}/notifications/{notificationId}';
     const queryParams: Record<string, any> = {};
@@ -1877,7 +1877,7 @@ export class Calendars {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1902,7 +1902,7 @@ export class Calendars {
       groupId?: string;
       showDrafted?: boolean;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CalendarsGetSuccessfulResponseDTO> {
     let url = '/calendars/';
     const queryParams: Record<string, any> = {};
@@ -1940,7 +1940,7 @@ export class Calendars {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1961,7 +1961,7 @@ export class Calendars {
    */
   async createCalendar(
     requestBody: Models.CalendarCreateDTO,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CalendarByIdSuccessfulResponseDTO> {
     let url = '/calendars/';
     const queryParams: Record<string, any> = {};
@@ -1989,7 +1989,7 @@ export class Calendars {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken

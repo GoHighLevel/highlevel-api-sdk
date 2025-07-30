@@ -203,7 +203,6 @@ The SDK automatically attempts to refresh expired tokens when:
 ```typescript
 // Configure for automatic refresh
 const ghl = new HighLevel({
-  agencyAccessToken: 'your-access-token',
   clientId: 'your-client-id',
   clientSecret: 'your-client-secret'
 });
@@ -254,60 +253,6 @@ try {
 }
 ```
 
-#### Search Contacts
-```typescript
-try {
-  const searchResults = await ghl.contacts.searchContactsAdvanced({
-    locationId: 'your-location-id',
-    filters: [
-      {
-        field: 'name',
-        operator: 'LIKE',
-        value: 'John'
-      },
-      {
-        field: 'email',
-        operator: 'NOT_EMPTY'
-      }
-    ],
-    sort: [
-      {
-        field: 'dateAdded',
-        direction: 'desc'
-      }
-    ],
-    limit: 10
-  });
-  
-  console.log('Search results:', searchResults);
-} catch (error) {
-  console.error('Error searching contacts:', error.message);
-}
-```
-
-#### Create a New Contact
-```typescript
-try {
-  const newContact = await ghl.contacts.createContact({
-    locationId: 'your-location-id',
-    name: 'Jane Doe',
-    email: 'jane.doe@example.com',
-    phone: '+1234567890',
-    customFields: [
-      {
-        id: 'custom-field-id',
-        field_value: 'Custom Value'
-      }
-    ],
-    tags: ['lead', 'interested']
-  });
-  
-  console.log('Contact created:', newContact);
-} catch (error) {
-  console.error('Error creating contact:', error.message);
-}
-```
-
 ### Working with Other Services
 
 #### Locations
@@ -336,33 +281,21 @@ const opportunities = await ghl.opportunities.getOpportunities({
   locationId: 'location-id',
   limit: 20
 });
-
-// Create opportunity
-const newOpportunity = await ghl.opportunities.createOpportunity({
-  locationId: 'location-id',
-  name: 'New Deal',
-  pipelineId: 'pipeline-id',
-  stageId: 'stage-id',
-  contactId: 'contact-id',
-  monetaryValue: 1000
-});
 ```
 
 ### Preferred Token Type
 
-You can specify which token type to prefer for specific API calls:
+You can specify which token type to prefer for specific API calls where both agency and sub-account token are supported:
 
 ```typescript
 // Prefer agency token for this call
-const contact = await ghl.contacts.getContact(
-  { contactId: 'contact-id' },
-  { preferredTokenType: 'agency' }
-);
-
-// Prefer location token for this call
-const campaigns = await ghl.campaigns.getCampaigns(
-  { locationId: 'location-id' },
-  { preferredTokenType: 'location' }
+const location = await ghl.locations.getLocation(
+  {
+    locationId: 'location-id'
+  }, 
+  { 
+    preferredTokenType: 'agency' 
+  }
 );
 ```
 

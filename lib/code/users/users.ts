@@ -258,7 +258,7 @@ export class Users {
     params: {
       locationId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.LocationSuccessfulResponseDto> {
     let url = '/users/';
     const queryParams: Record<string, any> = {};
@@ -290,7 +290,7 @@ export class Users {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken

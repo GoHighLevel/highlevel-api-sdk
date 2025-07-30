@@ -18,7 +18,7 @@ export class Courses {
    */
   async importCourses(
     requestBody: Models.PublicExporterPayload,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<any> {
     let url = '/courses/courses-exporter/public/import';
     const queryParams: Record<string, any> = {};
@@ -46,7 +46,7 @@ export class Courses {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken

@@ -21,7 +21,7 @@ export class Links {
       linkId: string;
     },
     requestBody: Models.LinkUpdateDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetLinkSuccessfulResponseDto> {
     let url = '/links/{linkId}';
     const queryParams: Record<string, any> = {};
@@ -54,7 +54,7 @@ export class Links {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -77,7 +77,7 @@ export class Links {
     params: {
       linkId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.DeleteLinksSuccessfulResponseDto> {
     let url = '/links/{linkId}';
     const queryParams: Record<string, any> = {};
@@ -109,7 +109,7 @@ export class Links {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -132,7 +132,7 @@ export class Links {
     params: {
       locationId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetLinksSuccessfulResponseDto> {
     let url = '/links/';
     const queryParams: Record<string, any> = {};
@@ -164,7 +164,7 @@ export class Links {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -185,7 +185,7 @@ export class Links {
    */
   async createLink(
     requestBody: Models.LinksDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetLinkSuccessfulResponseDto> {
     let url = '/links/';
     const queryParams: Record<string, any> = {};
@@ -213,7 +213,7 @@ export class Links {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken

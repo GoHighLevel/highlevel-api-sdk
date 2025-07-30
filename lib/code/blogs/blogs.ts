@@ -22,7 +22,7 @@ export class Blogs {
       locationId: string;
       postId?: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.UrlSlugCheckResponseDTO> {
     let url = '/blogs/posts/url-slug-exists';
     const queryParams: Record<string, any> = {};
@@ -60,7 +60,7 @@ export class Blogs {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -81,7 +81,7 @@ export class Blogs {
    */
   async updateBlogPost(
     requestBody: Models.UpdateBlogPostParams,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.BlogPostUpdateResponseWrapperDTO> {
     let url = '/blogs/posts/{postId}';
     const queryParams: Record<string, any> = {};
@@ -109,7 +109,7 @@ export class Blogs {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -130,7 +130,7 @@ export class Blogs {
    */
   async createBlogPost(
     requestBody: Models.CreateBlogPostParams,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.BlogPostCreateResponseWrapperDTO> {
     let url = '/blogs/posts';
     const queryParams: Record<string, any> = {};
@@ -158,7 +158,7 @@ export class Blogs {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -183,7 +183,7 @@ export class Blogs {
       limit: number;
       offset: number;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.AuthorsResponseDTO> {
     let url = '/blogs/authors';
     const queryParams: Record<string, any> = {};
@@ -221,7 +221,7 @@ export class Blogs {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -246,7 +246,7 @@ export class Blogs {
       limit: number;
       offset: number;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CategoriesResponseDTO> {
     let url = '/blogs/categories';
     const queryParams: Record<string, any> = {};
@@ -284,7 +284,7 @@ export class Blogs {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -312,7 +312,7 @@ export class Blogs {
       searchTerm?: string;
       status?: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.BlogPostGetResponseWrapperDTO> {
     let url = '/blogs/posts/all';
     const queryParams: Record<string, any> = {};
@@ -359,7 +359,7 @@ export class Blogs {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -385,7 +385,7 @@ export class Blogs {
       limit: number;
       searchTerm?: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.BlogGetResponseWrapperDTO> {
     let url = '/blogs/site/all';
     const queryParams: Record<string, any> = {};
@@ -426,7 +426,7 @@ export class Blogs {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken

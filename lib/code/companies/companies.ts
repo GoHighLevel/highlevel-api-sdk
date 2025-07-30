@@ -20,7 +20,7 @@ export class Companies {
     params: {
       companyId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetCompanyByIdSuccessfulResponseDto> {
     let url = '/companies/{companyId}';
     const queryParams: Record<string, any> = {};
@@ -52,7 +52,7 @@ export class Companies {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken

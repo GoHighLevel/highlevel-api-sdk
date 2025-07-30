@@ -39,7 +39,7 @@ export class Opportunities {
       getNotes?: boolean;
       getCalendarEvents?: boolean;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.SearchSuccessfulResponseDto> {
     let url = '/opportunities/search';
     const queryParams: Record<string, any> = {};
@@ -128,7 +128,7 @@ export class Opportunities {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -151,7 +151,7 @@ export class Opportunities {
     params: {
       locationId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetPipelinesSuccessfulResponseDto> {
     let url = '/opportunities/pipelines';
     const queryParams: Record<string, any> = {};
@@ -183,7 +183,7 @@ export class Opportunities {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -206,7 +206,7 @@ export class Opportunities {
     params: {
       id: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetPostOpportunitySuccessfulResponseDto> {
     let url = '/opportunities/{id}';
     const queryParams: Record<string, any> = {};
@@ -238,7 +238,7 @@ export class Opportunities {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -261,7 +261,7 @@ export class Opportunities {
     params: {
       id: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.DeleteUpdateOpportunitySuccessfulResponseDto> {
     let url = '/opportunities/{id}';
     const queryParams: Record<string, any> = {};
@@ -293,7 +293,7 @@ export class Opportunities {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -317,7 +317,7 @@ export class Opportunities {
       id: string;
     },
     requestBody: Models.UpdateOpportunityDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetPostOpportunitySuccessfulResponseDto> {
     let url = '/opportunities/{id}';
     const queryParams: Record<string, any> = {};
@@ -350,7 +350,7 @@ export class Opportunities {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -374,7 +374,7 @@ export class Opportunities {
       id: string;
     },
     requestBody: Models.UpdateStatusDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.DeleteUpdateOpportunitySuccessfulResponseDto> {
     let url = '/opportunities/{id}/status';
     const queryParams: Record<string, any> = {};
@@ -407,7 +407,7 @@ export class Opportunities {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -428,7 +428,7 @@ export class Opportunities {
    */
   async upsertOpportunity(
     requestBody: Models.UpsertOpportunityDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.UpsertOpportunitySuccessfulResponseDto> {
     let url = '/opportunities/upsert';
     const queryParams: Record<string, any> = {};
@@ -456,7 +456,7 @@ export class Opportunities {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -480,7 +480,7 @@ export class Opportunities {
       id: string;
     },
     requestBody: Models.FollowersDTO,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CreateAddFollowersSuccessfulResponseDto> {
     let url = '/opportunities/{id}/followers';
     const queryParams: Record<string, any> = {};
@@ -513,7 +513,7 @@ export class Opportunities {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -537,7 +537,7 @@ export class Opportunities {
       id: string;
     },
     requestBody: Models.FollowersDTO,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.DeleteFollowersSuccessfulResponseDto> {
     let url = '/opportunities/{id}/followers';
     const queryParams: Record<string, any> = {};
@@ -570,7 +570,7 @@ export class Opportunities {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -591,7 +591,7 @@ export class Opportunities {
    */
   async createOpportunity(
     requestBody: Models.CreateDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetPostOpportunitySuccessfulResponseDto> {
     let url = '/opportunities/';
     const queryParams: Record<string, any> = {};
@@ -619,7 +619,7 @@ export class Opportunities {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken

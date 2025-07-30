@@ -18,7 +18,7 @@ export class Funnels {
    */
   async createRedirect(
     requestBody: Models.CreateRedirectParams,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CreateRedirectResponseDTO> {
     let url = '/funnels/lookup/redirect';
     const queryParams: Record<string, any> = {};
@@ -46,7 +46,7 @@ export class Funnels {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -70,7 +70,7 @@ export class Funnels {
       id: string;
     },
     requestBody: Models.UpdateRedirectParams,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.UpdateRedirectResponseDTO> {
     let url = '/funnels/lookup/redirect/{id}';
     const queryParams: Record<string, any> = {};
@@ -103,7 +103,7 @@ export class Funnels {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -127,7 +127,7 @@ export class Funnels {
       id: string;
       locationId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.DeleteRedirectResponseDTO> {
     let url = '/funnels/lookup/redirect/{id}';
     const queryParams: Record<string, any> = {};
@@ -162,7 +162,7 @@ export class Funnels {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -188,7 +188,7 @@ export class Funnels {
       offset: number;
       search?: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.RedirectListResponseDTO> {
     let url = '/funnels/lookup/redirect/list';
     const queryParams: Record<string, any> = {};
@@ -229,7 +229,7 @@ export class Funnels {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -258,7 +258,7 @@ export class Funnels {
       parentId?: string;
       name?: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.FunnelListResponseDTO> {
     let url = '/funnels/funnel/list';
     const queryParams: Record<string, any> = {};
@@ -308,7 +308,7 @@ export class Funnels {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -335,7 +335,7 @@ export class Funnels {
       limit: number;
       offset: number;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.FunnelPageResponseDTO> {
     let url = '/funnels/page';
     const queryParams: Record<string, any> = {};
@@ -379,7 +379,7 @@ export class Funnels {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -404,7 +404,7 @@ export class Funnels {
       funnelId: string;
       name?: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.FunnelPageCountResponseDTO> {
     let url = '/funnels/page/count';
     const queryParams: Record<string, any> = {};
@@ -442,7 +442,7 @@ export class Funnels {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken

@@ -21,7 +21,7 @@ export class EmailIsv {
       locationId: string;
     },
     requestBody: Models.VerificationBodyDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<any> {
     let url = '/email/verify';
     const queryParams: Record<string, any> = {};
@@ -54,7 +54,7 @@ export class EmailIsv {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken

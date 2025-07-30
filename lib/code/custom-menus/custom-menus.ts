@@ -20,7 +20,7 @@ export class CustomMenus {
     params: {
       customMenuId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetSingleCustomMenusSuccessfulResponseDTO> {
     let url = '/custom-menus/{customMenuId}';
     const queryParams: Record<string, any> = {};
@@ -52,7 +52,7 @@ export class CustomMenus {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -75,7 +75,7 @@ export class CustomMenus {
     params: {
       customMenuId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.DeleteCustomMenuSuccessfulResponseDTO> {
     let url = '/custom-menus/{customMenuId}';
     const queryParams: Record<string, any> = {};
@@ -107,7 +107,7 @@ export class CustomMenus {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -131,7 +131,7 @@ export class CustomMenus {
       customMenuId: string;
     },
     requestBody: Models.UpdateCustomMenuDTO,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.UpdateCustomMenuLinkResponseDTO> {
     let url = '/custom-menus/{customMenuId}';
     const queryParams: Record<string, any> = {};
@@ -164,7 +164,7 @@ export class CustomMenus {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -191,7 +191,7 @@ export class CustomMenus {
       query?: string;
       showOnCompany?: boolean;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetCustomMenusResponseDTO> {
     let url = '/custom-menus/';
     const queryParams: Record<string, any> = {};
@@ -235,7 +235,7 @@ export class CustomMenus {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -256,7 +256,7 @@ export class CustomMenus {
    */
   async createCustomMenu(
     requestBody: Models.CreateCustomMenuDTO,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetSingleCustomMenusSuccessfulResponseDTO> {
     let url = '/custom-menus/';
     const queryParams: Record<string, any> = {};
@@ -284,7 +284,7 @@ export class CustomMenus {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken

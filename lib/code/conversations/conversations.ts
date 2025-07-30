@@ -38,7 +38,7 @@ export class Conversations {
       scoreProfileMin?: number;
       scoreProfileMax?: number;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.SendConversationResponseDto> {
     let url = '/conversations/search';
     const queryParams: Record<string, any> = {};
@@ -124,7 +124,7 @@ export class Conversations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -147,7 +147,7 @@ export class Conversations {
     params: {
       conversationId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetConversationByIdResponse> {
     let url = '/conversations/{conversationId}';
     const queryParams: Record<string, any> = {};
@@ -179,7 +179,7 @@ export class Conversations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -203,7 +203,7 @@ export class Conversations {
       conversationId: string;
     },
     requestBody: Models.UpdateConversationDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetConversationSuccessfulResponse> {
     let url = '/conversations/{conversationId}';
     const queryParams: Record<string, any> = {};
@@ -236,7 +236,7 @@ export class Conversations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -259,7 +259,7 @@ export class Conversations {
     params: {
       conversationId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.DeleteConversationSuccessfulResponse> {
     let url = '/conversations/{conversationId}';
     const queryParams: Record<string, any> = {};
@@ -291,7 +291,7 @@ export class Conversations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -311,7 +311,7 @@ export class Conversations {
    * Get email by Id
    */
   async getEmailById(
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetEmailMessageResponseDto> {
     let url = '/conversations/messages/email/{id}';
     const queryParams: Record<string, any> = {};
@@ -338,7 +338,7 @@ export class Conversations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -361,7 +361,7 @@ export class Conversations {
     params: {
       emailMessageId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CancelScheduledResponseDto> {
     let url = '/conversations/messages/email/{emailMessageId}/schedule';
     const queryParams: Record<string, any> = {};
@@ -393,7 +393,7 @@ export class Conversations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -413,7 +413,7 @@ export class Conversations {
    * Get message by message id.
    */
   async getMessage(
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetMessageResponseDto> {
     let url = '/conversations/messages/{id}';
     const queryParams: Record<string, any> = {};
@@ -440,7 +440,7 @@ export class Conversations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -466,7 +466,7 @@ export class Conversations {
       limit?: number;
       type?: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetMessagesByConversationResponseDto> {
     let url = '/conversations/{conversationId}/messages';
     const queryParams: Record<string, any> = {};
@@ -507,7 +507,7 @@ export class Conversations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -528,7 +528,7 @@ export class Conversations {
    */
   async sendANewMessage(
     requestBody: Models.SendMessageBodyDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.SendMessageResponseDto> {
     let url = '/conversations/messages';
     const queryParams: Record<string, any> = {};
@@ -556,7 +556,7 @@ export class Conversations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -577,7 +577,7 @@ export class Conversations {
    */
   async addAnInboundMessage(
     requestBody: Models.ProcessMessageBodyDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.ProcessMessageResponseDto> {
     let url = '/conversations/messages/inbound';
     const queryParams: Record<string, any> = {};
@@ -605,7 +605,7 @@ export class Conversations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -626,7 +626,7 @@ export class Conversations {
    */
   async addAnOutboundMessage(
     requestBody: Models.ProcessOutboundMessageBodyDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.ProcessMessageResponseDto> {
     let url = '/conversations/messages/outbound';
     const queryParams: Record<string, any> = {};
@@ -654,7 +654,7 @@ export class Conversations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -677,7 +677,7 @@ export class Conversations {
     params: {
       messageId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CancelScheduledResponseDto> {
     let url = '/conversations/messages/{messageId}/schedule';
     const queryParams: Record<string, any> = {};
@@ -709,7 +709,7 @@ export class Conversations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -730,7 +730,7 @@ export class Conversations {
    */
   async uploadFileAttachments(
     requestBody: any,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.UploadFilesResponseDto> {
     let url = '/conversations/messages/upload';
     const queryParams: Record<string, any> = {};
@@ -758,7 +758,7 @@ export class Conversations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -782,7 +782,7 @@ export class Conversations {
       messageId: string;
     },
     requestBody: Models.UpdateMessageStatusDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.SendMessageResponseDto> {
     let url = '/conversations/messages/{messageId}/status';
     const queryParams: Record<string, any> = {};
@@ -815,7 +815,7 @@ export class Conversations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -839,7 +839,7 @@ export class Conversations {
       locationId: string;
       messageId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<any> {
     let url = '/conversations/messages/{messageId}/locations/{locationId}/recording';
     const queryParams: Record<string, any> = {};
@@ -874,7 +874,7 @@ export class Conversations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -898,7 +898,7 @@ export class Conversations {
       locationId: string;
       messageId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetMessageTranscriptionResponseDto> {
     let url = '/conversations/locations/{locationId}/messages/{messageId}/transcription';
     const queryParams: Record<string, any> = {};
@@ -933,7 +933,7 @@ export class Conversations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -957,7 +957,7 @@ export class Conversations {
       locationId: string;
       messageId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<any> {
     let url = '/conversations/locations/{locationId}/messages/{messageId}/transcription/download';
     const queryParams: Record<string, any> = {};
@@ -992,7 +992,7 @@ export class Conversations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1013,7 +1013,7 @@ export class Conversations {
    */
   async liveChatAgentTyping(
     requestBody: Models.UserTypingBody,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CreateLiveChatMessageFeedbackResponse> {
     let url = '/conversations/providers/live-chat/typing';
     const queryParams: Record<string, any> = {};
@@ -1041,7 +1041,7 @@ export class Conversations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1062,7 +1062,7 @@ export class Conversations {
    */
   async createConversation(
     requestBody: Models.CreateConversationDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CreateConversationSuccessResponse> {
     let url = '/conversations/';
     const queryParams: Record<string, any> = {};
@@ -1090,7 +1090,7 @@ export class Conversations {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken

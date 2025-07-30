@@ -18,7 +18,7 @@ export class Products {
    */
   async bulkUpdate(
     requestBody: Models.BulkUpdateDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.BulkUpdateResponseDto> {
     let url = '/products/bulk-update';
     const queryParams: Record<string, any> = {};
@@ -46,7 +46,7 @@ export class Products {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -508,7 +508,7 @@ export class Products {
       search?: string;
       collectionIds?: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetProductStatsResponseDto> {
     let url = '/products/store/{storeId}/stats';
     const queryParams: Record<string, any> = {};
@@ -552,7 +552,7 @@ export class Products {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -576,7 +576,7 @@ export class Products {
       storeId: string;
     },
     requestBody: Models.UpdateProductStoreDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.UpdateProductStoreResponseDto> {
     let url = '/products/store/{storeId}';
     const queryParams: Record<string, any> = {};
@@ -609,7 +609,7 @@ export class Products {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -637,7 +637,7 @@ export class Products {
       collectionIds?: string;
       name?: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.ListCollectionResponseDto> {
     let url = '/products/collections';
     const queryParams: Record<string, any> = {};
@@ -684,7 +684,7 @@ export class Products {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -705,7 +705,7 @@ export class Products {
    */
   async createProductCollection(
     requestBody: Models.CreateProductCollectionsDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CreateCollectionResponseDto> {
     let url = '/products/collections';
     const queryParams: Record<string, any> = {};
@@ -733,7 +733,7 @@ export class Products {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -756,7 +756,7 @@ export class Products {
     params: {
       collectionId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.DefaultCollectionResponseDto> {
     let url = '/products/collections/{collectionId}';
     const queryParams: Record<string, any> = {};
@@ -788,7 +788,7 @@ export class Products {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -812,7 +812,7 @@ export class Products {
       collectionId: string;
     },
     requestBody: Models.UpdateProductCollectionsDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.UpdateProductCollectionResponseDto> {
     let url = '/products/collections/{collectionId}';
     const queryParams: Record<string, any> = {};
@@ -845,7 +845,7 @@ export class Products {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -870,7 +870,7 @@ export class Products {
       altId: string;
       altType: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.DeleteProductCollectionResponseDto> {
     let url = '/products/collections/{collectionId}';
     const queryParams: Record<string, any> = {};
@@ -908,7 +908,7 @@ export class Products {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -941,7 +941,7 @@ export class Products {
       productId?: string;
       storeId?: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.ListProductReviewsResponseDto> {
     let url = '/products/reviews';
     const queryParams: Record<string, any> = {};
@@ -1003,7 +1003,7 @@ export class Products {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1032,7 +1032,7 @@ export class Products {
       productId?: string;
       storeId?: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CountReviewsByStatusResponseDto> {
     let url = '/products/reviews/count';
     const queryParams: Record<string, any> = {};
@@ -1082,7 +1082,7 @@ export class Products {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1106,7 +1106,7 @@ export class Products {
       reviewId: string;
     },
     requestBody: Models.UpdateProductReviewDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.UpdateProductReviewsResponseDto> {
     let url = '/products/reviews/{reviewId}';
     const queryParams: Record<string, any> = {};
@@ -1139,7 +1139,7 @@ export class Products {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1165,7 +1165,7 @@ export class Products {
       altType: string;
       productId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.DeleteProductReviewResponseDto> {
     let url = '/products/reviews/{reviewId}';
     const queryParams: Record<string, any> = {};
@@ -1206,7 +1206,7 @@ export class Products {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1227,7 +1227,7 @@ export class Products {
    */
   async bulkUpdateProductReview(
     requestBody: Models.UpdateProductReviewsDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.UpdateProductReviewsResponseDto> {
     let url = '/products/reviews/bulk-update';
     const queryParams: Record<string, any> = {};
@@ -1255,7 +1255,7 @@ export class Products {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken

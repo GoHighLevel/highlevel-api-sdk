@@ -30,7 +30,7 @@ export class Emails {
       campaignsOnly?: boolean;
       showStats?: boolean;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.ScheduleFetchSuccessfulDTO> {
     let url = '/emails/schedule';
     const queryParams: Record<string, any> = {};
@@ -92,7 +92,7 @@ export class Emails {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -113,7 +113,7 @@ export class Emails {
    */
   async createTemplate(
     requestBody: Models.CreateBuilderDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CreateBuilderSuccesfulResponseDto> {
     let url = '/emails/builder';
     const queryParams: Record<string, any> = {};
@@ -141,7 +141,7 @@ export class Emails {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -174,7 +174,7 @@ export class Emails {
       originId?: string;
       templatesOnly?: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.FetchBuilderSuccesfulResponseDto> {
     let url = '/emails/builder';
     const queryParams: Record<string, any> = {};
@@ -236,7 +236,7 @@ export class Emails {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -260,7 +260,7 @@ export class Emails {
       locationId: string;
       templateId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.DeleteBuilderSuccesfulResponseDto> {
     let url = '/emails/builder/{locationId}/{templateId}';
     const queryParams: Record<string, any> = {};
@@ -295,7 +295,7 @@ export class Emails {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -316,7 +316,7 @@ export class Emails {
    */
   async updateTemplate(
     requestBody: Models.SaveBuilderDataDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.BuilderUpdateSuccessfulDTO> {
     let url = '/emails/builder/data';
     const queryParams: Record<string, any> = {};
@@ -344,7 +344,7 @@ export class Emails {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken

@@ -24,7 +24,7 @@ export class Saas {
       subscriptionId: string;
       companyId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<string[]> {
     let url = '/saas-api/public-api/locations';
     const queryParams: Record<string, any> = {};
@@ -68,7 +68,7 @@ export class Saas {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -92,7 +92,7 @@ export class Saas {
       locationId: string;
     },
     requestBody: Models.UpdateSubscriptionDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<string> {
     let url = '/saas-api/public-api/update-saas-subscription/{locationId}';
     const queryParams: Record<string, any> = {};
@@ -125,7 +125,7 @@ export class Saas {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -149,7 +149,7 @@ export class Saas {
       companyId: string;
     },
     requestBody: Models.BulkDisableSaasDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.BulkDisableSaasResponseDto> {
     let url = '/saas-api/public-api/bulk-disable-saas/{companyId}';
     const queryParams: Record<string, any> = {};
@@ -182,7 +182,7 @@ export class Saas {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -216,7 +216,7 @@ export class Saas {
       locationId: string;
     },
     requestBody: Models.EnableSaasDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.EnableSaasResponseDto> {
     let url = '/saas-api/public-api/enable-saas/{locationId}';
     const queryParams: Record<string, any> = {};
@@ -249,7 +249,7 @@ export class Saas {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -273,7 +273,7 @@ export class Saas {
       locationId: string;
     },
     requestBody: Models.PauseLocationDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<boolean> {
     let url = '/saas-api/public-api/pause/{locationId}';
     const queryParams: Record<string, any> = {};
@@ -306,7 +306,7 @@ export class Saas {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -330,7 +330,7 @@ export class Saas {
       companyId: string;
     },
     requestBody: Models.UpdateRebillingDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.UpdateRebillingResponseDto> {
     let url = '/saas-api/public-api/update-rebilling/{companyId}';
     const queryParams: Record<string, any> = {};
@@ -363,7 +363,7 @@ export class Saas {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -386,7 +386,7 @@ export class Saas {
     params: {
       companyId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.AgencyPlanResponseDto[]> {
     let url = '/saas-api/public-api/agency-plans/{companyId}';
     const queryParams: Record<string, any> = {};
@@ -418,7 +418,7 @@ export class Saas {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -442,7 +442,7 @@ export class Saas {
       locationId: string;
       companyId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.LocationSubscriptionResponseDto> {
     let url = '/saas-api/public-api/get-saas-subscription/{locationId}';
     const queryParams: Record<string, any> = {};
@@ -477,7 +477,7 @@ export class Saas {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -501,7 +501,7 @@ export class Saas {
       companyId: string;
     },
     requestBody: Models.BulkEnableSaasRequestDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.BulkEnableSaasResponseDto> {
     let url = '/saas-api/public-api/bulk-enable-saas/{companyId}';
     const queryParams: Record<string, any> = {};
@@ -534,7 +534,7 @@ export class Saas {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -558,7 +558,7 @@ export class Saas {
       companyId: string;
       page: number;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetSaasLocationsResponseDto> {
     let url = '/saas-api/public-api/saas-locations/{companyId}';
     const queryParams: Record<string, any> = {};
@@ -593,7 +593,7 @@ export class Saas {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -617,7 +617,7 @@ export class Saas {
       planId: string;
       companyId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.SaasPlanResponseDto> {
     let url = '/saas-api/public-api/saas-plan/{planId}';
     const queryParams: Record<string, any> = {};
@@ -652,7 +652,7 @@ export class Saas {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -675,7 +675,7 @@ export class Saas {
     params: {
       companyId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<any> {
     let url = '/saas-api/location-metadata/{companyId}/fetch_saas_locations_count';
     const queryParams: Record<string, any> = {};
@@ -707,7 +707,7 @@ export class Saas {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken

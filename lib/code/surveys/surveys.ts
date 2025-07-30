@@ -26,7 +26,7 @@ export class Surveys {
       startAt?: string;
       endAt?: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetSurveysSubmissionSuccessfulResponseDto> {
     let url = '/surveys/submissions';
     const queryParams: Record<string, any> = {};
@@ -76,7 +76,7 @@ export class Surveys {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -102,7 +102,7 @@ export class Surveys {
       limit?: number;
       type?: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetSurveysSuccessfulResponseDto> {
     let url = '/surveys/';
     const queryParams: Record<string, any> = {};
@@ -143,7 +143,7 @@ export class Surveys {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken

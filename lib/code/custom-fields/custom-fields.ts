@@ -25,7 +25,7 @@ export class CustomFields {
     params: {
       id: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CustomFieldSuccessfulResponseDto> {
     let url = '/custom-fields/{id}';
     const queryParams: Record<string, any> = {};
@@ -57,7 +57,7 @@ export class CustomFields {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -86,7 +86,7 @@ export class CustomFields {
       id: string;
     },
     requestBody: Models.UpdateCustomFieldsDTO,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CustomFieldSuccessfulResponseDto> {
     let url = '/custom-fields/{id}';
     const queryParams: Record<string, any> = {};
@@ -119,7 +119,7 @@ export class CustomFields {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -147,7 +147,7 @@ export class CustomFields {
     params: {
       id: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CustomFolderDeleteResponseDto> {
     let url = '/custom-fields/{id}';
     const queryParams: Record<string, any> = {};
@@ -179,7 +179,7 @@ export class CustomFields {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -208,7 +208,7 @@ export class CustomFields {
       objectKey: string;
       locationId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CustomFieldsResponseDTO> {
     let url = '/custom-fields/object-key/{objectKey}';
     const queryParams: Record<string, any> = {};
@@ -243,7 +243,7 @@ export class CustomFields {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -269,7 +269,7 @@ export class CustomFields {
    */
   async createCustomFieldFolder(
     requestBody: Models.CreateFolder,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.ICustomFieldFolder> {
     let url = '/custom-fields/folder';
     const queryParams: Record<string, any> = {};
@@ -297,7 +297,7 @@ export class CustomFields {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -326,7 +326,7 @@ export class CustomFields {
       id: string;
     },
     requestBody: Models.UpdateFolder,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.ICustomFieldFolder> {
     let url = '/custom-fields/folder/{id}';
     const queryParams: Record<string, any> = {};
@@ -359,7 +359,7 @@ export class CustomFields {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -388,7 +388,7 @@ export class CustomFields {
       id: string;
       locationId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CustomFolderDeleteResponseDto> {
     let url = '/custom-fields/folder/{id}';
     const queryParams: Record<string, any> = {};
@@ -423,7 +423,7 @@ export class CustomFields {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -449,7 +449,7 @@ export class CustomFields {
    */
   async createCustomField(
     requestBody: Models.CreateCustomFieldsDTO,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CustomFieldSuccessfulResponseDto> {
     let url = '/custom-fields/';
     const queryParams: Record<string, any> = {};
@@ -477,7 +477,7 @@ export class CustomFields {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken

@@ -44,7 +44,7 @@ export class SocialPlanner {
       page?: string;
       reconnect?: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<any> {
     let url = '/social-media-posting/oauth/google/start';
     const queryParams: Record<string, any> = {};
@@ -85,7 +85,7 @@ export class SocialPlanner {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -109,7 +109,7 @@ export class SocialPlanner {
       locationId: string;
       accountId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetGoogleLocationResponseDTO> {
     let url = '/social-media-posting/oauth/{locationId}/google/locations/{accountId}';
     const queryParams: Record<string, any> = {};
@@ -144,7 +144,7 @@ export class SocialPlanner {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -169,7 +169,7 @@ export class SocialPlanner {
       accountId: string;
     },
     requestBody: Models.AttachGMBLocationDTO,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.SocialMediaGmbAccountResponseDTO> {
     let url = '/social-media-posting/oauth/{locationId}/google/locations/{accountId}';
     const queryParams: Record<string, any> = {};
@@ -205,7 +205,7 @@ export class SocialPlanner {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -229,7 +229,7 @@ export class SocialPlanner {
       locationId: string;
     },
     requestBody: Models.SearchPostDTO,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.PostSuccessfulResponseDTO> {
     let url = '/social-media-posting/{locationId}/posts/list';
     const queryParams: Record<string, any> = {};
@@ -262,7 +262,7 @@ export class SocialPlanner {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -290,7 +290,7 @@ The content and media limitations, as well as platform rate limiters correspondi
       locationId: string;
     },
     requestBody: Models.CreatePostDTO,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CreatePostSuccessfulResponseDTO> {
     let url = '/social-media-posting/{locationId}/posts';
     const queryParams: Record<string, any> = {};
@@ -323,7 +323,7 @@ The content and media limitations, as well as platform rate limiters correspondi
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -347,7 +347,7 @@ The content and media limitations, as well as platform rate limiters correspondi
       locationId: string;
       id: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetPostSuccessfulResponseDTO> {
     let url = '/social-media-posting/{locationId}/posts/{id}';
     const queryParams: Record<string, any> = {};
@@ -382,7 +382,7 @@ The content and media limitations, as well as platform rate limiters correspondi
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -411,7 +411,7 @@ The content and media limitations, as well as platform rate limiters correspondi
       id: string;
     },
     requestBody: Models.PostCreateRequest,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.UpdatePostSuccessfulResponseDTO> {
     let url = '/social-media-posting/{locationId}/posts/{id}';
     const queryParams: Record<string, any> = {};
@@ -447,7 +447,7 @@ The content and media limitations, as well as platform rate limiters correspondi
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -471,7 +471,7 @@ The content and media limitations, as well as platform rate limiters correspondi
       locationId: string;
       id: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.DeletePostSuccessfulResponseDTO> {
     let url = '/social-media-posting/{locationId}/posts/{id}';
     const queryParams: Record<string, any> = {};
@@ -506,7 +506,7 @@ The content and media limitations, as well as platform rate limiters correspondi
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -535,7 +535,7 @@ Note:
    */
   async bulkDeleteSocialPlannerPosts(
     requestBody: Models.DeletePostsDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.BulkDeleteResponseDto> {
     let url = '/social-media-posting/{locationId}/posts/bulk-delete';
     const queryParams: Record<string, any> = {};
@@ -563,7 +563,7 @@ Note:
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -586,7 +586,7 @@ Note:
     params: {
       locationId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.AccountsListResponseDTO> {
     let url = '/social-media-posting/{locationId}/accounts';
     const queryParams: Record<string, any> = {};
@@ -618,7 +618,7 @@ Note:
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -644,7 +644,7 @@ Note:
       companyId?: string;
       userId?: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.LocationAndAccountDeleteResponseDTO> {
     let url = '/social-media-posting/{locationId}/accounts/{id}';
     const queryParams: Record<string, any> = {};
@@ -685,7 +685,7 @@ Note:
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -732,7 +732,7 @@ Note:
       page?: string;
       reconnect?: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<any> {
     let url = '/social-media-posting/oauth/facebook/start';
     const queryParams: Record<string, any> = {};
@@ -773,7 +773,7 @@ Note:
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -797,7 +797,7 @@ Note:
       locationId: string;
       accountId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetFacebookAccountsResponseDTO> {
     let url = '/social-media-posting/oauth/{locationId}/facebook/accounts/{accountId}';
     const queryParams: Record<string, any> = {};
@@ -832,7 +832,7 @@ Note:
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -857,7 +857,7 @@ Note:
       accountId: string;
     },
     requestBody: Models.AttachFBAccountDTO,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.SocialMediaFBAccountResponseDTO> {
     let url = '/social-media-posting/oauth/{locationId}/facebook/accounts/{accountId}';
     const queryParams: Record<string, any> = {};
@@ -893,7 +893,7 @@ Note:
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -940,7 +940,7 @@ Note:
       page?: string;
       reconnect?: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<any> {
     let url = '/social-media-posting/oauth/instagram/start';
     const queryParams: Record<string, any> = {};
@@ -981,7 +981,7 @@ Note:
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1005,7 +1005,7 @@ Note:
       locationId: string;
       accountId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetInstagramAccountsResponseDTO> {
     let url = '/social-media-posting/oauth/{locationId}/instagram/accounts/{accountId}';
     const queryParams: Record<string, any> = {};
@@ -1040,7 +1040,7 @@ Note:
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1065,7 +1065,7 @@ Note:
       accountId: string;
     },
     requestBody: Models.AttachIGAccountDTO,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.SocialMediaInstagramAccountResponseDTO> {
     let url = '/social-media-posting/oauth/{locationId}/instagram/accounts/{accountId}';
     const queryParams: Record<string, any> = {};
@@ -1101,7 +1101,7 @@ Note:
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1148,7 +1148,7 @@ Note:
       page?: string;
       reconnect?: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<any> {
     let url = '/social-media-posting/oauth/linkedin/start';
     const queryParams: Record<string, any> = {};
@@ -1189,7 +1189,7 @@ Note:
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1213,7 +1213,7 @@ Note:
       locationId: string;
       accountId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetLinkedInAccountsResponseDTO> {
     let url = '/social-media-posting/oauth/{locationId}/linkedin/accounts/{accountId}';
     const queryParams: Record<string, any> = {};
@@ -1248,7 +1248,7 @@ Note:
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1273,7 +1273,7 @@ Note:
       accountId: string;
     },
     requestBody: Models.AttachLinkedinAccountDTO,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.SocialMediaLinkedInAccountResponseDTO> {
     let url = '/social-media-posting/oauth/{locationId}/linkedin/accounts/{accountId}';
     const queryParams: Record<string, any> = {};
@@ -1309,7 +1309,7 @@ Note:
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1335,7 +1335,7 @@ Note:
       page?: string;
       reconnect?: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<any> {
     let url = '/social-media-posting/oauth/twitter/start';
     const queryParams: Record<string, any> = {};
@@ -1376,7 +1376,7 @@ Note:
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1400,7 +1400,7 @@ Note:
       locationId: string;
       accountId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetTwitterAccountsResponseDTO> {
     let url = '/social-media-posting/oauth/{locationId}/twitter/accounts/{accountId}';
     const queryParams: Record<string, any> = {};
@@ -1435,7 +1435,7 @@ Note:
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1460,7 +1460,7 @@ Note:
       accountId: string;
     },
     requestBody: Models.AttachTwitterAccountDTO,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.SocialMediaTwitterAccountResponseDTO> {
     let url = '/social-media-posting/oauth/{locationId}/twitter/accounts/{accountId}';
     const queryParams: Record<string, any> = {};
@@ -1496,7 +1496,7 @@ Note:
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1520,7 +1520,7 @@ Note:
       locationId: string;
     },
     requestBody: any,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.UploadFileResponseDTO> {
     let url = '/social-media-posting/{locationId}/csv';
     const queryParams: Record<string, any> = {};
@@ -1553,7 +1553,7 @@ Note:
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1580,7 +1580,7 @@ Note:
       includeUsers?: string;
       userId?: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetUploadStatusResponseDTO> {
     let url = '/social-media-posting/{locationId}/csv';
     const queryParams: Record<string, any> = {};
@@ -1624,7 +1624,7 @@ Note:
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1648,7 +1648,7 @@ Note:
       locationId: string;
     },
     requestBody: Models.SetAccountsDTO,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.SetAccountsResponseDTO> {
     let url = '/social-media-posting/{locationId}/set-accounts';
     const queryParams: Record<string, any> = {};
@@ -1681,7 +1681,7 @@ Note:
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1707,7 +1707,7 @@ Note:
       skip?: string;
       limit?: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetCsvPostResponseDTO> {
     let url = '/social-media-posting/{locationId}/csv/{id}';
     const queryParams: Record<string, any> = {};
@@ -1748,7 +1748,7 @@ Note:
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1773,7 +1773,7 @@ Note:
       id: string;
     },
     requestBody: Models.CSVDefaultDTO,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CsvPostStatusResponseDTO> {
     let url = '/social-media-posting/{locationId}/csv/{id}';
     const queryParams: Record<string, any> = {};
@@ -1809,7 +1809,7 @@ Note:
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1833,7 +1833,7 @@ Note:
       locationId: string;
       id: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.DeleteCsvResponseDTO> {
     let url = '/social-media-posting/{locationId}/csv/{id}';
     const queryParams: Record<string, any> = {};
@@ -1868,7 +1868,7 @@ Note:
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1893,7 +1893,7 @@ Note:
       postId: string;
       csvId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.DeletePostResponseDTO> {
     let url = '/social-media-posting/{locationId}/csv/{csvId}/post/{postId}';
     const queryParams: Record<string, any> = {};
@@ -1931,7 +1931,7 @@ Note:
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1978,7 +1978,7 @@ Note:
       page?: string;
       reconnect?: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<any> {
     let url = '/social-media-posting/oauth/tiktok/start';
     const queryParams: Record<string, any> = {};
@@ -2019,7 +2019,7 @@ Note:
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -2043,7 +2043,7 @@ Note:
       locationId: string;
       accountId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetTiktokAccountResponseDTO> {
     let url = '/social-media-posting/oauth/{locationId}/tiktok/accounts/{accountId}';
     const queryParams: Record<string, any> = {};
@@ -2078,7 +2078,7 @@ Note:
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -2103,7 +2103,7 @@ Note:
       accountId: string;
     },
     requestBody: Models.AttachTiktokAccountDTO,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.SocialMediaTiktokAccountResponseDTO> {
     let url = '/social-media-posting/oauth/{locationId}/tiktok/accounts/{accountId}';
     const queryParams: Record<string, any> = {};
@@ -2139,7 +2139,7 @@ Note:
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -2186,7 +2186,7 @@ Note:
       page?: string;
       reconnect?: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<any> {
     let url = '/social-media-posting/oauth/tiktok-business/start';
     const queryParams: Record<string, any> = {};
@@ -2227,7 +2227,7 @@ Note:
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -2251,7 +2251,7 @@ Note:
       locationId: string;
       accountId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetTiktokBusinessAccountResponseDTO> {
     let url = '/social-media-posting/oauth/{locationId}/tiktok-business/accounts/{accountId}';
     const queryParams: Record<string, any> = {};
@@ -2286,7 +2286,7 @@ Note:
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -2312,7 +2312,7 @@ Note:
       limit?: string;
       skip?: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetByLocationIdResponseDTO> {
     let url = '/social-media-posting/{locationId}/categories';
     const queryParams: Record<string, any> = {};
@@ -2353,7 +2353,7 @@ Note:
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -2377,7 +2377,7 @@ Note:
       id: string;
       locationId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetByIdResponseDTO> {
     let url = '/social-media-posting/{locationId}/categories/{id}';
     const queryParams: Record<string, any> = {};
@@ -2412,7 +2412,7 @@ Note:
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -2438,7 +2438,7 @@ Note:
       limit?: string;
       skip?: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetTagsByLocationIdResponseDTO> {
     let url = '/social-media-posting/{locationId}/tags';
     const queryParams: Record<string, any> = {};
@@ -2479,7 +2479,7 @@ Note:
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -2503,7 +2503,7 @@ Note:
       locationId: string;
     },
     requestBody: Models.UpdateTagDTO,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetTagsByIdResponseDTO> {
     let url = '/social-media-posting/{locationId}/tags/details';
     const queryParams: Record<string, any> = {};
@@ -2536,7 +2536,7 @@ Note:
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -2560,7 +2560,7 @@ Note:
       locationId: string;
     },
     requestBody?: any,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<any> {
     let url = '/social-media-posting/statistics';
     const queryParams: Record<string, any> = {};
@@ -2593,7 +2593,7 @@ Note:
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken

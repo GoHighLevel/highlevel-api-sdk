@@ -18,7 +18,7 @@ export class Payments {
    */
   async createIntegrationProvider(
     requestBody: Models.CreateWhiteLabelIntegrationProviderDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CreateWhitelabelIntegrationResponseDto> {
     let url = '/payments/integrations/provider/whitelabel';
     const queryParams: Record<string, any> = {};
@@ -46,7 +46,7 @@ export class Payments {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -72,7 +72,7 @@ export class Payments {
       limit?: number;
       offset?: number;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.ListWhitelabelIntegrationProviderResponseDto> {
     let url = '/payments/integrations/provider/whitelabel';
     const queryParams: Record<string, any> = {};
@@ -113,7 +113,7 @@ export class Payments {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -147,7 +147,7 @@ export class Payments {
       limit?: number;
       offset?: number;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.ListOrdersResponseDto> {
     let url = '/payments/orders';
     const queryParams: Record<string, any> = {};
@@ -212,7 +212,7 @@ export class Payments {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -238,7 +238,7 @@ export class Payments {
       altId: string;
       altType: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetOrderResponseSchema> {
     let url = '/payments/orders/{orderId}';
     const queryParams: Record<string, any> = {};
@@ -279,7 +279,7 @@ export class Payments {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -303,7 +303,7 @@ export class Payments {
       orderId: string;
     },
     requestBody: Models.CreateFulfillmentDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CreateFulfillmentResponseDto> {
     let url = '/payments/orders/{orderId}/fulfillments';
     const queryParams: Record<string, any> = {};
@@ -336,7 +336,7 @@ export class Payments {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -361,7 +361,7 @@ export class Payments {
       altType: string;
       orderId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.ListFulfillmentResponseDto> {
     let url = '/payments/orders/{orderId}/fulfillments';
     const queryParams: Record<string, any> = {};
@@ -399,7 +399,7 @@ export class Payments {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -435,7 +435,7 @@ export class Payments {
       limit?: number;
       offset?: number;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.ListTxnsResponseDto> {
     let url = '/payments/transactions';
     const queryParams: Record<string, any> = {};
@@ -506,7 +506,7 @@ export class Payments {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -532,7 +532,7 @@ export class Payments {
       altId: string;
       altType: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetTxnResponseSchema> {
     let url = '/payments/transactions/{transactionId}';
     const queryParams: Record<string, any> = {};
@@ -573,7 +573,7 @@ export class Payments {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -607,7 +607,7 @@ export class Payments {
       limit?: number;
       offset?: number;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.ListSubscriptionResponseDto> {
     let url = '/payments/subscriptions';
     const queryParams: Record<string, any> = {};
@@ -672,7 +672,7 @@ export class Payments {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -697,7 +697,7 @@ export class Payments {
       altId: string;
       altType: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetSubscriptionResponseSchema> {
     let url = '/payments/subscriptions/{subscriptionId}';
     const queryParams: Record<string, any> = {};
@@ -735,7 +735,7 @@ export class Payments {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -763,7 +763,7 @@ export class Payments {
       status?: string;
       search?: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.ListCouponsResponseDto> {
     let url = '/payments/coupon/list';
     const queryParams: Record<string, any> = {};
@@ -810,7 +810,7 @@ export class Payments {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -831,7 +831,7 @@ export class Payments {
    */
   async createCoupon(
     requestBody: Models.CreateCouponParams,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CreateCouponResponseDto> {
     let url = '/payments/coupon';
     const queryParams: Record<string, any> = {};
@@ -859,7 +859,7 @@ export class Payments {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -880,7 +880,7 @@ export class Payments {
    */
   async updateCoupon(
     requestBody: Models.UpdateCouponParams,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CreateCouponResponseDto> {
     let url = '/payments/coupon';
     const queryParams: Record<string, any> = {};
@@ -908,7 +908,7 @@ export class Payments {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -929,7 +929,7 @@ export class Payments {
    */
   async deleteCoupon(
     requestBody: Models.DeleteCouponParams,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.DeleteCouponResponseDto> {
     let url = '/payments/coupon';
     const queryParams: Record<string, any> = {};
@@ -957,7 +957,7 @@ export class Payments {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -983,7 +983,7 @@ export class Payments {
       id: string;
       code: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CreateCouponResponseDto> {
     let url = '/payments/coupon';
     const queryParams: Record<string, any> = {};
@@ -1024,7 +1024,7 @@ export class Payments {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1048,7 +1048,7 @@ export class Payments {
       locationId: string;
     },
     requestBody: Models.CreateCustomProvidersDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CreateCustomProvidersResponseSchema> {
     let url = '/payments/custom-provider/provider';
     const queryParams: Record<string, any> = {};
@@ -1081,7 +1081,7 @@ export class Payments {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1104,7 +1104,7 @@ export class Payments {
     params: {
       locationId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.DeleteCustomProvidersResponseSchema> {
     let url = '/payments/custom-provider/provider';
     const queryParams: Record<string, any> = {};
@@ -1136,7 +1136,7 @@ export class Payments {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1159,7 +1159,7 @@ export class Payments {
     params: {
       locationId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetCustomProvidersResponseSchema> {
     let url = '/payments/custom-provider/connect';
     const queryParams: Record<string, any> = {};
@@ -1191,7 +1191,7 @@ export class Payments {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1215,7 +1215,7 @@ export class Payments {
       locationId: string;
     },
     requestBody: Models.ConnectCustomProvidersConfigDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.ConnectCustomProvidersResponseSchema> {
     let url = '/payments/custom-provider/connect';
     const queryParams: Record<string, any> = {};
@@ -1248,7 +1248,7 @@ export class Payments {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -1272,7 +1272,7 @@ export class Payments {
       locationId: string;
     },
     requestBody: Models.DeleteCustomProvidersConfigDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.DisconnectCustomProvidersResponseSchema> {
     let url = '/payments/custom-provider/disconnect';
     const queryParams: Record<string, any> = {};
@@ -1305,7 +1305,7 @@ export class Payments {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken

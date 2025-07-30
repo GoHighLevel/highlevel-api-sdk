@@ -20,7 +20,7 @@ export class Snapshots {
     params: {
       companyId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetSnapshotsSuccessfulResponseDto> {
     let url = '/snapshots/';
     const queryParams: Record<string, any> = {};
@@ -52,7 +52,7 @@ export class Snapshots {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -76,7 +76,7 @@ export class Snapshots {
       companyId: string;
     },
     requestBody: Models.CreateSnapshotShareLinkRequestDTO,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CreateSnapshotShareLinkSuccessfulResponseDTO> {
     let url = '/snapshots/share/link';
     const queryParams: Record<string, any> = {};
@@ -109,7 +109,7 @@ export class Snapshots {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -137,7 +137,7 @@ export class Snapshots {
       lastDoc: string;
       limit: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetSnapshotPushStatusSuccessfulResponseDTO> {
     let url = '/snapshots/snapshot-status/{snapshotId}';
     const queryParams: Record<string, any> = {};
@@ -184,7 +184,7 @@ export class Snapshots {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -209,7 +209,7 @@ export class Snapshots {
       snapshotId: string;
       locationId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetLatestSnapshotPushStatusSuccessfulResponseDTO> {
     let url = '/snapshots/snapshot-status/{snapshotId}/location/{locationId}';
     const queryParams: Record<string, any> = {};
@@ -247,7 +247,7 @@ export class Snapshots {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
           config.headers = {
             ...config.headers,
             'Authorization': authToken
