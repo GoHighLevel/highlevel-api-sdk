@@ -1,4 +1,3 @@
-import * as qs from 'querystring';
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as Models from './models/oauth';
 
@@ -28,7 +27,7 @@ export class Oauth {
       response_type: 'code'
     }
 
-    return `${this.MARKETPLACE_URL}/oauth/chooselocation?${qs.stringify(params)}`;
+    return `${this.MARKETPLACE_URL}/oauth/chooselocation?${new URLSearchParams(params).toString()}`;
   }
 
   /**
@@ -88,7 +87,7 @@ export class Oauth {
         ...headerParams,
         ...options?.headers
       },
-      data: qs.stringify(requestBody as any),
+      data: new URLSearchParams(requestBody as any).toString(),
       ...options
     };
 
@@ -138,7 +137,7 @@ export class Oauth {
         ...headerParams,
         ...options?.headers
       },
-      data: qs.stringify(requestBody as any),
+      data: new URLSearchParams(requestBody as any).toString(),
       ...options
     };
 

@@ -1,0 +1,33 @@
+# Development files
+*.test.ts
+*.spec.ts
+.env
+.env.*
+
+# Build artifacts that should be rebuilt
+tsconfig.tsbuildinfo
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git files
+.git/
+.gitignore
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+
+# Documentation
+README.md
+
+# Examples (optional, uncomment if you have examples you don't want to publish)
+# examples/
+# docs/ 
