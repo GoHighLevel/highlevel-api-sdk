@@ -18,7 +18,7 @@ export class Invoices {
    */
   async createInvoiceTemplate(
     requestBody: Models.CreateInvoiceTemplateDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CreateInvoiceTemplateResponseDto> {
     let url = '/invoices/template';
     const queryParams: Record<string, any> = {};
@@ -26,7 +26,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
 
     const config: AxiosRequestConfig = {
       method: 'POST',
@@ -40,20 +40,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -77,7 +88,7 @@ export class Invoices {
       limit: string;
       offset: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.ListTemplatesResponseDto> {
     let url = '/invoices/template';
     const queryParams: Record<string, any> = {};
@@ -85,7 +96,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
     if (params) {
       if (params.altId !== undefined) {
         queryParams['altId'] = params.altId;
@@ -127,20 +138,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -158,7 +180,7 @@ export class Invoices {
       altId: string;
       altType: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetTemplateResponseDto> {
     let url = '/invoices/template/{templateId}';
     const queryParams: Record<string, any> = {};
@@ -166,7 +188,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
     if (params) {
       if (params.templateId !== undefined) {
         url = url.replace('{' + 'templateId' + '}', encodeURIComponent(String(params.templateId)));
@@ -190,20 +212,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -220,7 +253,7 @@ export class Invoices {
       templateId: string;
     },
     requestBody: Models.UpdateInvoiceTemplateDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.UpdateInvoiceTemplateResponseDto> {
     let url = '/invoices/template/{templateId}';
     const queryParams: Record<string, any> = {};
@@ -228,7 +261,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
     if (params) {
       if (params.templateId !== undefined) {
         url = url.replace('{' + 'templateId' + '}', encodeURIComponent(String(params.templateId)));
@@ -247,20 +280,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -278,7 +322,7 @@ export class Invoices {
       altId: string;
       altType: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.DeleteInvoiceTemplateResponseDto> {
     let url = '/invoices/template/{templateId}';
     const queryParams: Record<string, any> = {};
@@ -286,7 +330,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
     if (params) {
       if (params.templateId !== undefined) {
         url = url.replace('{' + 'templateId' + '}', encodeURIComponent(String(params.templateId)));
@@ -310,20 +354,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -340,7 +395,7 @@ export class Invoices {
       templateId: string;
     },
     requestBody: Models.UpdateInvoiceLateFeesConfigurationDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.UpdateInvoiceTemplateResponseDto> {
     let url = '/invoices/template/{templateId}/late-fees-configuration';
     const queryParams: Record<string, any> = {};
@@ -348,7 +403,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
     if (params) {
       if (params.templateId !== undefined) {
         url = url.replace('{' + 'templateId' + '}', encodeURIComponent(String(params.templateId)));
@@ -367,20 +422,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -397,7 +463,7 @@ export class Invoices {
       templateId: string;
     },
     requestBody: Models.UpdatePaymentMethodsConfigurationDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.UpdateInvoiceTemplateResponseDto> {
     let url = '/invoices/template/{templateId}/payment-methods-configuration';
     const queryParams: Record<string, any> = {};
@@ -405,7 +471,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
     if (params) {
       if (params.templateId !== undefined) {
         url = url.replace('{' + 'templateId' + '}', encodeURIComponent(String(params.templateId)));
@@ -424,20 +490,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -451,7 +528,7 @@ export class Invoices {
    */
   async createInvoiceSchedule(
     requestBody: Models.CreateInvoiceScheduleDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CreateInvoiceScheduleResponseDto> {
     let url = '/invoices/schedule';
     const queryParams: Record<string, any> = {};
@@ -459,7 +536,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
 
     const config: AxiosRequestConfig = {
       method: 'POST',
@@ -473,20 +550,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -510,7 +598,7 @@ export class Invoices {
       limit: string;
       offset: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.ListSchedulesResponseDto> {
     let url = '/invoices/schedule';
     const queryParams: Record<string, any> = {};
@@ -518,7 +606,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
     if (params) {
       if (params.altId !== undefined) {
         queryParams['altId'] = params.altId;
@@ -560,20 +648,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -591,7 +690,7 @@ export class Invoices {
       altId: string;
       altType: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetScheduleResponseDto> {
     let url = '/invoices/schedule/{scheduleId}';
     const queryParams: Record<string, any> = {};
@@ -599,7 +698,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
     if (params) {
       if (params.scheduleId !== undefined) {
         url = url.replace('{' + 'scheduleId' + '}', encodeURIComponent(String(params.scheduleId)));
@@ -623,20 +722,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -653,7 +763,7 @@ export class Invoices {
       scheduleId: string;
     },
     requestBody: Models.UpdateInvoiceScheduleDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.UpdateInvoiceScheduleResponseDto> {
     let url = '/invoices/schedule/{scheduleId}';
     const queryParams: Record<string, any> = {};
@@ -661,7 +771,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
     if (params) {
       if (params.scheduleId !== undefined) {
         url = url.replace('{' + 'scheduleId' + '}', encodeURIComponent(String(params.scheduleId)));
@@ -680,20 +790,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -711,7 +832,7 @@ export class Invoices {
       altId: string;
       altType: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.DeleteInvoiceScheduleResponseDto> {
     let url = '/invoices/schedule/{scheduleId}';
     const queryParams: Record<string, any> = {};
@@ -719,7 +840,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
     if (params) {
       if (params.scheduleId !== undefined) {
         url = url.replace('{' + 'scheduleId' + '}', encodeURIComponent(String(params.scheduleId)));
@@ -743,20 +864,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -772,7 +904,7 @@ export class Invoices {
     params: {
       scheduleId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.UpdateAndScheduleInvoiceScheduleResponseDto> {
     let url = '/invoices/schedule/{scheduleId}/updateAndSchedule';
     const queryParams: Record<string, any> = {};
@@ -780,7 +912,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
     if (params) {
       if (params.scheduleId !== undefined) {
         url = url.replace('{' + 'scheduleId' + '}', encodeURIComponent(String(params.scheduleId)));
@@ -798,20 +930,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -828,7 +971,7 @@ export class Invoices {
       scheduleId: string;
     },
     requestBody: Models.ScheduleInvoiceScheduleDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.ScheduleInvoiceScheduleResponseDto> {
     let url = '/invoices/schedule/{scheduleId}/schedule';
     const queryParams: Record<string, any> = {};
@@ -836,7 +979,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
     if (params) {
       if (params.scheduleId !== undefined) {
         url = url.replace('{' + 'scheduleId' + '}', encodeURIComponent(String(params.scheduleId)));
@@ -855,20 +998,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -885,7 +1039,7 @@ export class Invoices {
       scheduleId: string;
     },
     requestBody: Models.AutoPaymentScheduleDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.AutoPaymentInvoiceScheduleResponseDto> {
     let url = '/invoices/schedule/{scheduleId}/auto-payment';
     const queryParams: Record<string, any> = {};
@@ -893,7 +1047,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
     if (params) {
       if (params.scheduleId !== undefined) {
         url = url.replace('{' + 'scheduleId' + '}', encodeURIComponent(String(params.scheduleId)));
@@ -912,20 +1066,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -942,7 +1107,7 @@ export class Invoices {
       scheduleId: string;
     },
     requestBody: Models.CancelInvoiceScheduleDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CancelInvoiceScheduleResponseDto> {
     let url = '/invoices/schedule/{scheduleId}/cancel';
     const queryParams: Record<string, any> = {};
@@ -950,7 +1115,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
     if (params) {
       if (params.scheduleId !== undefined) {
         url = url.replace('{' + 'scheduleId' + '}', encodeURIComponent(String(params.scheduleId)));
@@ -969,20 +1134,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -1004,7 +1180,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access"];
-
+    
 
     const config: AxiosRequestConfig = {
       method: 'POST',
@@ -1018,20 +1194,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -1048,7 +1235,7 @@ export class Invoices {
       altId: string;
       altType: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GenerateInvoiceNumberResponseDto> {
     let url = '/invoices/generate-invoice-number';
     const queryParams: Record<string, any> = {};
@@ -1056,7 +1243,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
     if (params) {
       if (params.altId !== undefined) {
         queryParams['altId'] = params.altId;
@@ -1077,20 +1264,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -1108,7 +1306,7 @@ export class Invoices {
       altId: string;
       altType: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetInvoiceResponseDto> {
     let url = '/invoices/{invoiceId}';
     const queryParams: Record<string, any> = {};
@@ -1116,7 +1314,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
     if (params) {
       if (params.invoiceId !== undefined) {
         url = url.replace('{' + 'invoiceId' + '}', encodeURIComponent(String(params.invoiceId)));
@@ -1140,20 +1338,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -1170,7 +1379,7 @@ export class Invoices {
       invoiceId: string;
     },
     requestBody: Models.UpdateInvoiceDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.UpdateInvoiceResponseDto> {
     let url = '/invoices/{invoiceId}';
     const queryParams: Record<string, any> = {};
@@ -1178,7 +1387,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
     if (params) {
       if (params.invoiceId !== undefined) {
         url = url.replace('{' + 'invoiceId' + '}', encodeURIComponent(String(params.invoiceId)));
@@ -1197,20 +1406,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -1228,7 +1448,7 @@ export class Invoices {
       altId: string;
       altType: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.DeleteInvoiceResponseDto> {
     let url = '/invoices/{invoiceId}';
     const queryParams: Record<string, any> = {};
@@ -1236,7 +1456,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
     if (params) {
       if (params.invoiceId !== undefined) {
         url = url.replace('{' + 'invoiceId' + '}', encodeURIComponent(String(params.invoiceId)));
@@ -1260,20 +1480,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -1290,7 +1521,7 @@ export class Invoices {
       invoiceId: string;
     },
     requestBody: Models.UpdateInvoiceLateFeesConfigurationDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.UpdateInvoiceResponseDto> {
     let url = '/invoices/{invoiceId}/late-fees-configuration';
     const queryParams: Record<string, any> = {};
@@ -1298,7 +1529,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
     if (params) {
       if (params.invoiceId !== undefined) {
         url = url.replace('{' + 'invoiceId' + '}', encodeURIComponent(String(params.invoiceId)));
@@ -1317,20 +1548,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -1347,7 +1589,7 @@ export class Invoices {
       invoiceId: string;
     },
     requestBody: Models.VoidInvoiceDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.VoidInvoiceResponseDto> {
     let url = '/invoices/{invoiceId}/void';
     const queryParams: Record<string, any> = {};
@@ -1355,7 +1597,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
     if (params) {
       if (params.invoiceId !== undefined) {
         url = url.replace('{' + 'invoiceId' + '}', encodeURIComponent(String(params.invoiceId)));
@@ -1374,20 +1616,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -1404,7 +1657,7 @@ export class Invoices {
       invoiceId: string;
     },
     requestBody: Models.SendInvoiceDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.SendInvoicesResponseDto> {
     let url = '/invoices/{invoiceId}/send';
     const queryParams: Record<string, any> = {};
@@ -1412,7 +1665,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
     if (params) {
       if (params.invoiceId !== undefined) {
         url = url.replace('{' + 'invoiceId' + '}', encodeURIComponent(String(params.invoiceId)));
@@ -1431,20 +1684,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -1461,7 +1725,7 @@ export class Invoices {
       invoiceId: string;
     },
     requestBody: Models.RecordPaymentDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.RecordPaymentResponseDto> {
     let url = '/invoices/{invoiceId}/record-payment';
     const queryParams: Record<string, any> = {};
@@ -1469,7 +1733,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
     if (params) {
       if (params.invoiceId !== undefined) {
         url = url.replace('{' + 'invoiceId' + '}', encodeURIComponent(String(params.invoiceId)));
@@ -1488,20 +1752,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -1515,7 +1790,7 @@ export class Invoices {
    */
   async updateInvoiceLastVisitedAt(
     requestBody: Models.PatchInvoiceStatsLastViewedDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<any> {
     let url = '/invoices/stats/last-visited-at';
     const queryParams: Record<string, any> = {};
@@ -1523,7 +1798,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
 
     const config: AxiosRequestConfig = {
       method: 'PATCH',
@@ -1537,20 +1812,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -1564,7 +1850,7 @@ export class Invoices {
    */
   async createNewEstimate(
     requestBody: Models.CreateEstimatesDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.EstimateResponseDto> {
     let url = '/invoices/estimate';
     const queryParams: Record<string, any> = {};
@@ -1572,7 +1858,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
 
     const config: AxiosRequestConfig = {
       method: 'POST',
@@ -1586,20 +1872,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -1616,7 +1913,7 @@ export class Invoices {
       estimateId: string;
     },
     requestBody: Models.UpdateEstimateDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.EstimateResponseDto> {
     let url = '/invoices/estimate/{estimateId}';
     const queryParams: Record<string, any> = {};
@@ -1624,7 +1921,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
     if (params) {
       if (params.estimateId !== undefined) {
         url = url.replace('{' + 'estimateId' + '}', encodeURIComponent(String(params.estimateId)));
@@ -1643,20 +1940,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -1673,7 +1981,7 @@ export class Invoices {
       estimateId: string;
     },
     requestBody: Models.AltDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.EstimateResponseDto> {
     let url = '/invoices/estimate/{estimateId}';
     const queryParams: Record<string, any> = {};
@@ -1681,7 +1989,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
     if (params) {
       if (params.estimateId !== undefined) {
         url = url.replace('{' + 'estimateId' + '}', encodeURIComponent(String(params.estimateId)));
@@ -1700,20 +2008,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -1730,7 +2049,7 @@ export class Invoices {
       altId: string;
       altType: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GenerateEstimateNumberResponse> {
     let url = '/invoices/estimate/number/generate';
     const queryParams: Record<string, any> = {};
@@ -1738,7 +2057,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
     if (params) {
       if (params.altId !== undefined) {
         queryParams['altId'] = params.altId;
@@ -1759,20 +2078,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -1789,7 +2119,7 @@ export class Invoices {
       estimateId: string;
     },
     requestBody: Models.SendEstimateDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.EstimateResponseDto> {
     let url = '/invoices/estimate/{estimateId}/send';
     const queryParams: Record<string, any> = {};
@@ -1797,7 +2127,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
     if (params) {
       if (params.estimateId !== undefined) {
         url = url.replace('{' + 'estimateId' + '}', encodeURIComponent(String(params.estimateId)));
@@ -1816,20 +2146,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -1846,7 +2187,7 @@ export class Invoices {
       estimateId: string;
     },
     requestBody: Models.CreateInvoiceFromEstimateDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CreateInvoiceFromEstimateResponseDTO> {
     let url = '/invoices/estimate/{estimateId}/invoice';
     const queryParams: Record<string, any> = {};
@@ -1854,7 +2195,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
     if (params) {
       if (params.estimateId !== undefined) {
         url = url.replace('{' + 'estimateId' + '}', encodeURIComponent(String(params.estimateId)));
@@ -1873,20 +2214,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -1910,7 +2262,7 @@ export class Invoices {
       limit: string;
       offset: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.ListEstimatesResponseDTO> {
     let url = '/invoices/estimate/list';
     const queryParams: Record<string, any> = {};
@@ -1918,7 +2270,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
     if (params) {
       if (params.altId !== undefined) {
         queryParams['altId'] = params.altId;
@@ -1960,20 +2312,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -1987,7 +2350,7 @@ export class Invoices {
    */
   async updateEstimateLastVisitedAt(
     requestBody: Models.EstimateIdParam,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<any> {
     let url = '/invoices/estimate/stats/last-visited-at';
     const queryParams: Record<string, any> = {};
@@ -1995,7 +2358,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
 
     const config: AxiosRequestConfig = {
       method: 'PATCH',
@@ -2009,20 +2372,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -2042,7 +2416,7 @@ export class Invoices {
       limit: string;
       offset: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.ListEstimateTemplateResponseDTO> {
     let url = '/invoices/estimate/template';
     const queryParams: Record<string, any> = {};
@@ -2050,7 +2424,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
     if (params) {
       if (params.altId !== undefined) {
         queryParams['altId'] = params.altId;
@@ -2080,20 +2454,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -2107,7 +2492,7 @@ export class Invoices {
    */
   async createEstimateTemplate(
     requestBody: Models.EstimateTemplatesDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.EstimateTemplateResponseDTO> {
     let url = '/invoices/estimate/template';
     const queryParams: Record<string, any> = {};
@@ -2115,7 +2500,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
 
     const config: AxiosRequestConfig = {
       method: 'POST',
@@ -2129,20 +2514,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -2159,7 +2555,7 @@ export class Invoices {
       templateId: string;
     },
     requestBody: Models.EstimateTemplatesDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.EstimateTemplateResponseDTO> {
     let url = '/invoices/estimate/template/{templateId}';
     const queryParams: Record<string, any> = {};
@@ -2167,7 +2563,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
     if (params) {
       if (params.templateId !== undefined) {
         url = url.replace('{' + 'templateId' + '}', encodeURIComponent(String(params.templateId)));
@@ -2186,20 +2582,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -2216,7 +2623,7 @@ export class Invoices {
       templateId: string;
     },
     requestBody: Models.AltDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.EstimateTemplateResponseDTO> {
     let url = '/invoices/estimate/template/{templateId}';
     const queryParams: Record<string, any> = {};
@@ -2224,7 +2631,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
     if (params) {
       if (params.templateId !== undefined) {
         url = url.replace('{' + 'templateId' + '}', encodeURIComponent(String(params.templateId)));
@@ -2243,20 +2650,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -2274,7 +2692,7 @@ export class Invoices {
       altType: string;
       templateId: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.EstimateTemplateResponseDTO> {
     let url = '/invoices/estimate/template/preview';
     const queryParams: Record<string, any> = {};
@@ -2282,7 +2700,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
     if (params) {
       if (params.altId !== undefined) {
         queryParams['altId'] = params.altId;
@@ -2306,20 +2724,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -2333,7 +2762,7 @@ export class Invoices {
    */
   async createInvoice(
     requestBody: Models.CreateInvoiceDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.CreateInvoiceResponseDto> {
     let url = '/invoices/';
     const queryParams: Record<string, any> = {};
@@ -2341,7 +2770,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
 
     const config: AxiosRequestConfig = {
       method: 'POST',
@@ -2355,20 +2784,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -2395,7 +2835,7 @@ export class Invoices {
       sortField?: string;
       sortOrder?: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.ListInvoicesResponseDto> {
     let url = '/invoices/';
     const queryParams: Record<string, any> = {};
@@ -2403,7 +2843,7 @@ export class Invoices {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-
+    
     if (params) {
       if (params.altId !== undefined) {
         queryParams['altId'] = params.altId;
@@ -2454,20 +2894,31 @@ export class Invoices {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 

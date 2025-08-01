@@ -46,7 +46,7 @@ export class Conversations {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
     if (params) {
       if (params.locationId !== undefined) {
         queryParams['locationId'] = params.locationId;
@@ -118,20 +118,31 @@ export class Conversations {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -155,7 +166,7 @@ export class Conversations {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
     if (params) {
       if (params.conversationId !== undefined) {
         url = url.replace('{' + 'conversationId' + '}', encodeURIComponent(String(params.conversationId)));
@@ -173,20 +184,31 @@ export class Conversations {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -211,7 +233,7 @@ export class Conversations {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
     if (params) {
       if (params.conversationId !== undefined) {
         url = url.replace('{' + 'conversationId' + '}', encodeURIComponent(String(params.conversationId)));
@@ -230,20 +252,31 @@ export class Conversations {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -267,7 +300,7 @@ export class Conversations {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
     if (params) {
       if (params.conversationId !== undefined) {
         url = url.replace('{' + 'conversationId' + '}', encodeURIComponent(String(params.conversationId)));
@@ -285,20 +318,31 @@ export class Conversations {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -319,7 +363,7 @@ export class Conversations {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = [];
-
+    
 
     const config: AxiosRequestConfig = {
       method: 'GET',
@@ -332,20 +376,31 @@ export class Conversations {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -369,7 +424,7 @@ export class Conversations {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = [];
-
+    
     if (params) {
       if (params.emailMessageId !== undefined) {
         url = url.replace('{' + 'emailMessageId' + '}', encodeURIComponent(String(params.emailMessageId)));
@@ -387,20 +442,31 @@ export class Conversations {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -421,7 +487,7 @@ export class Conversations {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
 
     const config: AxiosRequestConfig = {
       method: 'GET',
@@ -434,20 +500,31 @@ export class Conversations {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -474,7 +551,7 @@ export class Conversations {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
     if (params) {
       if (params.conversationId !== undefined) {
         url = url.replace('{' + 'conversationId' + '}', encodeURIComponent(String(params.conversationId)));
@@ -501,20 +578,31 @@ export class Conversations {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -536,7 +624,7 @@ export class Conversations {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
 
     const config: AxiosRequestConfig = {
       method: 'POST',
@@ -550,20 +638,31 @@ export class Conversations {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -585,7 +684,7 @@ export class Conversations {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
 
     const config: AxiosRequestConfig = {
       method: 'POST',
@@ -599,20 +698,31 @@ export class Conversations {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -634,7 +744,7 @@ export class Conversations {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
 
     const config: AxiosRequestConfig = {
       method: 'POST',
@@ -648,20 +758,31 @@ export class Conversations {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -685,7 +806,7 @@ export class Conversations {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
     if (params) {
       if (params.messageId !== undefined) {
         url = url.replace('{' + 'messageId' + '}', encodeURIComponent(String(params.messageId)));
@@ -703,20 +824,31 @@ export class Conversations {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -738,7 +870,7 @@ export class Conversations {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
 
     const config: AxiosRequestConfig = {
       method: 'POST',
@@ -752,20 +884,31 @@ export class Conversations {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -790,7 +933,7 @@ export class Conversations {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
     if (params) {
       if (params.messageId !== undefined) {
         url = url.replace('{' + 'messageId' + '}', encodeURIComponent(String(params.messageId)));
@@ -809,20 +952,31 @@ export class Conversations {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -847,7 +1001,7 @@ export class Conversations {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer","Location-Access"];
-
+    
     if (params) {
       if (params.locationId !== undefined) {
         url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
@@ -868,20 +1022,31 @@ export class Conversations {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -906,7 +1071,7 @@ export class Conversations {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer","Location-Access"];
-
+    
     if (params) {
       if (params.locationId !== undefined) {
         url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
@@ -927,20 +1092,31 @@ export class Conversations {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -965,7 +1141,7 @@ export class Conversations {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer","Location-Access"];
-
+    
     if (params) {
       if (params.locationId !== undefined) {
         url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
@@ -986,20 +1162,31 @@ export class Conversations {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -1021,7 +1208,7 @@ export class Conversations {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access"];
-
+    
 
     const config: AxiosRequestConfig = {
       method: 'POST',
@@ -1035,20 +1222,31 @@ export class Conversations {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -1070,7 +1268,7 @@ export class Conversations {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
 
     const config: AxiosRequestConfig = {
       method: 'POST',
@@ -1084,20 +1282,31 @@ export class Conversations {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 

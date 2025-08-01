@@ -28,7 +28,7 @@ export class Calendars {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
     if (params) {
       if (params.locationId !== undefined) {
         queryParams['locationId'] = params.locationId;
@@ -46,20 +46,31 @@ export class Calendars {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -81,7 +92,7 @@ export class Calendars {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
 
     const config: AxiosRequestConfig = {
       method: 'POST',
@@ -95,20 +106,31 @@ export class Calendars {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -130,7 +152,7 @@ export class Calendars {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
 
     const config: AxiosRequestConfig = {
       method: 'POST',
@@ -144,20 +166,31 @@ export class Calendars {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -181,7 +214,7 @@ export class Calendars {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
     if (params) {
       if (params.groupId !== undefined) {
         url = url.replace('{' + 'groupId' + '}', encodeURIComponent(String(params.groupId)));
@@ -199,20 +232,31 @@ export class Calendars {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -237,7 +281,7 @@ export class Calendars {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
     if (params) {
       if (params.groupId !== undefined) {
         url = url.replace('{' + 'groupId' + '}', encodeURIComponent(String(params.groupId)));
@@ -256,20 +300,31 @@ export class Calendars {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -294,7 +349,7 @@ export class Calendars {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
     if (params) {
       if (params.groupId !== undefined) {
         url = url.replace('{' + 'groupId' + '}', encodeURIComponent(String(params.groupId)));
@@ -313,20 +368,31 @@ export class Calendars {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -348,7 +414,7 @@ export class Calendars {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
 
     const config: AxiosRequestConfig = {
       method: 'POST',
@@ -362,20 +428,31 @@ export class Calendars {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -400,7 +477,7 @@ export class Calendars {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
     if (params) {
       if (params.eventId !== undefined) {
         url = url.replace('{' + 'eventId' + '}', encodeURIComponent(String(params.eventId)));
@@ -419,20 +496,31 @@ export class Calendars {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -456,7 +544,7 @@ export class Calendars {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
     if (params) {
       if (params.eventId !== undefined) {
         url = url.replace('{' + 'eventId' + '}', encodeURIComponent(String(params.eventId)));
@@ -474,20 +562,31 @@ export class Calendars {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -516,7 +615,7 @@ export class Calendars {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
     if (params) {
       if (params.locationId !== undefined) {
         queryParams['locationId'] = params.locationId;
@@ -549,20 +648,31 @@ export class Calendars {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -591,7 +701,7 @@ export class Calendars {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
     if (params) {
       if (params.locationId !== undefined) {
         queryParams['locationId'] = params.locationId;
@@ -624,20 +734,31 @@ export class Calendars {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -659,7 +780,7 @@ export class Calendars {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
 
     const config: AxiosRequestConfig = {
       method: 'POST',
@@ -673,20 +794,31 @@ export class Calendars {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -711,7 +843,7 @@ export class Calendars {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
     if (params) {
       if (params.eventId !== undefined) {
         url = url.replace('{' + 'eventId' + '}', encodeURIComponent(String(params.eventId)));
@@ -730,20 +862,31 @@ export class Calendars {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -772,7 +915,7 @@ export class Calendars {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
     if (params) {
       if (params.calendarId !== undefined) {
         url = url.replace('{' + 'calendarId' + '}', encodeURIComponent(String(params.calendarId)));
@@ -805,20 +948,31 @@ export class Calendars {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -843,7 +997,7 @@ export class Calendars {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
     if (params) {
       if (params.calendarId !== undefined) {
         url = url.replace('{' + 'calendarId' + '}', encodeURIComponent(String(params.calendarId)));
@@ -862,20 +1016,31 @@ export class Calendars {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -899,7 +1064,7 @@ export class Calendars {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
     if (params) {
       if (params.calendarId !== undefined) {
         url = url.replace('{' + 'calendarId' + '}', encodeURIComponent(String(params.calendarId)));
@@ -917,20 +1082,31 @@ export class Calendars {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -954,7 +1130,7 @@ export class Calendars {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
     if (params) {
       if (params.calendarId !== undefined) {
         url = url.replace('{' + 'calendarId' + '}', encodeURIComponent(String(params.calendarId)));
@@ -972,20 +1148,31 @@ export class Calendars {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -1010,7 +1197,7 @@ export class Calendars {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
     if (params) {
       if (params.eventId !== undefined) {
         url = url.replace('{' + 'eventId' + '}', encodeURIComponent(String(params.eventId)));
@@ -1029,20 +1216,31 @@ export class Calendars {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -1068,7 +1266,7 @@ export class Calendars {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
     if (params) {
       if (params.limit !== undefined) {
         queryParams['limit'] = params.limit;
@@ -1092,20 +1290,31 @@ export class Calendars {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -1130,7 +1339,7 @@ export class Calendars {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
     if (params) {
       if (params.appointmentId !== undefined) {
         url = url.replace('{' + 'appointmentId' + '}', encodeURIComponent(String(params.appointmentId)));
@@ -1149,20 +1358,31 @@ export class Calendars {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -1187,7 +1407,7 @@ export class Calendars {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
     if (params) {
       if (params.appointmentId !== undefined) {
         url = url.replace('{' + 'appointmentId' + '}', encodeURIComponent(String(params.appointmentId)));
@@ -1206,20 +1426,31 @@ export class Calendars {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -1243,7 +1474,7 @@ export class Calendars {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
     if (params) {
       if (params.appointmentId !== undefined) {
         url = url.replace('{' + 'appointmentId' + '}', encodeURIComponent(String(params.appointmentId)));
@@ -1261,20 +1492,31 @@ export class Calendars {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -1299,7 +1541,7 @@ export class Calendars {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access"];
-
+    
     if (params) {
       if (params.resourceType !== undefined) {
         url = url.replace('{' + 'resourceType' + '}', encodeURIComponent(String(params.resourceType)));
@@ -1320,20 +1562,31 @@ export class Calendars {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -1359,7 +1612,7 @@ export class Calendars {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access"];
-
+    
     if (params) {
       if (params.resourceType !== undefined) {
         url = url.replace('{' + 'resourceType' + '}', encodeURIComponent(String(params.resourceType)));
@@ -1381,20 +1634,31 @@ export class Calendars {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -1419,7 +1683,7 @@ export class Calendars {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access"];
-
+    
     if (params) {
       if (params.resourceType !== undefined) {
         url = url.replace('{' + 'resourceType' + '}', encodeURIComponent(String(params.resourceType)));
@@ -1440,20 +1704,31 @@ export class Calendars {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -1480,7 +1755,7 @@ export class Calendars {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access"];
-
+    
     if (params) {
       if (params.resourceType !== undefined) {
         url = url.replace('{' + 'resourceType' + '}', encodeURIComponent(String(params.resourceType)));
@@ -1507,20 +1782,31 @@ export class Calendars {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -1545,7 +1831,7 @@ export class Calendars {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access"];
-
+    
     if (params) {
       if (params.resourceType !== undefined) {
         url = url.replace('{' + 'resourceType' + '}', encodeURIComponent(String(params.resourceType)));
@@ -1564,20 +1850,31 @@ export class Calendars {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -1605,7 +1902,7 @@ export class Calendars {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
     if (params) {
       if (params.calendarId !== undefined) {
         url = url.replace('{' + 'calendarId' + '}', encodeURIComponent(String(params.calendarId)));
@@ -1635,20 +1932,31 @@ export class Calendars {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -1673,7 +1981,7 @@ export class Calendars {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
     if (params) {
       if (params.calendarId !== undefined) {
         url = url.replace('{' + 'calendarId' + '}', encodeURIComponent(String(params.calendarId)));
@@ -1692,20 +2000,31 @@ export class Calendars {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -1730,7 +2049,7 @@ export class Calendars {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
     if (params) {
       if (params.calendarId !== undefined) {
         url = url.replace('{' + 'calendarId' + '}', encodeURIComponent(String(params.calendarId)));
@@ -1751,20 +2070,31 @@ export class Calendars {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -1790,7 +2120,7 @@ export class Calendars {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
     if (params) {
       if (params.calendarId !== undefined) {
         url = url.replace('{' + 'calendarId' + '}', encodeURIComponent(String(params.calendarId)));
@@ -1812,20 +2142,31 @@ export class Calendars {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -1850,7 +2191,7 @@ export class Calendars {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
     if (params) {
       if (params.calendarId !== undefined) {
         url = url.replace('{' + 'calendarId' + '}', encodeURIComponent(String(params.calendarId)));
@@ -1871,20 +2212,31 @@ export class Calendars {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -1910,7 +2262,7 @@ export class Calendars {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
     if (params) {
       if (params.locationId !== undefined) {
         queryParams['locationId'] = params.locationId;
@@ -1934,20 +2286,31 @@ export class Calendars {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -1969,7 +2332,7 @@ export class Calendars {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
 
     const config: AxiosRequestConfig = {
       method: 'POST',
@@ -1983,20 +2346,31 @@ export class Calendars {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          requestBody
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 

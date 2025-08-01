@@ -42,11 +42,12 @@
   },
   "homepage": "https://github.com/GoHighLevel/highlevel-api-sdk#readme",
   "dependencies": {
-    "axios": "^1.11.0"
+    "axios": "^1.11.0",
+    "mongodb": "^6.18.0"
   },
   "devDependencies": {
-    "typescript": "^5.3.0",
     "@types/node": "^20.0.0",
-    "rimraf": "^5.0.0"
+    "rimraf": "^5.0.0",
+    "typescript": "^5.3.0"
   }
 }

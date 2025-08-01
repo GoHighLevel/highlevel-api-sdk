@@ -34,7 +34,7 @@ export class Surveys {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
     if (params) {
       if (params.locationId !== undefined) {
         queryParams['locationId'] = params.locationId;
@@ -70,20 +70,31 @@ export class Surveys {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 
@@ -110,7 +121,7 @@ export class Surveys {
     
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["bearer"];
-
+    
     if (params) {
       if (params.locationId !== undefined) {
         queryParams['locationId'] = params.locationId;
@@ -137,20 +148,31 @@ export class Surveys {
       ...options
     };
 
-    // If security requirements exist, override Authorization header with appropriate token
-    if (securityRequirements.length > 0) {
-      // Access the HighLevel instance through the parent to get the token
-      const ghlInstance = (this.client as any).__ghlInstance;
-      if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-        try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements);
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          queryParams,
+          {}
+        );
+        
+        if (authToken) {
           config.headers = {
             ...config.headers,
             'Authorization': authToken
           };
-        } catch (error) {
-          throw error; // Re-throw GHLError with appropriate message
         }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
       }
     }
 

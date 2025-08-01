@@ -30,6 +30,7 @@ import { SocialPlanner } from './code/social-planner/social-planner';
 import { Surveys } from './code/surveys/surveys';
 import { Users } from './code/users/users';
 import { Workflows } from './code/workflows/workflows';
+import { SessionStorage, MemorySessionStorage } from './storage';
 
 // Extend AxiosRequestConfig to support retry tracking
 declare module 'axios' {
@@ -46,7 +47,13 @@ export interface HighLevelConfig {
   locationAccessToken?: string;
   clientId?: string;
   clientSecret?: string;
+  sessionStorage?: SessionStorage;
 }
+
+// Type guard to ensure valid configuration
+export type ValidConfig = 
+  | { privateIntegrationToken: string; clientId?: string; clientSecret?: string; agencyAccessToken?: string; locationAccessToken?: string; apiVersion?: string; sessionStorage?: SessionStorage; }
+  | { clientId: string; clientSecret: string; privateIntegrationToken?: undefined; agencyAccessToken?: string; locationAccessToken?: string; apiVersion?: string; sessionStorage?: SessionStorage; };
 
 // Custom error class for GHL API errors
 export class GHLError extends Error {
@@ -81,7 +88,7 @@ export interface ResponseInterceptor {
 export class HighLevel {
   private static readonly BASE_URL = 'https://services.leadconnectorhq.com';
   
-  private config: Required<Omit<HighLevelConfig, 'privateIntegrationToken' | 'agencyAccessToken' | 'locationAccessToken' | 'clientId' | 'clientSecret'>> & { 
+  private config: Required<Omit<HighLevelConfig, 'privateIntegrationToken' | 'agencyAccessToken' | 'locationAccessToken' | 'clientId' | 'clientSecret' | 'sessionStorage'>> & { 
     privateIntegrationToken?: string;
     agencyAccessToken?: string;
     locationAccessToken?: string;
@@ -91,6 +98,7 @@ export class HighLevel {
     locationRefreshToken?: string | undefined;
   };
   private httpClient: AxiosInstance;
+  private sessionStorage: SessionStorage;
   
   // Service instances
   public associations!: Associations;
@@ -125,7 +133,14 @@ export class HighLevel {
   public users!: Users;
   public workflows!: Workflows;
 
-  constructor(config: HighLevelConfig = {}) {
+  constructor(config: ValidConfig) {
+    // Validate configuration
+    if (!config.privateIntegrationToken && (!config.clientId || !config.clientSecret)) {
+      throw new GHLError(
+        'Invalid configuration: Either provide privateIntegrationToken OR both clientId and clientSecret are required.'
+      );
+    }
+
     // Set default configuration
     this.config = {
       apiVersion: config.apiVersion || '2021-07-28',
@@ -138,6 +153,15 @@ export class HighLevel {
       agencyRefreshToken: undefined,
       locationRefreshToken: undefined
     };
+
+    // Store sessionStorage reference or create default MemorySessionStorage
+    if (config.sessionStorage) {
+      this.sessionStorage = config.sessionStorage;
+    } else {
+      // Auto-create MemorySessionStorage if none provided
+      this.sessionStorage = new MemorySessionStorage();
+      console.log('[GHL SDK] No sessionStorage provided, using MemorySessionStorage');
+    }
 
     // Create HTTP client with base configuration
     this.httpClient = axios.create({
@@ -154,6 +178,9 @@ export class HighLevel {
 
     // Initialize services with updated configuration
     this.initializeServices();
+
+    // Initialize session storage
+    this.initializeSessionStorage();
   }
 
   /**
@@ -169,16 +196,258 @@ export class HighLevel {
     if (this.config.privateIntegrationToken) {
       headers['Authorization'] = `Bearer ${this.config.privateIntegrationToken}`;
     }
-    // Priority 2: agencyAccessToken (with Bearer prefix)
+    // Priority 2: agencyAccessToken (with Bearer prefix) - temporary token
     else if (this.config.agencyAccessToken) {
       headers['Authorization'] = `Bearer ${this.config.agencyAccessToken}`;
     }
-    // Priority 3: locationAccessToken (with Bearer prefix)
+    // Priority 3: locationAccessToken (with Bearer prefix) - temporary token
     else if (this.config.locationAccessToken) {
       headers['Authorization'] = `Bearer ${this.config.locationAccessToken}`;
     }
+    // Priority 4: No default token - will be resolved per request with resourceId
 
     return headers;
+  }
+
+  /**
+   * Get appropriate token for API requests (internal method)
+   * @param resourceId - Optional resourceId (companyId or locationId) for storage-based token lookup
+   * @returns Authorization header value or null
+   */
+  public async getAuthToken(resourceId?: string): Promise<string | null> {
+    // Priority 1: privateIntegrationToken
+    if (this.config.privateIntegrationToken) {
+      return `Bearer ${this.config.privateIntegrationToken}`;
+    }
+
+    // Priority 2: agencyAccessToken (temporary)
+    if (this.config.agencyAccessToken) {
+      return `Bearer ${this.config.agencyAccessToken}`;
+    }
+
+    // Priority 3: locationAccessToken (temporary)  
+    if (this.config.locationAccessToken) {
+      return `Bearer ${this.config.locationAccessToken}`;
+    }
+
+    // Priority 4: Storage-based token (requires resourceId)
+    if (resourceId && this.sessionStorage) {
+      try {
+        const accessToken = await this.sessionStorage.getAccessToken(resourceId);
+        if (accessToken) {
+          return `Bearer ${accessToken}`;
+        }
+      } catch (error) {
+        console.warn(`[GHL SDK] Failed to get token from storage for ${resourceId}:`, error);
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Helper method to try getting token from storage
+   * @param resourceId - Resource ID for token lookup
+   * @returns Bearer token if found, null otherwise
+   */
+  private async fetchToken(resourceId: string | null): Promise<string | null> {
+    if (!resourceId) return null;
+    
+    try {
+      // First check if we need to refresh the token proactively
+      const sessionData = await this.sessionStorage.getSession(resourceId);
+      if (sessionData && this.shouldRefreshToken(sessionData)) {
+        console.log(`[GHL SDK] Token expiring soon for ${resourceId}, refreshing proactively`);
+        const refreshed = await this.refreshTokenIfNeeded(resourceId, sessionData);
+        if (refreshed) {
+          return refreshed;
+        }
+      }
+      
+      const token = await this.sessionStorage.getAccessToken(resourceId);
+      return token ? `Bearer ${token}` : null;
+    } catch (error) {
+      console.warn(`[GHL SDK] Failed to get token from storage for ${resourceId}:`, error);
+      return null;
+    }
+  }
+
+  /**
+   * Check if a token should be refreshed based on expiration
+   * @param sessionData - Session data containing expiration info
+   * @returns True if token should be refreshed
+   */
+  private shouldRefreshToken(sessionData: any): boolean {
+    if (!sessionData.expire_at) return false;
+    
+    // Refresh if token expires within 30 seconds
+    const bufferTime = 30 * 1000; // 30 seconds in milliseconds
+    return Date.now() + bufferTime >= sessionData.expire_at;
+  }
+
+  /**
+   * Check if a token is expired (with 1 minute buffer for 401 retries)
+   * @param sessionData - Session data containing expiration info
+   * @returns True if token is expired
+   */
+  private isTokenExpired(sessionData: any): boolean {
+    if (!sessionData.expire_at) return false;
+    
+    const bufferTime = 30 * 1000;
+    return Date.now() + bufferTime >= sessionData.expire_at;
+  }
+
+  /**
+   * Refresh token if expired and store the new token
+   * @param resourceId - Resource ID for the session
+   * @param sessionData - Current session data
+   * @returns New Bearer token if successful, null otherwise
+   */
+  private async refreshTokenIfNeeded(resourceId: string, sessionData: any): Promise<string | null> {
+    if (!sessionData.refresh_token) {
+      console.warn(`[GHL SDK] No refresh token available for ${resourceId}`);
+      return null;
+    }
+
+    if (!this.config.clientId || !this.config.clientSecret) {
+      console.warn(`[GHL SDK] Client credentials not available for token refresh`);
+      return null;
+    }
+
+    try {
+      console.log(`[GHL SDK] Refreshing token for ${resourceId}`);
+      
+      // Determine user type from session data (default to 'Location' if not specified)
+      const userType = sessionData.userType || 'Location';
+      
+      // Use the OAuth service to refresh the token
+      const newTokenData = await this.oauth.refreshToken(
+        sessionData.refresh_token,
+        this.config.clientId,
+        this.config.clientSecret,
+        'refresh_token',
+        userType
+      );
+      
+      // Store the new token data
+      await this.sessionStorage.setSession(resourceId, {
+        ...sessionData,
+        ...newTokenData
+      });
+
+      console.log(`[GHL SDK] Token refreshed successfully for ${resourceId}`);
+      return `Bearer ${newTokenData.access_token}`;
+      
+    } catch (error) {
+      console.error(`[GHL SDK] Failed to refresh token for ${resourceId}:`, error);
+      return null;
+    }
+  }
+
+  /**
+   * Internal method to get token based on security requirements and request data
+   * @param securityRequirements - Security requirements from OpenAPI spec
+   * @param headers - Request headers
+   * @param query - Query parameters  
+   * @param body - Request body
+   * @returns Authorization header value or throws error
+   */
+  public async getTokenForSecurity(
+    securityRequirements: string[], 
+    headers: any = {}, 
+    query: any = {}, 
+    body: any = {}
+  ): Promise<string> {
+    // Priority 1: privateIntegrationToken always wins
+    if (this.config.privateIntegrationToken) {
+      return `Bearer ${this.config.privateIntegrationToken}`;
+    }
+
+    // check which token we need to use
+    const hasAgencyAccess = securityRequirements.includes('Agency-Access');
+    const hasLocationAccess = securityRequirements.includes('Location-Access');
+    const hasAgencyOnly = securityRequirements.includes('Agency-Access-Only');
+    const hasLocationOnly = securityRequirements.includes('Location-Access-Only');
+    const hasBearer = securityRequirements.includes('bearer');
+
+    // Extract resourceId from request data
+    const resourceId = this.extractResourceId(headers, query, body);
+
+    // Handle Agency-Access-Only
+    if (hasAgencyOnly) {
+      if (this.config.agencyAccessToken) {
+        return `Bearer ${this.config.agencyAccessToken}`;
+      }
+      const storageToken = await this.fetchToken(resourceId);
+      if (storageToken) return storageToken;
+      throw new GHLError('Agency Access Token required but not available');
+    }
+
+    // Handle Location-Access-Only
+    if (hasLocationOnly) {
+      if (this.config.locationAccessToken) {
+        return `Bearer ${this.config.locationAccessToken}`;
+      }
+      const storageToken = await this.fetchToken(resourceId);
+      if (storageToken) return storageToken;
+      throw new GHLError('Location Access Token required but not available');
+    }
+
+    // Handle both Agency-Access and Location-Access (flexible)
+    if (hasAgencyAccess || hasLocationAccess || hasBearer) {
+      // Try temporary tokens first
+      if (this.config.agencyAccessToken) {
+        return `Bearer ${this.config.agencyAccessToken}`;
+      }
+      if (this.config.locationAccessToken) {
+        return `Bearer ${this.config.locationAccessToken}`;
+      }
+      
+      // Try storage-based token
+      const storageToken = await this.fetchToken(resourceId);
+      if (storageToken) return storageToken;
+      
+      throw new GHLError('Authentication token required but not available');
+    }
+
+    // Default fallback
+    const token = await this.getAuthToken(resourceId || undefined);
+    if (!token) {
+      throw new GHLError('No authentication token available');
+    }
+    return token;
+  }
+
+  /**
+   * Extract resourceId from request data (headers, query, body)
+   * @param headers - Request headers
+   * @param query - Query parameters  
+   * @param body - Request body
+   * @returns Extracted resourceId (companyId or locationId)
+   */
+  public extractResourceId(headers: any = {}, query: any = {}, body: any = {}): string | null {
+    // Check headers first
+    const companyId = headers['x-company-id'] || headers['companyId'] || headers['company-id'];
+    const locationId = headers['x-location-id'] || headers['locationId'] || headers['location-id'];
+    
+    if (companyId) return companyId;
+    if (locationId) return locationId;
+
+    // Check query parameters
+    if (query.companyId) return query.companyId;
+    if (query.locationId) return query.locationId;
+    if (query.company_id) return query.company_id;
+    if (query.location_id) return query.location_id;
+
+    // Check body
+    if (body && typeof body === 'object') {
+      if (body.companyId) return body.companyId;
+      if (body.locationId) return body.locationId;
+      if (body.company_id) return body.company_id;
+      if (body.location_id) return body.location_id;
+    }
+
+    return null;
   }
 
   /**
@@ -239,19 +508,40 @@ export class HighLevel {
         return response;
       },
       async (error: AxiosError) => {
-        // Check if this is a 401 error that might be resolved by refreshing tokens
-        if (error.response?.status === 401 && error.config && !error.config.__isRetryRequest) {
-          try {
-            const refreshed = await this.attemptTokenRefresh(error);
-            if (refreshed) {
-              // Mark this as a retry request to prevent infinite loops
-              error.config.__isRetryRequest = true;
-              // Retry the original request with the new token
-              return this.httpClient.request(error.config);
+        const originalRequest = error.config as any;
+        
+        // Handle 401 errors with automatic token refresh
+        if (error.response?.status === 401 && !originalRequest.__isRetryRequest) {
+          console.warn('[GHL SDK] 401 Unauthorized - Attempting token refresh');
+          
+          // Try to extract resourceId from the original request
+          const resourceId = this.extractResourceId(
+            originalRequest.headers || {},
+            originalRequest.params || {},
+            originalRequest.data || {}
+          );
+          
+          if (resourceId) {
+            try {
+              const sessionData = await this.sessionStorage.getSession(resourceId);
+              
+              if (sessionData && this.isTokenExpired(sessionData)) {
+                console.log(`[GHL SDK] Token expired for ${resourceId}, attempting refresh`);
+                
+                const newToken = await this.refreshTokenIfNeeded(resourceId, sessionData);
+                if (newToken) {
+                  // Mark as retry request and update authorization header
+                  originalRequest.__isRetryRequest = true;
+                  originalRequest.headers = originalRequest.headers || {};
+                  originalRequest.headers.Authorization = newToken;
+                  
+                  console.log(`[GHL SDK] Retrying request with refreshed token for ${resourceId}`);
+                  return this.httpClient.request(originalRequest);
+                }
+              }
+            } catch (refreshError) {
+              console.error('[GHL SDK] Failed to refresh token on 401:', refreshError);
             }
-          } catch (refreshError) {
-            console.warn('[GHL SDK] Token refresh failed:', refreshError);
-            // Fall through to normal error handling
           }
         }
         
@@ -406,6 +696,52 @@ export class HighLevel {
   }
 
   /**
+   * Initialize session storage (always exists now - either provided or auto-created)
+   */
+  private initializeSessionStorage(): void {
+    // Pass clientId to session storage if available
+    if (this.config.clientId && this.sessionStorage) {
+      this.sessionStorage.setClientId(this.config.clientId);
+    }
+    
+    this.sessionStorage!.init().catch(error => {
+      console.error('[GHL SDK] Failed to initialize session storage:', error);
+    });
+  }
+
+  /**
+   * Get the session storage instance (always available)
+   */
+  public getSessionStorage(): SessionStorage {
+    return this.sessionStorage!;
+  }
+
+  /**
+   * Set or update the session storage instance
+   */
+  public setSessionStorage(sessionStorage: SessionStorage): void {
+    this.sessionStorage = sessionStorage;
+    
+    // Pass clientId to session storage if available
+    if (this.config.clientId) {
+      this.sessionStorage.setClientId(this.config.clientId);
+    }
+    
+    this.initializeSessionStorage();
+  }
+
+  /**
+   * Disconnect session storage
+   */
+  public async disconnectSessionStorage(): Promise<void> {
+    try {
+      await this.sessionStorage!.disconnect();
+    } catch (error) {
+      console.error('[GHL SDK] Error disconnecting session storage:', error);
+    }
+  }
+
+  /**
    * Update configuration and refresh all services
    */
   public updateConfig(newConfig: Partial<HighLevelConfig & { agencyRefreshToken?: string | undefined; locationRefreshToken?: string | undefined; }>): void {
@@ -440,66 +776,29 @@ export class HighLevel {
   }
 
   /**
-   * Set or update the agency access token (used with Bearer prefix)
-   */
-  public setAgencyAccessToken(token: string): void {
-    this.updateConfig({ agencyAccessToken: token });
-  }
-
-  /**
-   * Get current agency access token
+   * Get current temporary agency access token (read-only, set during initialization)
    */
   public getAgencyAccessToken(): string | undefined {
     return this.config.agencyAccessToken;
   }
 
   /**
-   * Set or update the location access token (used with Bearer prefix)
-   */
-  public setLocationAccessToken(token: string): void {
-    this.updateConfig({ locationAccessToken: token });
-  }
-
-  /**
-   * Get current location access token
+   * Get current temporary location access token (read-only, set during initialization)
    */
   public getLocationAccessToken(): string | undefined {
     return this.config.locationAccessToken;
   }
 
   /**
-   * Set or update the agency refresh token
-   */
-  public setAgencyRefreshToken(token: string): void {
-    this.updateConfig({ agencyRefreshToken: token });
-  }
-
-  /**
-   * Get current agency refresh token
-   */
-  public getAgencyRefreshToken(): string | undefined {
-    return this.config.agencyRefreshToken;
-  }
-
-  /**
-   * Set or update the location refresh token
-   */
-  public setLocationRefreshToken(token: string): void {
-    this.updateConfig({ locationRefreshToken: token });
-  }
-
-  /**
-   * Get current location refresh token
-   */
-  public getLocationRefreshToken(): string | undefined {
-    return this.config.locationRefreshToken;
-  }
-
-  /**
-   * Set client ID for OAuth operations
+   * Set client ID for OAuth operations and update session storage
    */
   public setClientId(clientId: string): void {
     this.updateConfig({ clientId });
+    
+    // Update session storage with new clientId (always exists)
+    if (clientId) {
+      this.sessionStorage!.setClientId(clientId);
+    }
   }
 
   /**
@@ -521,193 +820,6 @@ export class HighLevel {
    */
   public getClientSecret(): string | undefined {
     return this.config.clientSecret;
-  }
-
-  /**
-   * Dynamically select the appropriate token based on security requirements
-   */
-  private selectTokenForSecurity(securityRequirements: string[], preferredTokenType?: 'agency' | 'location'): string | null {
-    // Always prioritize privateIntegrationToken if available
-    if (this.config.privateIntegrationToken) {
-      return `Bearer ${this.config.privateIntegrationToken}`;
-    }
-
-    // If no security requirements, use default (location token)
-    if (!securityRequirements || securityRequirements.length === 0) {
-      if (this.config.locationAccessToken) {
-        return `Bearer ${this.config.locationAccessToken}`;
-      }
-      return null;
-    }
-
-    const hasAgencyAccess = securityRequirements.includes('Agency-Access');
-    const hasLocationAccess = securityRequirements.includes('Location-Access');
-    const hasAgencyOnly = securityRequirements.includes('Agency-Access-Only');
-    const hasLocationOnly = securityRequirements.includes('Location-Access-Only');
-
-    // Handle exclusive access requirements
-    if (hasAgencyOnly) {
-      if (this.config.agencyAccessToken) {
-        return `Bearer ${this.config.agencyAccessToken}`;
-      }
-      throw new GHLError(`This method requires an Agency Access Token, but none is configured. Use setAgencyAccessToken() to configure it.`);
-    }
-
-    if (hasLocationOnly) {
-      if (this.config.locationAccessToken) {
-        return `Bearer ${this.config.locationAccessToken}`;
-      }
-      throw new GHLError(`This method requires a Location Access Token, but none is configured. Use setLocationAccessToken() to configure it.`);
-    }
-
-    // Handle cases where both agency and location access are supported
-    if (hasAgencyAccess && hasLocationAccess) {
-      // Use preferred token type if specified
-      if (preferredTokenType === 'agency' && this.config.agencyAccessToken) {
-        return `Bearer ${this.config.agencyAccessToken}`;
-      }
-      if (preferredTokenType === 'location' && this.config.locationAccessToken) {
-        return `Bearer ${this.config.locationAccessToken}`;
-      }
-      
-      // Default to location token when both are supported
-      if (this.config.locationAccessToken) {
-        return `Bearer ${this.config.locationAccessToken}`;
-      }
-      if (this.config.agencyAccessToken) {
-        return `Bearer ${this.config.agencyAccessToken}`;
-      }
-      
-      throw new GHLError(`This method supports both Agency and Location Access Tokens, but neither is configured. Use setAgencyAccessToken() or setLocationAccessToken() to configure one.`);
-    }
-
-    // Handle single access type requirements
-    if (hasAgencyAccess) {
-      if (this.config.agencyAccessToken) {
-        return `Bearer ${this.config.agencyAccessToken}`;
-      }
-      throw new GHLError(`This method requires an Agency Access Token, but none is configured. Use setAgencyAccessToken() to configure it.`);
-    }
-
-    if (hasLocationAccess) {
-      if (this.config.locationAccessToken) {
-        return `Bearer ${this.config.locationAccessToken}`;
-      }
-      throw new GHLError(`This method requires a Location Access Token, but none is configured. Use setLocationAccessToken() to configure it.`);
-    }
-
-    // Handle generic bearer auth
-    if (securityRequirements.includes('bearer')) {
-      if (this.config.locationAccessToken) {
-        return `Bearer ${this.config.locationAccessToken}`;
-      }
-      if (this.config.agencyAccessToken) {
-        return `Bearer ${this.config.agencyAccessToken}`;
-      }
-      throw new GHLError(`This method requires authentication, but no token is configured.`);
-    }
-
-    // Default fallback
-    if (this.config.locationAccessToken) {
-      return `Bearer ${this.config.locationAccessToken}`;
-    }
-    if (this.config.agencyAccessToken) {
-      return `Bearer ${this.config.agencyAccessToken}`;
-    }
-    
-    return null; // No token available
-  }
-
-  /**
-   * Get the appropriate token for the given security requirements
-   */
-  public getTokenForSecurity(securityRequirements: string[] = [], preferredTokenType?: 'agency' | 'location'): string {
-    const token = this.selectTokenForSecurity(securityRequirements, preferredTokenType);
-    if (!token) {
-      throw new GHLError(`No authentication token is configured. Please configure an appropriate token using setPrivateIntegrationToken(), setAgencyAccessToken(), or setLocationAccessToken().`);
-    }
-    return token;
-  }
-
-  /**
-   * Attempt to refresh an expired token when a 401 error occurs
-   */
-  private async attemptTokenRefresh(error: AxiosError): Promise<boolean> {
-    // Check if we have the required client credentials
-    if (!this.config.clientId || !this.config.clientSecret) {
-      console.warn('[GHL SDK] Cannot refresh token: clientId and clientSecret are required');
-      return false;
-    }
-
-    // Get the Authorization header from the failed request
-    const authHeader = error.config?.headers?.Authorization as string;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return false;
-    }
-
-    // Determine which token was used and if we can refresh it
-    let refreshToken: string | undefined;
-    let userType: 'Company' | 'Location';
-    let tokenType: 'agency' | 'location';
-
-    if (this.config.agencyAccessToken && `Bearer ${this.config.agencyAccessToken}` === authHeader) {
-      // Agency token was used
-      refreshToken = this.config.agencyRefreshToken;
-      userType = 'Company';
-      tokenType = 'agency';
-    } else if (this.config.locationAccessToken && `Bearer ${this.config.locationAccessToken}` === authHeader) {
-      // Location token was used
-      refreshToken = this.config.locationRefreshToken;
-      userType = 'Location';
-      tokenType = 'location';
-    } else {
-      // Cannot determine which token was used or it's not refreshable (e.g., privateIntegrationToken)
-      return false;
-    }
-
-    if (!refreshToken) {
-      console.warn(`[GHL SDK] Cannot refresh ${tokenType} token: refresh token not available`);
-      return false;
-    }
-
-    try {
-      console.log(`[GHL SDK] Attempting to refresh ${tokenType} access token...`);
-      
-      // Call the OAuth service to refresh the token
-      const refreshResponse = await this.oauth.getAccessToken({
-        client_id: this.config.clientId,
-        client_secret: this.config.clientSecret,
-        grant_type: 'refresh_token',
-        refresh_token: refreshToken,
-        user_type: userType
-      });
-
-             // Update the appropriate token with the new access token
-       if (tokenType === 'agency') {
-         this.config.agencyAccessToken = refreshResponse.access_token;
-         // Update refresh token if provided
-         if (refreshResponse.refresh_token) {
-           this.config.agencyRefreshToken = refreshResponse.refresh_token;
-         }
-         console.log('[GHL SDK] Agency access token refreshed successfully');
-       } else {
-         this.config.locationAccessToken = refreshResponse.access_token;
-         // Update refresh token if provided
-         if (refreshResponse.refresh_token) {
-           this.config.locationRefreshToken = refreshResponse.refresh_token;
-         }
-         console.log('[GHL SDK] Location access token refreshed successfully');
-       }
-
-      // Update the default headers with the new token
-      const newHeaders = this.getDefaultHeaders();
-      Object.assign(this.httpClient.defaults.headers, newHeaders);
-
-      return true;
-    } catch (refreshError) {
-      console.error(`[GHL SDK] Failed to refresh ${tokenType} token:`, refreshError);
-      return false;
-    }
   }
 
   /**
