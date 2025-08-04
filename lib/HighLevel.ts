@@ -254,9 +254,12 @@ export class HighLevel {
     if (!resourceId) return null;
     
     try {
-      // First check if we need to refresh the token proactively
+      // Get session data
       const sessionData = await this.sessionStorage.getSession(resourceId);
-      if (sessionData && this.shouldRefreshToken(sessionData)) {
+      if (!sessionData) return null;
+      
+      // Check if we need to refresh the token proactively
+      if (this.shouldRefreshToken(sessionData)) {
         console.log(`[GHL SDK] Token expiring soon for ${resourceId}, refreshing proactively`);
         const refreshed = await this.refreshTokenIfNeeded(resourceId, sessionData);
         if (refreshed) {
@@ -264,8 +267,7 @@ export class HighLevel {
         }
       }
       
-      const token = await this.sessionStorage.getAccessToken(resourceId);
-      return token ? `Bearer ${token}` : null;
+      return sessionData.access_token ? `Bearer ${sessionData.access_token}` : null;
     } catch (error) {
       console.warn(`[GHL SDK] Failed to get token from storage for ${resourceId}:`, error);
       return null;
