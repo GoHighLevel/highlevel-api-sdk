@@ -7,6 +7,7 @@ The official TypeScript/JavaScript SDK for the HighLevel (GoHighLevel) API. This
 - [Installation](#installation)
 - [Authentication](#authentication)
 - [Getting Started](#getting-started)
+- [Session Storage](#session-storage)
 - [Token Management](#token-management)
 - [Usage Examples](#usage-examples)
 - [Error Handling](#error-handling)
@@ -49,22 +50,28 @@ The HighLevel API supports three types of authentication tokens with different l
 
 #### TypeScript
 ```typescript
-import HighLevel from '@ghl/api-client';
+import HighLevel, { MongoDBSessionStorage, LogLevel } from '@ghl/api-client';
 // or
 import { HighLevel } from '@ghl/api-client';
 
 // Initialize with private integration token (recommended for server-side apps)
 const ghl = new HighLevel({
-  privateIntegrationToken: 'your-private-integration-token'
+  privateIntegrationToken: 'your-private-integration-token',
+  logLevel: LogLevel.INFO
 });
 
-// Initialize with clientId and clientSecret
+// Initialize with clientId, clientSecret, and MongoDB storage (recommended for multi-user apps)
 const ghl = new HighLevel({
   clientId: 'your-oauth-client-id',
-  clientSecret: 'your-oauth-client-secret'
+  clientSecret: 'your-oauth-client-secret',
+  sessionStorage: new MongoDBSessionStorage({
+    dbUrl: 'mongodb://localhost:27017',
+    dbName: 'ghl_sessions'
+  }),
+  logLevel: LogLevel.WARN
 });
 
-// Or you can directly initialize like below
+// Basic initialization
 const ghl = new HighLevel({})
 ```
 
@@ -87,6 +94,70 @@ const ghl = new HighLevel({
   locationAccessToken: 'your-location-access-token'
 });
 ```
+
+## Session Storage
+
+### MongoDB Storage (Recommended)
+
+For multi-user applications, configure MongoDB storage to persist session data:
+
+```typescript
+import { HighLevel, MongoDBSessionStorage } from '@ghl/api-client';
+
+const ghl = new HighLevel({
+  clientId: 'your-client-id',
+  clientSecret: 'your-client-secret',
+  sessionStorage: new MongoDBSessionStorage({
+    dbUrl: 'mongodb://localhost:27017',
+    dbName: 'ghl_sessions'
+  })
+});
+
+// Initialize storage connection
+await ghl.initialize();
+```
+
+**⚠️ Warning**: Without MongoDB storage, data is stored in memory and will be lost on application restart. This is not recommended for production.
+
+### Custom Storage Implementation
+
+You can also implement your own storage by extending the `SessionStorage` class:
+
+```typescript
+import { SessionStorage, ISessionData } from '@ghl/api-client';
+
+class RedisSessionStorage extends SessionStorage {
+  async init(): Promise<void> {
+    // Initialize your storage connection
+  }
+
+  async disconnect(): Promise<void> {
+    // Close your storage connection
+  }
+
+  async setSession(key: string, data: ISessionData, ttl?: number): Promise<void> {
+    // Implement session storage logic
+  }
+
+  async getSession(key: string): Promise<ISessionData | null> {
+    // Implement session retrieval logic
+    return null;
+  }
+
+  async deleteSession(key: string): Promise<boolean> {
+    // Implement session deletion logic
+    return true;
+  }
+}
+
+// Use your custom storage
+const ghl = new HighLevel({
+  sessionStorage: new RedisSessionStorage({
+    // your custom config
+  })
+});
+```
+
 
 ## Token Management
 
