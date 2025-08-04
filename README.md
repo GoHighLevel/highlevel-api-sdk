@@ -7,7 +7,6 @@ The official TypeScript/JavaScript SDK for the HighLevel (GoHighLevel) API. This
 - [Installation](#installation)
 - [Authentication](#authentication)
 - [Getting Started](#getting-started)
-- [Session Storage](#session-storage)
 - [Token Management](#token-management)
 - [Usage Examples](#usage-examples)
 - [Error Handling](#error-handling)
@@ -54,13 +53,13 @@ import HighLevel, { MongoDBSessionStorage, LogLevel } from '@ghl/api-client';
 // or
 import { HighLevel } from '@ghl/api-client';
 
-// Initialize with private integration token (recommended for server-side apps)
+// Initialize with private integration token
 const ghl = new HighLevel({
   privateIntegrationToken: 'your-private-integration-token',
   logLevel: LogLevel.INFO
 });
 
-// Initialize with clientId, clientSecret, and MongoDB storage (recommended for multi-user apps)
+// Initialize with clientId, clientSecret, and MongoDB storage (recommended)
 const ghl = new HighLevel({
   clientId: 'your-oauth-client-id',
   clientSecret: 'your-oauth-client-secret',
@@ -70,9 +69,6 @@ const ghl = new HighLevel({
   }),
   logLevel: LogLevel.WARN
 });
-
-// Basic initialization
-const ghl = new HighLevel({})
 ```
 
 #### JavaScript (CommonJS)
@@ -95,11 +91,11 @@ const ghl = new HighLevel({
 });
 ```
 
-## Session Storage
+## Token Management
 
-### MongoDB Storage (Recommended)
+### MongoDB Storage
 
-For multi-user applications, configure MongoDB storage to persist session data:
+Configure MongoDB storage to store token data and automatically fetch it while making API calls:
 
 ```typescript
 import { HighLevel, MongoDBSessionStorage } from '@ghl/api-client';
@@ -112,12 +108,9 @@ const ghl = new HighLevel({
     dbName: 'ghl_sessions'
   })
 });
-
-// Initialize storage connection
-await ghl.initialize();
 ```
 
-**⚠️ Warning**: Without MongoDB storage, data is stored in memory and will be lost on application restart. This is not recommended for production.
+**⚠️ Warning**: Without MongoDB storage, data will be stored in memory by default and will be lost on application restart. This is not recommended for production.
 
 ### Custom Storage Implementation
 
@@ -158,132 +151,12 @@ const ghl = new HighLevel({
 });
 ```
 
-
-## Token Management
-
-### Setting and Getting Tokens
-
-```typescript
-// Set tokens after initialization
-ghl.setPrivateIntegrationToken('your-private-token');
-ghl.setAgencyAccessToken('your-agency-token');
-ghl.setLocationAccessToken('your-location-token');
-
-// Get current tokens
-const privateToken = ghl.getPrivateIntegrationToken();
-const agencyToken = ghl.getAgencyAccessToken();
-const locationToken = ghl.getLocationAccessToken();
-```
-
-### OAuth 2.0 Flow
-
-#### Step 1: Generate Authorization URL
-```typescript
-const authUrl = ghl.oauth.getAuthorizationUrl(
-  'your-client-id',
-  'https://your-app.com/callback',
-  'contacts.readonly locations.readonly' // scopes
-);
-
-console.log('Redirect user to:', authUrl);
-```
-
-#### Step 2: Exchange Authorization Code for Tokens
-```typescript
-try {
-  const tokenResponse = await ghl.oauth.getAccessToken({
-    client_id: 'your-client-id',
-    client_secret: 'your-client-secret',
-    grant_type: 'authorization_code',
-    code: 'authorization-code-from-callback',
-    user_type: 'Location' // or 'Company' for agency tokens
-  });
-
-  // Store the tokens
-  if (tokenResponse.userType === 'Location') {
-    ghl.setLocationAccessToken(tokenResponse.access_token);
-    ghl.setLocationRefreshToken(tokenResponse.refresh_token);
-  } else {
-    ghl.setAgencyAccessToken(tokenResponse.access_token);
-    ghl.setAgencyRefreshToken(tokenResponse.refresh_token);
-  }
-
-  console.log('Tokens obtained successfully!');
-} catch (error) {
-  console.error('Error getting tokens:', error);
-}
-```
-
-### Manual Token Refresh
-
-The SDK automatically refreshes expired tokens, but you can also refresh them manually:
-
-```typescript
-// Set up OAuth credentials first
-ghl.setClientId('your-client-id');
-ghl.setClientSecret('your-client-secret');
-
-// For location tokens
-try {
-  const refreshedTokens = await ghl.oauth.refreshToken(
-    'your-refresh-token',
-    'your-client-id',
-    'your-client-secret',
-    'refresh_token',
-    'Location'
-  );
-  
-  ghl.setLocationAccessToken(refreshedTokens.access_token);
-  if (refreshedTokens.refresh_token) {
-    ghl.setLocationRefreshToken(refreshedTokens.refresh_token);
-  }
-  
-  console.log('Location token refreshed successfully');
-} catch (error) {
-  console.error('Token refresh failed:', error);
-}
-
-// For agency tokens
-try {
-  const refreshedTokens = await ghl.oauth.refreshToken(
-    'your-agency-refresh-token',
-    'your-client-id',
-    'your-client-secret',
-    'refresh_token',
-    'Company'
-  );
-  
-  ghl.setAgencyAccessToken(refreshedTokens.access_token);
-  if (refreshedTokens.refresh_token) {
-    ghl.setAgencyRefreshToken(refreshedTokens.refresh_token);
-  }
-  
-  console.log('Agency token refreshed successfully');
-} catch (error) {
-  console.error('Agency token refresh failed:', error);
-}
-```
-
 ### Automatic Token Refresh
 
 The SDK automatically attempts to refresh expired tokens when:
 - A 401 (Unauthorized) response is received
 - Valid refresh tokens are available
 - OAuth client credentials are configured
-
-```typescript
-// Configure for automatic refresh
-const ghl = new HighLevel({
-  clientId: 'your-client-id',
-  clientSecret: 'your-client-secret'
-});
-
-// Set refresh tokens
-ghl.setAgencyRefreshToken('your-refresh-token');
-
-// Now API calls will automatically refresh tokens if they expire
-const contacts = await ghl.contacts.getContacts({ locationId: 'location-id' });
-```
 
 ## Usage Examples
 
@@ -542,6 +415,7 @@ const httpClient = ghl.getHttpClient();
 
 - **GitHub Issues**: [Report bugs or request features](https://github.com/GoHighLevel/highlevel-api-docs/issues)
 - **Documentation**: [HighLevel API Docs](https://marketplace.gohighlevel.com/docs/)
+- **Examples**: [SDK Examples Node](https://github.com/GoHighLevel/ghl-sdk-examples/tree/main/node)
 
 ## License
 
