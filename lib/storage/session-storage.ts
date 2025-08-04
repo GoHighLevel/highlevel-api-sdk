@@ -1,8 +1,15 @@
+import { Logger } from '../logging';
+
 /**
  * Abstract base class for session storage implementations
  * Provides interface for storing and retrieving user sessions, tokens, and related data
  */
 export abstract class SessionStorage {
+  protected logger: Logger;
+
+  constructor(logger?: Logger) {
+    this.logger = logger || new Logger('warn', 'GHL SDK Storage');
+  }
   /**
    * Set the client ID (called automatically by HighLevel class)
    * @param clientId - The client ID from HighLevel configuration

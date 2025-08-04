@@ -31,6 +31,7 @@ import { Surveys } from './code/surveys/surveys';
 import { Users } from './code/users/users';
 import { Workflows } from './code/workflows/workflows';
 import { SessionStorage, MemorySessionStorage } from './storage';
+import { Logger, LogLevelType } from './logging';
 
 // Extend AxiosRequestConfig to support retry tracking
 declare module 'axios' {
@@ -48,12 +49,13 @@ export interface HighLevelConfig {
   clientId?: string;
   clientSecret?: string;
   sessionStorage?: SessionStorage;
+  logLevel?: LogLevelType;
 }
 
 // Type guard to ensure valid configuration
 export type ValidConfig = 
-  | { privateIntegrationToken: string; clientId?: string; clientSecret?: string; agencyAccessToken?: string; locationAccessToken?: string; apiVersion?: string; sessionStorage?: SessionStorage; }
-  | { clientId: string; clientSecret: string; privateIntegrationToken?: undefined; agencyAccessToken?: string; locationAccessToken?: string; apiVersion?: string; sessionStorage?: SessionStorage; };
+  | { privateIntegrationToken: string; clientId?: string; clientSecret?: string; agencyAccessToken?: string; locationAccessToken?: string; apiVersion?: string; sessionStorage?: SessionStorage; logLevel?: LogLevelType; }
+  | { clientId: string; clientSecret: string; privateIntegrationToken?: undefined; agencyAccessToken?: string; locationAccessToken?: string; apiVersion?: string; sessionStorage?: SessionStorage; logLevel?: LogLevelType; };
 
 // Custom error class for GHL API errors
 export class GHLError extends Error {
@@ -88,7 +90,7 @@ export interface ResponseInterceptor {
 export class HighLevel {
   private static readonly BASE_URL = 'https://services.leadconnectorhq.com';
   
-  private config: Required<Omit<HighLevelConfig, 'privateIntegrationToken' | 'agencyAccessToken' | 'locationAccessToken' | 'clientId' | 'clientSecret' | 'sessionStorage'>> & { 
+  private config: Required<Omit<HighLevelConfig, 'privateIntegrationToken' | 'agencyAccessToken' | 'locationAccessToken' | 'clientId' | 'clientSecret' | 'sessionStorage' | 'logLevel'>> & { 
     privateIntegrationToken?: string;
     agencyAccessToken?: string;
     locationAccessToken?: string;
@@ -99,6 +101,7 @@ export class HighLevel {
   };
   private httpClient: AxiosInstance;
   private sessionStorage: SessionStorage;
+  private logger: Logger;
   
   // Service instances
   public associations!: Associations;
@@ -141,6 +144,9 @@ export class HighLevel {
       );
     }
 
+    // Initialize logger FIRST (needed for other initialization steps)
+    this.logger = new Logger(config.logLevel || 'warn');
+
     // Set default configuration
     this.config = {
       apiVersion: config.apiVersion || '2021-07-28',
@@ -154,13 +160,15 @@ export class HighLevel {
       locationRefreshToken: undefined
     };
 
-    // Store sessionStorage reference or create default MemorySessionStorage
+    // Store sessionStorage reference or create default MemorySessionStorage with correct logger
     if (config.sessionStorage) {
       this.sessionStorage = config.sessionStorage;
+      // Update the sessionStorage logger to match our configured level
+      this.updateSessionStorageLogger();
     } else {
-      // Auto-create MemorySessionStorage if none provided
-      this.sessionStorage = new MemorySessionStorage();
-      console.log('[GHL SDK] No sessionStorage provided, using MemorySessionStorage');
+      // Auto-create MemorySessionStorage with the configured logger
+      this.sessionStorage = new MemorySessionStorage(this.logger);
+      this.logger.info('No sessionStorage provided, using MemorySessionStorage');
     }
 
     // Create HTTP client with base configuration
@@ -260,7 +268,7 @@ export class HighLevel {
       
       // Check if we need to refresh the token proactively
       if (this.shouldRefreshToken(sessionData)) {
-        console.log(`[GHL SDK] Token expiring soon for ${resourceId}, refreshing proactively`);
+        this.logger.debug(`Token expiring soon for ${resourceId}, refreshing proactively`);
         const refreshed = await this.refreshTokenIfNeeded(resourceId, sessionData);
         if (refreshed) {
           return refreshed;
@@ -268,10 +276,10 @@ export class HighLevel {
       }
       
       return sessionData.access_token ? `Bearer ${sessionData.access_token}` : null;
-    } catch (error) {
-      console.warn(`[GHL SDK] Failed to get token from storage for ${resourceId}:`, error);
-      return null;
-    }
+          } catch (error) {
+        this.logger.warn(`Failed to get token from storage for ${resourceId}:`, error);
+        return null;
+      }
   }
 
   /**
@@ -307,17 +315,17 @@ export class HighLevel {
    */
   private async refreshTokenIfNeeded(resourceId: string, sessionData: any): Promise<string | null> {
     if (!sessionData.refresh_token) {
-      console.warn(`[GHL SDK] No refresh token available for ${resourceId}`);
+      this.logger.warn(`No refresh token available for ${resourceId}`);
       return null;
     }
 
     if (!this.config.clientId || !this.config.clientSecret) {
-      console.warn(`[GHL SDK] Client credentials not available for token refresh`);
+      this.logger.warn(`Client credentials not available for token refresh`);
       return null;
     }
 
     try {
-      console.log(`[GHL SDK] Refreshing token for ${resourceId}`);
+      this.logger.info(`Refreshing token for ${resourceId}`);
       
       // Determine user type from session data (default to 'Location' if not specified)
       const userType = sessionData.userType || 'Location';
@@ -337,11 +345,11 @@ export class HighLevel {
         ...newTokenData
       });
 
-      console.log(`[GHL SDK] Token refreshed successfully for ${resourceId}`);
+      this.logger.info(`Token refreshed successfully for ${resourceId}`);
       return `Bearer ${newTokenData.access_token}`;
       
     } catch (error) {
-      console.error(`[GHL SDK] Failed to refresh token for ${resourceId}:`, error);
+      this.logger.error(`Failed to refresh token for ${resourceId}:`, error);
       return null;
     }
   }
@@ -482,19 +490,17 @@ export class HighLevel {
           config.headers.Version = this.config.apiVersion;
         }
 
-        // Log request in development
-        if (process.env.NODE_ENV === 'development') {
-          console.log(`[GHL SDK] ${config.method?.toUpperCase()} ${config.url}`, {
-            headers: config.headers,
-            params: config.params,
-            data: config.data
-          });
-        }
+        // Log request in development mode or when debug level is enabled
+        this.logger.debug(`${config.method?.toUpperCase()} ${config.url}`, {
+          headers: config.headers,
+          params: config.params,
+          data: config.data
+        });
 
         return config;
       },
       (error) => {
-        console.error('[GHL SDK] Request Error:', error);
+        this.logger.error('Request Error:', error);
         return Promise.reject(error);
       }
     );
@@ -502,10 +508,8 @@ export class HighLevel {
     // Response interceptor - handle errors and responses
     this.httpClient.interceptors.response.use(
       (response) => {
-        // Log response in development
-        if (process.env.NODE_ENV === 'development') {
-          console.log(`[GHL SDK] Response ${response.status}:`, response.data);
-        }
+        // Log response in debug mode
+        this.logger.debug(`Response ${response.status}:`, response.data);
 
         return response;
       },
@@ -514,7 +518,7 @@ export class HighLevel {
         
         // Handle 401 errors with automatic token refresh
         if (error.response?.status === 401 && !originalRequest.__isRetryRequest) {
-          console.warn('[GHL SDK] 401 Unauthorized - Attempting token refresh');
+          this.logger.warn('401 Unauthorized - Attempting token refresh');
           
           // Try to extract resourceId from the original request
           const resourceId = this.extractResourceId(
@@ -528,7 +532,7 @@ export class HighLevel {
               const sessionData = await this.sessionStorage.getSession(resourceId);
               
               if (sessionData && this.isTokenExpired(sessionData)) {
-                console.log(`[GHL SDK] Token expired for ${resourceId}, attempting refresh`);
+                this.logger.info(`Token expired for ${resourceId}, attempting refresh`);
                 
                 const newToken = await this.refreshTokenIfNeeded(resourceId, sessionData);
                 if (newToken) {
@@ -537,12 +541,12 @@ export class HighLevel {
                   originalRequest.headers = originalRequest.headers || {};
                   originalRequest.headers.Authorization = newToken;
                   
-                  console.log(`[GHL SDK] Retrying request with refreshed token for ${resourceId}`);
+                  this.logger.debug(`Retrying request with refreshed token for ${resourceId}`);
                   return this.httpClient.request(originalRequest);
                 }
               }
             } catch (refreshError) {
-              console.error('[GHL SDK] Failed to refresh token on 401:', refreshError);
+              this.logger.error('Failed to refresh token on 401:', refreshError);
             }
           }
         }
@@ -587,7 +591,7 @@ export class HighLevel {
       );
     }
 
-    console.error('[GHL SDK] Error:', ghlError);
+    this.logger.error('Error:', ghlError);
     return Promise.reject(ghlError);
   }
 
@@ -698,6 +702,26 @@ export class HighLevel {
   }
 
   /**
+   * Update session storage logger to match the main logger level
+   */
+  private updateSessionStorageLogger(): void {
+    if (this.sessionStorage && 'logger' in this.sessionStorage) {
+      // Create a child logger with the same level as the main logger
+      // Determine the appropriate prefix based on storage type
+      let prefix = 'Storage';
+      const storageType = this.sessionStorage.constructor.name;
+      if (storageType === 'MongoDBSessionStorage') {
+        prefix = 'MongoDB';
+      } else if (storageType === 'MemorySessionStorage') {
+        prefix = 'Memory';
+      }
+      
+      const childLogger = this.logger.child(prefix);
+      (this.sessionStorage as any).logger = childLogger;
+    }
+  }
+
+  /**
    * Initialize session storage (always exists now - either provided or auto-created)
    */
   private initializeSessionStorage(): void {
@@ -707,7 +731,7 @@ export class HighLevel {
     }
     
     this.sessionStorage!.init().catch(error => {
-      console.error('[GHL SDK] Failed to initialize session storage:', error);
+      this.logger.error('Failed to initialize session storage:', error);
     });
   }
 
@@ -724,6 +748,9 @@ export class HighLevel {
   public setSessionStorage(sessionStorage: SessionStorage): void {
     this.sessionStorage = sessionStorage;
     
+    // Update the sessionStorage logger to match our configured level
+    this.updateSessionStorageLogger();
+    
     // Pass clientId to session storage if available
     if (this.config.clientId) {
       this.sessionStorage.setClientId(this.config.clientId);
@@ -739,7 +766,7 @@ export class HighLevel {
     try {
       await this.sessionStorage!.disconnect();
     } catch (error) {
-      console.error('[GHL SDK] Error disconnecting session storage:', error);
+      this.logger.error('Error disconnecting session storage:', error);
     }
   }
 
@@ -904,7 +931,7 @@ export class HighLevel {
       await this.httpClient.get('/health');
       return true;
     } catch (error) {
-      console.warn('[GHL SDK] Health check failed:', error);
+      this.logger.warn('Health check failed:', error);
       return false;
     }
   }

@@ -1,5 +1,6 @@
 import { SessionStorage } from './session-storage';
 import { ISessionData } from './mongodb-session-storage';
+import { Logger } from '../logging';
 
 /**
  * In-memory implementation of SessionStorage
@@ -10,6 +11,10 @@ export class MemorySessionStorage extends SessionStorage {
   private sessions: Map<string, ISessionData & { createdAt: Date; updatedAt: Date }> = new Map();
   private clientId: string = '';
   private isInitialized: boolean = false;
+
+  constructor(logger?: Logger) {
+    super(logger ? logger.child('Memory') : new Logger('warn', 'GHL SDK Memory'));
+  }
 
   /**
    * Calculate the expiration timestamp in milliseconds
@@ -45,7 +50,7 @@ export class MemorySessionStorage extends SessionStorage {
       throw new Error('ClientId is required for session storage');
     }
     this.clientId = clientId;
-    console.log(`[GHL SDK] MemorySessionStorage clientId set: ${this.getApplicationId()}`);
+    this.logger.debug(`MemorySessionStorage clientId set: ${this.getApplicationId()}`);
   }
 
   /**
@@ -74,7 +79,7 @@ export class MemorySessionStorage extends SessionStorage {
    */
   async init(): Promise<void> {
     this.isInitialized = true;
-    console.log('[GHL SDK] MemorySessionStorage initialized');
+    this.logger.info('MemorySessionStorage initialized');
   }
 
   /**
@@ -83,7 +88,7 @@ export class MemorySessionStorage extends SessionStorage {
   async disconnect(): Promise<void> {
     this.sessions.clear();
     this.isInitialized = false;
-    console.log('[GHL SDK] MemorySessionStorage disconnected and cleared');
+    this.logger.info('MemorySessionStorage disconnected and cleared');
   }
 
   /**
@@ -91,7 +96,7 @@ export class MemorySessionStorage extends SessionStorage {
    * @param collectionName - Name of the collection (ignored in memory storage)
    */
   async createCollection(collectionName: string): Promise<void> {
-    console.log(`[GHL SDK] MemorySessionStorage collection concept acknowledged: ${collectionName}`);
+    this.logger.debug(`MemorySessionStorage collection concept acknowledged: ${collectionName}`);
   }
 
   /**
@@ -120,9 +125,9 @@ export class MemorySessionStorage extends SessionStorage {
 
       this.sessions.set(uniqueKey, sessionDocument);
 
-      console.log(`[GHL SDK] Session stored in memory: ${uniqueKey}`);
+      this.logger.debug(`Session stored in memory: ${uniqueKey}`);
     } catch (error) {
-      console.error(`[GHL SDK] Error storing session ${this.getApplicationId()}:${resourceId}:`, error);
+      this.logger.error(`Error storing session ${this.getApplicationId()}:${resourceId}:`, error);
       throw error;
     }
   }
@@ -142,13 +147,13 @@ export class MemorySessionStorage extends SessionStorage {
         return null;
       }
 
-      console.log(`[GHL SDK] Session retrieved from memory: ${uniqueKey}`);
+      this.logger.debug(`Session retrieved from memory: ${uniqueKey}`);
       
       // Return the session data without the timestamps
       const { createdAt, updatedAt, ...sessionData } = sessionDocument;
       return sessionData as ISessionData;
     } catch (error) {
-      console.error(`[GHL SDK] Error retrieving session ${this.getApplicationId()}:${resourceId}:`, error);
+      this.logger.error(`Error retrieving session ${this.getApplicationId()}:${resourceId}:`, error);
       throw error;
     }
   }
@@ -164,12 +169,12 @@ export class MemorySessionStorage extends SessionStorage {
       const deleted = this.sessions.delete(uniqueKey);
       
       if (deleted) {
-        console.log(`[GHL SDK] Session deleted from memory: ${uniqueKey}`);
+        this.logger.debug(`Session deleted from memory: ${uniqueKey}`);
       } else {
-        console.log(`[GHL SDK] Session not found for deletion: ${uniqueKey}`);
+        this.logger.debug(`Session not found for deletion: ${uniqueKey}`);
       }
     } catch (error) {
-      console.error(`[GHL SDK] Error deleting session ${this.getApplicationId()}:${resourceId}:`, error);
+      this.logger.error(`Error deleting session ${this.getApplicationId()}:${resourceId}:`, error);
       throw error;
     }
   }
@@ -186,7 +191,7 @@ export class MemorySessionStorage extends SessionStorage {
       
       return sessionDocument?.access_token || null;
     } catch (error) {
-      console.error(`[GHL SDK] Error retrieving access token ${this.getApplicationId()}:${resourceId}:`, error);
+      this.logger.error(`Error retrieving access token ${this.getApplicationId()}:${resourceId}:`, error);
       throw error;
     }
   }
@@ -203,7 +208,7 @@ export class MemorySessionStorage extends SessionStorage {
       
       return sessionDocument?.refresh_token || null;
     } catch (error) {
-      console.error(`[GHL SDK] Error retrieving refresh token ${this.getApplicationId()}:${resourceId}:`, error);
+      this.logger.error(`Error retrieving refresh token ${this.getApplicationId()}:${resourceId}:`, error);
       throw error;
     }
   }
@@ -224,10 +229,10 @@ export class MemorySessionStorage extends SessionStorage {
         }
       }
       
-      console.log(`[GHL SDK] Found ${appSessions.length} sessions in memory for application: ${applicationId}`);
+      this.logger.debug(`Found ${appSessions.length} sessions in memory for application: ${applicationId}`);
       return appSessions;
     } catch (error) {
-      console.error(`[GHL SDK] Error retrieving sessions for application ${this.getApplicationId()}:`, error);
+      this.logger.error(`Error retrieving sessions for application ${this.getApplicationId()}:`, error);
       throw error;
     }
   }
@@ -262,6 +267,6 @@ export class MemorySessionStorage extends SessionStorage {
   public clearAllSessions(): void {
     const count = this.sessions.size;
     this.sessions.clear();
-    console.log(`[GHL SDK] Cleared ${count} sessions from memory`);
+    this.logger.debug(`Cleared ${count} sessions from memory`);
   }
 } 

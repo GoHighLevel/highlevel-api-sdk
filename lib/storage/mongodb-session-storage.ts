@@ -1,5 +1,6 @@
 import { MongoClient, Db, Collection } from 'mongodb';
 import { SessionStorage } from './session-storage';
+import { Logger } from '../logging';
 
 export interface ISessionData {
   access_token?: string;
@@ -27,8 +28,8 @@ export class MongoDBSessionStorage extends SessionStorage {
   private clientId: string = '';
   private isConnected: boolean = false;
 
-  constructor(dbUrl: string, dbName: string, collectionName: string = 'application_sessions') {
-    super();
+  constructor(dbUrl: string, dbName: string, collectionName: string = 'application_sessions', logger?: Logger) {
+    super(logger ? logger.child('MongoDB') : new Logger('warn', 'GHL SDK MongoDB'));
     this.dbUrl = dbUrl;
     this.dbName = dbName;
     this.collectionName = collectionName;
@@ -43,7 +44,7 @@ export class MongoDBSessionStorage extends SessionStorage {
       throw new Error('ClientId is required for session storage');
     }
     this.clientId = clientId;
-    console.log(`[GHL SDK] SessionStorage clientId set: ${this.getApplicationId()}`);
+    this.logger.debug(`SessionStorage clientId set: ${this.getApplicationId()}`);
   }
 
   /**
@@ -103,9 +104,9 @@ export class MongoDBSessionStorage extends SessionStorage {
       await this.createCollection(this.collectionName);
       this.isConnected = true;
       
-      console.log(`[GHL SDK] Connected to MongoDB database: ${this.dbName}`);
+      this.logger.info(`Connected to MongoDB database: ${this.dbName}`);
     } catch (error) {
-      console.error('[GHL SDK] Failed to connect to MongoDB:', error);
+      this.logger.error('Failed to connect to MongoDB:', error);
       throw error;
     }
   }
@@ -120,10 +121,10 @@ export class MongoDBSessionStorage extends SessionStorage {
         this.isConnected = false;
         this.db = null;
         this.client = null;
-        console.log('[GHL SDK] Disconnected from MongoDB');
+        this.logger.info('Disconnected from MongoDB');
       }
     } catch (error) {
-      console.error('[GHL SDK] Error disconnecting from MongoDB:', error);
+      this.logger.error('Error disconnecting from MongoDB:', error);
       throw error;
     }
   }
@@ -144,12 +145,12 @@ export class MongoDBSessionStorage extends SessionStorage {
       
       if (!collectionExists) {
         await this.db.createCollection(collectionName);
-        console.log(`[GHL SDK] Created MongoDB collection: ${collectionName}`);
+        this.logger.debug(`Created MongoDB collection: ${collectionName}`);
       } else {
-        console.log(`[GHL SDK] MongoDB collection already exists: ${collectionName}`);
+        this.logger.debug(`MongoDB collection already exists: ${collectionName}`);
       }
     } catch (error) {
-      console.error(`[GHL SDK] Error creating collection ${collectionName}:`, error);
+      this.logger.error(`Error creating collection ${collectionName}:`, error);
       throw error;
     }
   }
@@ -196,9 +197,9 @@ export class MongoDBSessionStorage extends SessionStorage {
         { upsert: true }
       );
 
-      console.log(`[GHL SDK] Session stored: ${uniqueKey}`);
+      this.logger.debug(`Session stored: ${uniqueKey}`);
     } catch (error) {
-      console.error(`[GHL SDK] Error storing session ${this.getApplicationId()}:${resourceId}:`, error);
+      this.logger.error(`Error storing session ${this.getApplicationId()}:${resourceId}:`, error);
       throw error;
     }
   }
@@ -219,13 +220,13 @@ export class MongoDBSessionStorage extends SessionStorage {
         return null;
       }
 
-      console.log(`[GHL SDK] Session retrieved: ${uniqueKey}`);
+      this.logger.debug(`Session retrieved: ${uniqueKey}`);
       
               // Return the session data including expire_at but without MongoDB metadata
         const { uniqueKey: _, applicationId: __, resourceId: ___, createdAt, updatedAt, _id, ...sessionData } = sessionDocument;
         return sessionData as ISessionData;
     } catch (error) {
-      console.error(`[GHL SDK] Error retrieving session ${this.getApplicationId()}:${resourceId}:`, error);
+      this.logger.error(`Error retrieving session ${this.getApplicationId()}:${resourceId}:`, error);
       throw error;
     }
   }
@@ -242,12 +243,12 @@ export class MongoDBSessionStorage extends SessionStorage {
       const result = await collection.deleteOne({ uniqueKey });
       
       if (result.deletedCount > 0) {
-        console.log(`[GHL SDK] Session deleted: ${uniqueKey}`);
+        this.logger.debug(`Session deleted: ${uniqueKey}`);
       } else {
-        console.log(`[GHL SDK] Session not found for deletion: ${uniqueKey}`);
+        this.logger.debug(`Session not found for deletion: ${uniqueKey}`);
       }
     } catch (error) {
-      console.error(`[GHL SDK] Error deleting session ${this.getApplicationId()}:${resourceId}:`, error);
+      this.logger.error(`Error deleting session ${this.getApplicationId()}:${resourceId}:`, error);
       throw error;
     }
   }
@@ -266,7 +267,7 @@ export class MongoDBSessionStorage extends SessionStorage {
       
       return sessionDocument?.access_token || null;
     } catch (error) {
-      console.error(`[GHL SDK] Error retrieving access token ${this.getApplicationId()}:${resourceId}:`, error);
+      this.logger.error(`Error retrieving access token ${this.getApplicationId()}:${resourceId}:`, error);
       throw error;
     }
   }
@@ -285,7 +286,7 @@ export class MongoDBSessionStorage extends SessionStorage {
       
       return sessionDocument?.refresh_token || null;
     } catch (error) {
-      console.error(`[GHL SDK] Error retrieving refresh token ${this.getApplicationId()}:${resourceId}:`, error);
+      this.logger.error(`Error retrieving refresh token ${this.getApplicationId()}:${resourceId}:`, error);
       throw error;
     }
   }
@@ -301,7 +302,7 @@ export class MongoDBSessionStorage extends SessionStorage {
       
       const sessions = await collection.find({ applicationId }).toArray();
       
-      console.log(`[GHL SDK] Found ${sessions.length} sessions for application: ${applicationId}`);
+      this.logger.debug(`Found ${sessions.length} sessions for application: ${applicationId}`);
       
       // Return session data without MongoDB metadata
       return sessions.map(doc => {
@@ -309,7 +310,7 @@ export class MongoDBSessionStorage extends SessionStorage {
         return sessionData as ISessionData;
       });
     } catch (error) {
-      console.error(`[GHL SDK] Error retrieving sessions for application ${this.getApplicationId()}:`, error);
+      this.logger.error(`Error retrieving sessions for application ${this.getApplicationId()}:`, error);
       throw error;
     }
   }
