@@ -35,6 +35,14 @@ export class Snapshots {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.companyId !== undefined) {
+        allParams['companyId'] = params.companyId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -56,10 +64,16 @@ export class Snapshots {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         
@@ -102,6 +116,14 @@ export class Snapshots {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.companyId !== undefined) {
+        allParams['companyId'] = params.companyId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'POST',
       url,
@@ -124,10 +146,16 @@ export class Snapshots {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           requestBody
         );
         
@@ -189,6 +217,29 @@ export class Snapshots {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.snapshotId !== undefined) {
+        allParams['snapshotId'] = params.snapshotId;
+      }
+      if (params.companyId !== undefined) {
+        allParams['companyId'] = params.companyId;
+      }
+      if (params.from !== undefined) {
+        allParams['from'] = params.from;
+      }
+      if (params.to !== undefined) {
+        allParams['to'] = params.to;
+      }
+      if (params.lastDoc !== undefined) {
+        allParams['lastDoc'] = params.lastDoc;
+      }
+      if (params.limit !== undefined) {
+        allParams['limit'] = params.limit;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -210,10 +261,16 @@ export class Snapshots {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         
@@ -263,6 +320,20 @@ export class Snapshots {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.companyId !== undefined) {
+        allParams['companyId'] = params.companyId;
+      }
+      if (params.snapshotId !== undefined) {
+        allParams['snapshotId'] = params.snapshotId;
+      }
+      if (params.locationId !== undefined) {
+        allParams['locationId'] = params.locationId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -284,10 +355,16 @@ export class Snapshots {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         

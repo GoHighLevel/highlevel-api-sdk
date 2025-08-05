@@ -18,7 +18,7 @@ export class Invoices {
    */
   async createInvoiceTemplate(
     requestBody: Models.CreateInvoiceTemplateDto,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.CreateInvoiceTemplateResponseDto> {
     let url = '/invoices/template';
     const queryParams: Record<string, any> = {};
@@ -27,6 +27,9 @@ export class Invoices {
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
     
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
 
     const config: AxiosRequestConfig = {
       method: 'POST',
@@ -50,11 +53,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          requestBody
+          combinedQuery,
+          requestBody,
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -88,7 +98,7 @@ export class Invoices {
       limit: string;
       offset: string;
     },
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.ListTemplatesResponseDto> {
     let url = '/invoices/template';
     const queryParams: Record<string, any> = {};
@@ -127,6 +137,38 @@ export class Invoices {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.altId !== undefined) {
+        allParams['altId'] = params.altId;
+      }
+      if (params.altType !== undefined) {
+        allParams['altType'] = params.altType;
+      }
+      if (params.status !== undefined) {
+        allParams['status'] = params.status;
+      }
+      if (params.startAt !== undefined) {
+        allParams['startAt'] = params.startAt;
+      }
+      if (params.endAt !== undefined) {
+        allParams['endAt'] = params.endAt;
+      }
+      if (params.search !== undefined) {
+        allParams['search'] = params.search;
+      }
+      if (params.paymentMode !== undefined) {
+        allParams['paymentMode'] = params.paymentMode;
+      }
+      if (params.limit !== undefined) {
+        allParams['limit'] = params.limit;
+      }
+      if (params.offset !== undefined) {
+        allParams['offset'] = params.offset;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -148,11 +190,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          {}
+          combinedQuery,
+          {},
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -180,7 +229,7 @@ export class Invoices {
       altId: string;
       altType: string;
     },
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.GetTemplateResponseDto> {
     let url = '/invoices/template/{templateId}';
     const queryParams: Record<string, any> = {};
@@ -198,6 +247,20 @@ export class Invoices {
       }
       if (params.altType !== undefined) {
         queryParams['altType'] = params.altType;
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.templateId !== undefined) {
+        allParams['templateId'] = params.templateId;
+      }
+      if (params.altId !== undefined) {
+        allParams['altId'] = params.altId;
+      }
+      if (params.altType !== undefined) {
+        allParams['altType'] = params.altType;
       }
     }
 
@@ -222,11 +285,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          {}
+          combinedQuery,
+          {},
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -253,7 +323,7 @@ export class Invoices {
       templateId: string;
     },
     requestBody: Models.UpdateInvoiceTemplateDto,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.UpdateInvoiceTemplateResponseDto> {
     let url = '/invoices/template/{templateId}';
     const queryParams: Record<string, any> = {};
@@ -265,6 +335,14 @@ export class Invoices {
     if (params) {
       if (params.templateId !== undefined) {
         url = url.replace('{' + 'templateId' + '}', encodeURIComponent(String(params.templateId)));
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.templateId !== undefined) {
+        allParams['templateId'] = params.templateId;
       }
     }
 
@@ -290,11 +368,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          requestBody
+          combinedQuery,
+          requestBody,
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -322,7 +407,7 @@ export class Invoices {
       altId: string;
       altType: string;
     },
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.DeleteInvoiceTemplateResponseDto> {
     let url = '/invoices/template/{templateId}';
     const queryParams: Record<string, any> = {};
@@ -340,6 +425,20 @@ export class Invoices {
       }
       if (params.altType !== undefined) {
         queryParams['altType'] = params.altType;
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.templateId !== undefined) {
+        allParams['templateId'] = params.templateId;
+      }
+      if (params.altId !== undefined) {
+        allParams['altId'] = params.altId;
+      }
+      if (params.altType !== undefined) {
+        allParams['altType'] = params.altType;
       }
     }
 
@@ -364,11 +463,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          {}
+          combinedQuery,
+          {},
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -395,7 +501,7 @@ export class Invoices {
       templateId: string;
     },
     requestBody: Models.UpdateInvoiceLateFeesConfigurationDto,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.UpdateInvoiceTemplateResponseDto> {
     let url = '/invoices/template/{templateId}/late-fees-configuration';
     const queryParams: Record<string, any> = {};
@@ -407,6 +513,14 @@ export class Invoices {
     if (params) {
       if (params.templateId !== undefined) {
         url = url.replace('{' + 'templateId' + '}', encodeURIComponent(String(params.templateId)));
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.templateId !== undefined) {
+        allParams['templateId'] = params.templateId;
       }
     }
 
@@ -432,11 +546,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          requestBody
+          combinedQuery,
+          requestBody,
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -463,7 +584,7 @@ export class Invoices {
       templateId: string;
     },
     requestBody: Models.UpdatePaymentMethodsConfigurationDto,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.UpdateInvoiceTemplateResponseDto> {
     let url = '/invoices/template/{templateId}/payment-methods-configuration';
     const queryParams: Record<string, any> = {};
@@ -475,6 +596,14 @@ export class Invoices {
     if (params) {
       if (params.templateId !== undefined) {
         url = url.replace('{' + 'templateId' + '}', encodeURIComponent(String(params.templateId)));
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.templateId !== undefined) {
+        allParams['templateId'] = params.templateId;
       }
     }
 
@@ -500,11 +629,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          requestBody
+          combinedQuery,
+          requestBody,
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -528,7 +664,7 @@ export class Invoices {
    */
   async createInvoiceSchedule(
     requestBody: Models.CreateInvoiceScheduleDto,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.CreateInvoiceScheduleResponseDto> {
     let url = '/invoices/schedule';
     const queryParams: Record<string, any> = {};
@@ -537,6 +673,9 @@ export class Invoices {
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
     
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
 
     const config: AxiosRequestConfig = {
       method: 'POST',
@@ -560,11 +699,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          requestBody
+          combinedQuery,
+          requestBody,
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -598,7 +744,7 @@ export class Invoices {
       limit: string;
       offset: string;
     },
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.ListSchedulesResponseDto> {
     let url = '/invoices/schedule';
     const queryParams: Record<string, any> = {};
@@ -637,6 +783,38 @@ export class Invoices {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.altId !== undefined) {
+        allParams['altId'] = params.altId;
+      }
+      if (params.altType !== undefined) {
+        allParams['altType'] = params.altType;
+      }
+      if (params.status !== undefined) {
+        allParams['status'] = params.status;
+      }
+      if (params.startAt !== undefined) {
+        allParams['startAt'] = params.startAt;
+      }
+      if (params.endAt !== undefined) {
+        allParams['endAt'] = params.endAt;
+      }
+      if (params.search !== undefined) {
+        allParams['search'] = params.search;
+      }
+      if (params.paymentMode !== undefined) {
+        allParams['paymentMode'] = params.paymentMode;
+      }
+      if (params.limit !== undefined) {
+        allParams['limit'] = params.limit;
+      }
+      if (params.offset !== undefined) {
+        allParams['offset'] = params.offset;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -658,11 +836,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          {}
+          combinedQuery,
+          {},
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -690,7 +875,7 @@ export class Invoices {
       altId: string;
       altType: string;
     },
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.GetScheduleResponseDto> {
     let url = '/invoices/schedule/{scheduleId}';
     const queryParams: Record<string, any> = {};
@@ -708,6 +893,20 @@ export class Invoices {
       }
       if (params.altType !== undefined) {
         queryParams['altType'] = params.altType;
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.scheduleId !== undefined) {
+        allParams['scheduleId'] = params.scheduleId;
+      }
+      if (params.altId !== undefined) {
+        allParams['altId'] = params.altId;
+      }
+      if (params.altType !== undefined) {
+        allParams['altType'] = params.altType;
       }
     }
 
@@ -732,11 +931,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          {}
+          combinedQuery,
+          {},
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -763,7 +969,7 @@ export class Invoices {
       scheduleId: string;
     },
     requestBody: Models.UpdateInvoiceScheduleDto,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.UpdateInvoiceScheduleResponseDto> {
     let url = '/invoices/schedule/{scheduleId}';
     const queryParams: Record<string, any> = {};
@@ -775,6 +981,14 @@ export class Invoices {
     if (params) {
       if (params.scheduleId !== undefined) {
         url = url.replace('{' + 'scheduleId' + '}', encodeURIComponent(String(params.scheduleId)));
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.scheduleId !== undefined) {
+        allParams['scheduleId'] = params.scheduleId;
       }
     }
 
@@ -800,11 +1014,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          requestBody
+          combinedQuery,
+          requestBody,
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -832,7 +1053,7 @@ export class Invoices {
       altId: string;
       altType: string;
     },
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.DeleteInvoiceScheduleResponseDto> {
     let url = '/invoices/schedule/{scheduleId}';
     const queryParams: Record<string, any> = {};
@@ -850,6 +1071,20 @@ export class Invoices {
       }
       if (params.altType !== undefined) {
         queryParams['altType'] = params.altType;
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.scheduleId !== undefined) {
+        allParams['scheduleId'] = params.scheduleId;
+      }
+      if (params.altId !== undefined) {
+        allParams['altId'] = params.altId;
+      }
+      if (params.altType !== undefined) {
+        allParams['altType'] = params.altType;
       }
     }
 
@@ -874,11 +1109,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          {}
+          combinedQuery,
+          {},
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -904,7 +1146,7 @@ export class Invoices {
     params: {
       scheduleId: string;
     },
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.UpdateAndScheduleInvoiceScheduleResponseDto> {
     let url = '/invoices/schedule/{scheduleId}/updateAndSchedule';
     const queryParams: Record<string, any> = {};
@@ -916,6 +1158,14 @@ export class Invoices {
     if (params) {
       if (params.scheduleId !== undefined) {
         url = url.replace('{' + 'scheduleId' + '}', encodeURIComponent(String(params.scheduleId)));
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.scheduleId !== undefined) {
+        allParams['scheduleId'] = params.scheduleId;
       }
     }
 
@@ -940,11 +1190,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          {}
+          combinedQuery,
+          {},
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -971,7 +1228,7 @@ export class Invoices {
       scheduleId: string;
     },
     requestBody: Models.ScheduleInvoiceScheduleDto,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.ScheduleInvoiceScheduleResponseDto> {
     let url = '/invoices/schedule/{scheduleId}/schedule';
     const queryParams: Record<string, any> = {};
@@ -983,6 +1240,14 @@ export class Invoices {
     if (params) {
       if (params.scheduleId !== undefined) {
         url = url.replace('{' + 'scheduleId' + '}', encodeURIComponent(String(params.scheduleId)));
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.scheduleId !== undefined) {
+        allParams['scheduleId'] = params.scheduleId;
       }
     }
 
@@ -1008,11 +1273,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          requestBody
+          combinedQuery,
+          requestBody,
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -1039,7 +1311,7 @@ export class Invoices {
       scheduleId: string;
     },
     requestBody: Models.AutoPaymentScheduleDto,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.AutoPaymentInvoiceScheduleResponseDto> {
     let url = '/invoices/schedule/{scheduleId}/auto-payment';
     const queryParams: Record<string, any> = {};
@@ -1051,6 +1323,14 @@ export class Invoices {
     if (params) {
       if (params.scheduleId !== undefined) {
         url = url.replace('{' + 'scheduleId' + '}', encodeURIComponent(String(params.scheduleId)));
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.scheduleId !== undefined) {
+        allParams['scheduleId'] = params.scheduleId;
       }
     }
 
@@ -1076,11 +1356,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          requestBody
+          combinedQuery,
+          requestBody,
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -1107,7 +1394,7 @@ export class Invoices {
       scheduleId: string;
     },
     requestBody: Models.CancelInvoiceScheduleDto,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.CancelInvoiceScheduleResponseDto> {
     let url = '/invoices/schedule/{scheduleId}/cancel';
     const queryParams: Record<string, any> = {};
@@ -1119,6 +1406,14 @@ export class Invoices {
     if (params) {
       if (params.scheduleId !== undefined) {
         url = url.replace('{' + 'scheduleId' + '}', encodeURIComponent(String(params.scheduleId)));
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.scheduleId !== undefined) {
+        allParams['scheduleId'] = params.scheduleId;
       }
     }
 
@@ -1144,11 +1439,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          requestBody
+          combinedQuery,
+          requestBody,
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -1182,6 +1484,9 @@ export class Invoices {
     const securityRequirements: string[] = ["Location-Access"];
     
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+
     const config: AxiosRequestConfig = {
       method: 'POST',
       url,
@@ -1204,10 +1509,16 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           requestBody
         );
         
@@ -1235,7 +1546,7 @@ export class Invoices {
       altId: string;
       altType: string;
     },
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.GenerateInvoiceNumberResponseDto> {
     let url = '/invoices/generate-invoice-number';
     const queryParams: Record<string, any> = {};
@@ -1250,6 +1561,17 @@ export class Invoices {
       }
       if (params.altType !== undefined) {
         queryParams['altType'] = params.altType;
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.altId !== undefined) {
+        allParams['altId'] = params.altId;
+      }
+      if (params.altType !== undefined) {
+        allParams['altType'] = params.altType;
       }
     }
 
@@ -1274,11 +1596,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          {}
+          combinedQuery,
+          {},
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -1306,7 +1635,7 @@ export class Invoices {
       altId: string;
       altType: string;
     },
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.GetInvoiceResponseDto> {
     let url = '/invoices/{invoiceId}';
     const queryParams: Record<string, any> = {};
@@ -1324,6 +1653,20 @@ export class Invoices {
       }
       if (params.altType !== undefined) {
         queryParams['altType'] = params.altType;
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.invoiceId !== undefined) {
+        allParams['invoiceId'] = params.invoiceId;
+      }
+      if (params.altId !== undefined) {
+        allParams['altId'] = params.altId;
+      }
+      if (params.altType !== undefined) {
+        allParams['altType'] = params.altType;
       }
     }
 
@@ -1348,11 +1691,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          {}
+          combinedQuery,
+          {},
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -1379,7 +1729,7 @@ export class Invoices {
       invoiceId: string;
     },
     requestBody: Models.UpdateInvoiceDto,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.UpdateInvoiceResponseDto> {
     let url = '/invoices/{invoiceId}';
     const queryParams: Record<string, any> = {};
@@ -1391,6 +1741,14 @@ export class Invoices {
     if (params) {
       if (params.invoiceId !== undefined) {
         url = url.replace('{' + 'invoiceId' + '}', encodeURIComponent(String(params.invoiceId)));
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.invoiceId !== undefined) {
+        allParams['invoiceId'] = params.invoiceId;
       }
     }
 
@@ -1416,11 +1774,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          requestBody
+          combinedQuery,
+          requestBody,
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -1448,7 +1813,7 @@ export class Invoices {
       altId: string;
       altType: string;
     },
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.DeleteInvoiceResponseDto> {
     let url = '/invoices/{invoiceId}';
     const queryParams: Record<string, any> = {};
@@ -1466,6 +1831,20 @@ export class Invoices {
       }
       if (params.altType !== undefined) {
         queryParams['altType'] = params.altType;
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.invoiceId !== undefined) {
+        allParams['invoiceId'] = params.invoiceId;
+      }
+      if (params.altId !== undefined) {
+        allParams['altId'] = params.altId;
+      }
+      if (params.altType !== undefined) {
+        allParams['altType'] = params.altType;
       }
     }
 
@@ -1490,11 +1869,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          {}
+          combinedQuery,
+          {},
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -1521,7 +1907,7 @@ export class Invoices {
       invoiceId: string;
     },
     requestBody: Models.UpdateInvoiceLateFeesConfigurationDto,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.UpdateInvoiceResponseDto> {
     let url = '/invoices/{invoiceId}/late-fees-configuration';
     const queryParams: Record<string, any> = {};
@@ -1533,6 +1919,14 @@ export class Invoices {
     if (params) {
       if (params.invoiceId !== undefined) {
         url = url.replace('{' + 'invoiceId' + '}', encodeURIComponent(String(params.invoiceId)));
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.invoiceId !== undefined) {
+        allParams['invoiceId'] = params.invoiceId;
       }
     }
 
@@ -1558,11 +1952,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          requestBody
+          combinedQuery,
+          requestBody,
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -1589,7 +1990,7 @@ export class Invoices {
       invoiceId: string;
     },
     requestBody: Models.VoidInvoiceDto,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.VoidInvoiceResponseDto> {
     let url = '/invoices/{invoiceId}/void';
     const queryParams: Record<string, any> = {};
@@ -1601,6 +2002,14 @@ export class Invoices {
     if (params) {
       if (params.invoiceId !== undefined) {
         url = url.replace('{' + 'invoiceId' + '}', encodeURIComponent(String(params.invoiceId)));
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.invoiceId !== undefined) {
+        allParams['invoiceId'] = params.invoiceId;
       }
     }
 
@@ -1626,11 +2035,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          requestBody
+          combinedQuery,
+          requestBody,
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -1657,7 +2073,7 @@ export class Invoices {
       invoiceId: string;
     },
     requestBody: Models.SendInvoiceDto,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.SendInvoicesResponseDto> {
     let url = '/invoices/{invoiceId}/send';
     const queryParams: Record<string, any> = {};
@@ -1669,6 +2085,14 @@ export class Invoices {
     if (params) {
       if (params.invoiceId !== undefined) {
         url = url.replace('{' + 'invoiceId' + '}', encodeURIComponent(String(params.invoiceId)));
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.invoiceId !== undefined) {
+        allParams['invoiceId'] = params.invoiceId;
       }
     }
 
@@ -1694,11 +2118,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          requestBody
+          combinedQuery,
+          requestBody,
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -1725,7 +2156,7 @@ export class Invoices {
       invoiceId: string;
     },
     requestBody: Models.RecordPaymentDto,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.RecordPaymentResponseDto> {
     let url = '/invoices/{invoiceId}/record-payment';
     const queryParams: Record<string, any> = {};
@@ -1737,6 +2168,14 @@ export class Invoices {
     if (params) {
       if (params.invoiceId !== undefined) {
         url = url.replace('{' + 'invoiceId' + '}', encodeURIComponent(String(params.invoiceId)));
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.invoiceId !== undefined) {
+        allParams['invoiceId'] = params.invoiceId;
       }
     }
 
@@ -1762,11 +2201,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          requestBody
+          combinedQuery,
+          requestBody,
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -1790,7 +2236,7 @@ export class Invoices {
    */
   async updateInvoiceLastVisitedAt(
     requestBody: Models.PatchInvoiceStatsLastViewedDto,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<any> {
     let url = '/invoices/stats/last-visited-at';
     const queryParams: Record<string, any> = {};
@@ -1799,6 +2245,9 @@ export class Invoices {
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
     
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
 
     const config: AxiosRequestConfig = {
       method: 'PATCH',
@@ -1822,11 +2271,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          requestBody
+          combinedQuery,
+          requestBody,
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -1850,7 +2306,7 @@ export class Invoices {
    */
   async createNewEstimate(
     requestBody: Models.CreateEstimatesDto,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.EstimateResponseDto> {
     let url = '/invoices/estimate';
     const queryParams: Record<string, any> = {};
@@ -1859,6 +2315,9 @@ export class Invoices {
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
     
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
 
     const config: AxiosRequestConfig = {
       method: 'POST',
@@ -1882,11 +2341,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          requestBody
+          combinedQuery,
+          requestBody,
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -1913,7 +2379,7 @@ export class Invoices {
       estimateId: string;
     },
     requestBody: Models.UpdateEstimateDto,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.EstimateResponseDto> {
     let url = '/invoices/estimate/{estimateId}';
     const queryParams: Record<string, any> = {};
@@ -1925,6 +2391,14 @@ export class Invoices {
     if (params) {
       if (params.estimateId !== undefined) {
         url = url.replace('{' + 'estimateId' + '}', encodeURIComponent(String(params.estimateId)));
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.estimateId !== undefined) {
+        allParams['estimateId'] = params.estimateId;
       }
     }
 
@@ -1950,11 +2424,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          requestBody
+          combinedQuery,
+          requestBody,
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -1981,7 +2462,7 @@ export class Invoices {
       estimateId: string;
     },
     requestBody: Models.AltDto,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.EstimateResponseDto> {
     let url = '/invoices/estimate/{estimateId}';
     const queryParams: Record<string, any> = {};
@@ -1993,6 +2474,14 @@ export class Invoices {
     if (params) {
       if (params.estimateId !== undefined) {
         url = url.replace('{' + 'estimateId' + '}', encodeURIComponent(String(params.estimateId)));
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.estimateId !== undefined) {
+        allParams['estimateId'] = params.estimateId;
       }
     }
 
@@ -2018,11 +2507,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          requestBody
+          combinedQuery,
+          requestBody,
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -2049,7 +2545,7 @@ export class Invoices {
       altId: string;
       altType: string;
     },
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.GenerateEstimateNumberResponse> {
     let url = '/invoices/estimate/number/generate';
     const queryParams: Record<string, any> = {};
@@ -2064,6 +2560,17 @@ export class Invoices {
       }
       if (params.altType !== undefined) {
         queryParams['altType'] = params.altType;
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.altId !== undefined) {
+        allParams['altId'] = params.altId;
+      }
+      if (params.altType !== undefined) {
+        allParams['altType'] = params.altType;
       }
     }
 
@@ -2088,11 +2595,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          {}
+          combinedQuery,
+          {},
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -2119,7 +2633,7 @@ export class Invoices {
       estimateId: string;
     },
     requestBody: Models.SendEstimateDto,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.EstimateResponseDto> {
     let url = '/invoices/estimate/{estimateId}/send';
     const queryParams: Record<string, any> = {};
@@ -2131,6 +2645,14 @@ export class Invoices {
     if (params) {
       if (params.estimateId !== undefined) {
         url = url.replace('{' + 'estimateId' + '}', encodeURIComponent(String(params.estimateId)));
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.estimateId !== undefined) {
+        allParams['estimateId'] = params.estimateId;
       }
     }
 
@@ -2156,11 +2678,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          requestBody
+          combinedQuery,
+          requestBody,
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -2187,7 +2716,7 @@ export class Invoices {
       estimateId: string;
     },
     requestBody: Models.CreateInvoiceFromEstimateDto,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.CreateInvoiceFromEstimateResponseDTO> {
     let url = '/invoices/estimate/{estimateId}/invoice';
     const queryParams: Record<string, any> = {};
@@ -2199,6 +2728,14 @@ export class Invoices {
     if (params) {
       if (params.estimateId !== undefined) {
         url = url.replace('{' + 'estimateId' + '}', encodeURIComponent(String(params.estimateId)));
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.estimateId !== undefined) {
+        allParams['estimateId'] = params.estimateId;
       }
     }
 
@@ -2224,11 +2761,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          requestBody
+          combinedQuery,
+          requestBody,
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -2262,7 +2806,7 @@ export class Invoices {
       limit: string;
       offset: string;
     },
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.ListEstimatesResponseDTO> {
     let url = '/invoices/estimate/list';
     const queryParams: Record<string, any> = {};
@@ -2301,6 +2845,38 @@ export class Invoices {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.altId !== undefined) {
+        allParams['altId'] = params.altId;
+      }
+      if (params.altType !== undefined) {
+        allParams['altType'] = params.altType;
+      }
+      if (params.startAt !== undefined) {
+        allParams['startAt'] = params.startAt;
+      }
+      if (params.endAt !== undefined) {
+        allParams['endAt'] = params.endAt;
+      }
+      if (params.search !== undefined) {
+        allParams['search'] = params.search;
+      }
+      if (params.status !== undefined) {
+        allParams['status'] = params.status;
+      }
+      if (params.contactId !== undefined) {
+        allParams['contactId'] = params.contactId;
+      }
+      if (params.limit !== undefined) {
+        allParams['limit'] = params.limit;
+      }
+      if (params.offset !== undefined) {
+        allParams['offset'] = params.offset;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -2322,11 +2898,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          {}
+          combinedQuery,
+          {},
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -2350,7 +2933,7 @@ export class Invoices {
    */
   async updateEstimateLastVisitedAt(
     requestBody: Models.EstimateIdParam,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<any> {
     let url = '/invoices/estimate/stats/last-visited-at';
     const queryParams: Record<string, any> = {};
@@ -2359,6 +2942,9 @@ export class Invoices {
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
     
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
 
     const config: AxiosRequestConfig = {
       method: 'PATCH',
@@ -2382,11 +2968,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          requestBody
+          combinedQuery,
+          requestBody,
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -2416,7 +3009,7 @@ export class Invoices {
       limit: string;
       offset: string;
     },
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.ListEstimateTemplateResponseDTO> {
     let url = '/invoices/estimate/template';
     const queryParams: Record<string, any> = {};
@@ -2443,6 +3036,26 @@ export class Invoices {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.altId !== undefined) {
+        allParams['altId'] = params.altId;
+      }
+      if (params.altType !== undefined) {
+        allParams['altType'] = params.altType;
+      }
+      if (params.search !== undefined) {
+        allParams['search'] = params.search;
+      }
+      if (params.limit !== undefined) {
+        allParams['limit'] = params.limit;
+      }
+      if (params.offset !== undefined) {
+        allParams['offset'] = params.offset;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -2464,11 +3077,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          {}
+          combinedQuery,
+          {},
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -2492,7 +3112,7 @@ export class Invoices {
    */
   async createEstimateTemplate(
     requestBody: Models.EstimateTemplatesDto,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.EstimateTemplateResponseDTO> {
     let url = '/invoices/estimate/template';
     const queryParams: Record<string, any> = {};
@@ -2501,6 +3121,9 @@ export class Invoices {
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
     
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
 
     const config: AxiosRequestConfig = {
       method: 'POST',
@@ -2524,11 +3147,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          requestBody
+          combinedQuery,
+          requestBody,
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -2555,7 +3185,7 @@ export class Invoices {
       templateId: string;
     },
     requestBody: Models.EstimateTemplatesDto,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.EstimateTemplateResponseDTO> {
     let url = '/invoices/estimate/template/{templateId}';
     const queryParams: Record<string, any> = {};
@@ -2567,6 +3197,14 @@ export class Invoices {
     if (params) {
       if (params.templateId !== undefined) {
         url = url.replace('{' + 'templateId' + '}', encodeURIComponent(String(params.templateId)));
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.templateId !== undefined) {
+        allParams['templateId'] = params.templateId;
       }
     }
 
@@ -2592,11 +3230,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          requestBody
+          combinedQuery,
+          requestBody,
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -2623,7 +3268,7 @@ export class Invoices {
       templateId: string;
     },
     requestBody: Models.AltDto,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.EstimateTemplateResponseDTO> {
     let url = '/invoices/estimate/template/{templateId}';
     const queryParams: Record<string, any> = {};
@@ -2635,6 +3280,14 @@ export class Invoices {
     if (params) {
       if (params.templateId !== undefined) {
         url = url.replace('{' + 'templateId' + '}', encodeURIComponent(String(params.templateId)));
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.templateId !== undefined) {
+        allParams['templateId'] = params.templateId;
       }
     }
 
@@ -2660,11 +3313,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          requestBody
+          combinedQuery,
+          requestBody,
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -2692,7 +3352,7 @@ export class Invoices {
       altType: string;
       templateId: string;
     },
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.EstimateTemplateResponseDTO> {
     let url = '/invoices/estimate/template/preview';
     const queryParams: Record<string, any> = {};
@@ -2710,6 +3370,20 @@ export class Invoices {
       }
       if (params.templateId !== undefined) {
         queryParams['templateId'] = params.templateId;
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.altId !== undefined) {
+        allParams['altId'] = params.altId;
+      }
+      if (params.altType !== undefined) {
+        allParams['altType'] = params.altType;
+      }
+      if (params.templateId !== undefined) {
+        allParams['templateId'] = params.templateId;
       }
     }
 
@@ -2734,11 +3408,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          {}
+          combinedQuery,
+          {},
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -2762,7 +3443,7 @@ export class Invoices {
    */
   async createInvoice(
     requestBody: Models.CreateInvoiceDto,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.CreateInvoiceResponseDto> {
     let url = '/invoices/';
     const queryParams: Record<string, any> = {};
@@ -2771,6 +3452,9 @@ export class Invoices {
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
     
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
 
     const config: AxiosRequestConfig = {
       method: 'POST',
@@ -2794,11 +3478,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          requestBody
+          combinedQuery,
+          requestBody,
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -2835,7 +3526,7 @@ export class Invoices {
       sortField?: string;
       sortOrder?: string;
     },
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.ListInvoicesResponseDto> {
     let url = '/invoices/';
     const queryParams: Record<string, any> = {};
@@ -2883,6 +3574,47 @@ export class Invoices {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.altId !== undefined) {
+        allParams['altId'] = params.altId;
+      }
+      if (params.altType !== undefined) {
+        allParams['altType'] = params.altType;
+      }
+      if (params.status !== undefined) {
+        allParams['status'] = params.status;
+      }
+      if (params.startAt !== undefined) {
+        allParams['startAt'] = params.startAt;
+      }
+      if (params.endAt !== undefined) {
+        allParams['endAt'] = params.endAt;
+      }
+      if (params.search !== undefined) {
+        allParams['search'] = params.search;
+      }
+      if (params.paymentMode !== undefined) {
+        allParams['paymentMode'] = params.paymentMode;
+      }
+      if (params.contactId !== undefined) {
+        allParams['contactId'] = params.contactId;
+      }
+      if (params.limit !== undefined) {
+        allParams['limit'] = params.limit;
+      }
+      if (params.offset !== undefined) {
+        allParams['offset'] = params.offset;
+      }
+      if (params.sortField !== undefined) {
+        allParams['sortField'] = params.sortField;
+      }
+      if (params.sortOrder !== undefined) {
+        allParams['sortOrder'] = params.sortOrder;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -2904,11 +3636,18 @@ export class Invoices {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          {}
+          combinedQuery,
+          {},
+          options?.preferredTokenType
         );
         
         if (authToken) {

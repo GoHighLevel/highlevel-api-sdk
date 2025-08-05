@@ -43,9 +43,12 @@
   "homepage": "https://github.com/GoHighLevel/highlevel-api-sdk#readme",
   "dependencies": {
     "axios": "^1.11.0",
+    "crypto": "^1.0.1",
+    "express": "^5.1.0",
     "mongodb": "^6.18.0"
   },
   "devDependencies": {
+    "@types/express": "^5.0.3",
     "@types/node": "^20.0.0",
     "rimraf": "^5.0.0",
     "typescript": "^5.3.0"

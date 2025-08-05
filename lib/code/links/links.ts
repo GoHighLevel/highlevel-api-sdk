@@ -36,6 +36,14 @@ export class Links {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.linkId !== undefined) {
+        allParams['linkId'] = params.linkId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'PUT',
       url,
@@ -58,10 +66,16 @@ export class Links {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           requestBody
         );
         
@@ -103,6 +117,14 @@ export class Links {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.linkId !== undefined) {
+        allParams['linkId'] = params.linkId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'DELETE',
       url,
@@ -124,10 +146,16 @@ export class Links {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         
@@ -169,6 +197,14 @@ export class Links {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.locationId !== undefined) {
+        allParams['locationId'] = params.locationId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -190,10 +226,16 @@ export class Links {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         
@@ -228,6 +270,9 @@ export class Links {
     const securityRequirements: string[] = ["bearer"];
     
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+
     const config: AxiosRequestConfig = {
       method: 'POST',
       url,
@@ -250,10 +295,16 @@ export class Links {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           requestBody
         );
         

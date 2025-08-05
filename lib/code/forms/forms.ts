@@ -59,6 +59,32 @@ export class Forms {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.locationId !== undefined) {
+        allParams['locationId'] = params.locationId;
+      }
+      if (params.page !== undefined) {
+        allParams['page'] = params.page;
+      }
+      if (params.limit !== undefined) {
+        allParams['limit'] = params.limit;
+      }
+      if (params.formId !== undefined) {
+        allParams['formId'] = params.formId;
+      }
+      if (params.q !== undefined) {
+        allParams['q'] = params.q;
+      }
+      if (params.startAt !== undefined) {
+        allParams['startAt'] = params.startAt;
+      }
+      if (params.endAt !== undefined) {
+        allParams['endAt'] = params.endAt;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -80,10 +106,16 @@ export class Forms {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         
@@ -130,6 +162,17 @@ export class Forms {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.contactId !== undefined) {
+        allParams['contactId'] = params.contactId;
+      }
+      if (params.locationId !== undefined) {
+        allParams['locationId'] = params.locationId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'POST',
       url,
@@ -152,10 +195,16 @@ export class Forms {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           requestBody
         );
         
@@ -209,6 +258,23 @@ export class Forms {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.locationId !== undefined) {
+        allParams['locationId'] = params.locationId;
+      }
+      if (params.skip !== undefined) {
+        allParams['skip'] = params.skip;
+      }
+      if (params.limit !== undefined) {
+        allParams['limit'] = params.limit;
+      }
+      if (params.type !== undefined) {
+        allParams['type'] = params.type;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -230,10 +296,16 @@ export class Forms {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         

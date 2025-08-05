@@ -30,7 +30,7 @@ export class Users {
       sortDirection?: string;
       enabled2waySync?: boolean;
     },
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.SearchUserSuccessfulResponseDto> {
     let url = '/users/search';
     const queryParams: Record<string, any> = {};
@@ -75,6 +75,44 @@ export class Users {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.companyId !== undefined) {
+        allParams['companyId'] = params.companyId;
+      }
+      if (params.query !== undefined) {
+        allParams['query'] = params.query;
+      }
+      if (params.skip !== undefined) {
+        allParams['skip'] = params.skip;
+      }
+      if (params.limit !== undefined) {
+        allParams['limit'] = params.limit;
+      }
+      if (params.locationId !== undefined) {
+        allParams['locationId'] = params.locationId;
+      }
+      if (params.type !== undefined) {
+        allParams['type'] = params.type;
+      }
+      if (params.role !== undefined) {
+        allParams['role'] = params.role;
+      }
+      if (params.ids !== undefined) {
+        allParams['ids'] = params.ids;
+      }
+      if (params.sort !== undefined) {
+        allParams['sort'] = params.sort;
+      }
+      if (params.sortDirection !== undefined) {
+        allParams['sortDirection'] = params.sortDirection;
+      }
+      if (params.enabled2waySync !== undefined) {
+        allParams['enabled2waySync'] = params.enabled2waySync;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -96,11 +134,18 @@ export class Users {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          {}
+          combinedQuery,
+          {},
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -123,7 +168,7 @@ export class Users {
    * Get User
    */
   async getUser(
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.UserSuccessfulResponseDto> {
     let url = '/users/{userId}';
     const queryParams: Record<string, any> = {};
@@ -132,6 +177,9 @@ export class Users {
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Agency-Access","Location-Access"];
     
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
 
     const config: AxiosRequestConfig = {
       method: 'GET',
@@ -154,11 +202,18 @@ export class Users {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          {}
+          combinedQuery,
+          {},
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -182,7 +237,7 @@ export class Users {
    */
   async updateUser(
     requestBody: Models.UpdateUserDto,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.UserSuccessfulResponseDto> {
     let url = '/users/{userId}';
     const queryParams: Record<string, any> = {};
@@ -191,6 +246,9 @@ export class Users {
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Agency-Access","Location-Access"];
     
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
 
     const config: AxiosRequestConfig = {
       method: 'PUT',
@@ -214,11 +272,18 @@ export class Users {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          requestBody
+          combinedQuery,
+          requestBody,
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -241,7 +306,7 @@ export class Users {
    * Delete User
    */
   async deleteUser(
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.DeleteUserSuccessfulResponseDto> {
     let url = '/users/{userId}';
     const queryParams: Record<string, any> = {};
@@ -250,6 +315,9 @@ export class Users {
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Agency-Access","Location-Access"];
     
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
 
     const config: AxiosRequestConfig = {
       method: 'DELETE',
@@ -272,11 +340,18 @@ export class Users {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          {}
+          combinedQuery,
+          {},
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -317,6 +392,14 @@ export class Users {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.locationId !== undefined) {
+        allParams['locationId'] = params.locationId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -338,10 +421,16 @@ export class Users {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         
@@ -366,7 +455,7 @@ export class Users {
    */
   async createUser(
     requestBody: Models.CreateUserDto,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.UserSuccessfulResponseDto> {
     let url = '/users/';
     const queryParams: Record<string, any> = {};
@@ -375,6 +464,9 @@ export class Users {
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Agency-Access","Location-Access"];
     
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
 
     const config: AxiosRequestConfig = {
       method: 'POST',
@@ -398,11 +490,18 @@ export class Users {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          requestBody
+          combinedQuery,
+          requestBody,
+          options?.preferredTokenType
         );
         
         if (authToken) {

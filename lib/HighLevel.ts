@@ -32,6 +32,7 @@ import { Users } from './code/users/users';
 import { Workflows } from './code/workflows/workflows';
 import { SessionStorage, MemorySessionStorage } from './storage';
 import { Logger, LogLevelType } from './logging';
+import { WebhookManager } from './webhook';
 
 // Extend AxiosRequestConfig to support retry tracking
 declare module 'axios' {
@@ -135,6 +136,9 @@ export class HighLevel {
   public surveys!: Surveys;
   public users!: Users;
   public workflows!: Workflows;
+  
+  // Webhook manager
+  public webhooks!: WebhookManager;
 
   constructor(config: ValidConfig) {
     // Validate configuration
@@ -360,13 +364,15 @@ export class HighLevel {
    * @param headers - Request headers
    * @param query - Query parameters  
    * @param body - Request body
+   * @param preferredTokenType - Preferred token type when both are available ('company' or 'location')
    * @returns Authorization header value or throws error
    */
   public async getTokenForSecurity(
     securityRequirements: string[], 
     headers: any = {}, 
     query: any = {}, 
-    body: any = {}
+    body: any = {},
+    preferredTokenType?: 'company' | 'location'
   ): Promise<string> {
     // Priority 1: privateIntegrationToken always wins
     if (this.config.privateIntegrationToken) {
@@ -381,7 +387,7 @@ export class HighLevel {
     const hasBearer = securityRequirements.includes('bearer');
 
     // Extract resourceId from request data
-    const resourceId = this.extractResourceId(headers, query, body);
+    const resourceId = this.extractResourceId(securityRequirements, headers, query, body, preferredTokenType);
 
     // Handle Agency-Access-Only
     if (hasAgencyOnly) {
@@ -429,34 +435,66 @@ export class HighLevel {
   }
 
   /**
-   * Extract resourceId from request data (headers, query, body)
+   * Extract resourceId from request data based on security requirements
+   * @param securityRequirements - Security requirements to determine token type
    * @param headers - Request headers
    * @param query - Query parameters  
    * @param body - Request body
+   * @param preferredTokenType - Preferred token type when both are available ('company' or 'location')
    * @returns Extracted resourceId (companyId or locationId)
    */
-  public extractResourceId(headers: any = {}, query: any = {}, body: any = {}): string | null {
+  public extractResourceId(securityRequirements: string[], headers: any = {}, query: any = {}, body: any = {}, preferredTokenType?: 'company' | 'location'): string | null {
     // Check headers first
-    const companyId = headers['x-company-id'] || headers['companyId'] || headers['company-id'];
-    const locationId = headers['x-location-id'] || headers['locationId'] || headers['location-id'];
-    
-    if (companyId) return companyId;
-    if (locationId) return locationId;
+    let companyId = ''
+    let locationId = ''
+    companyId = headers['x-company-id'] || headers['companyId'] || headers['company-id'];
+    locationId = headers['x-location-id'] || headers['locationId'] || headers['location-id'];
 
-    // Check query parameters
-    if (query.companyId) return query.companyId;
-    if (query.locationId) return query.locationId;
-    if (query.company_id) return query.company_id;
-    if (query.location_id) return query.location_id;
-
-    // Check body
-    if (body && typeof body === 'object') {
-      if (body.companyId) return body.companyId;
-      if (body.locationId) return body.locationId;
-      if (body.company_id) return body.company_id;
-      if (body.location_id) return body.location_id;
+    // Check query 
+    if (!companyId) {
+      if (query.companyId) companyId = query.companyId;
+      if (query.company_id) companyId = query.company_id;
     }
 
+    if (!locationId) {
+      if (query.locationId) locationId = query.locationId;
+      if (query.location_id) locationId = query.location_id;
+    }
+
+    // Check body
+    if (!companyId && !locationId && body && typeof body === 'object') {
+      if (body.companyId) companyId = body.companyId;
+      if (body.company_id) companyId = body.company_id;
+
+      if (body.locationId) locationId = body.locationId;
+      if (body.location_id) locationId = body.location_id;
+    }
+    
+    // Determine if we need location-level or agency-level token
+    const needsLocationToken = securityRequirements.some(req => 
+      req === 'Location-Access' || req === 'Location-Access-Only' || req === 'bearer'
+    );
+    const needsAgencyToken = securityRequirements.some(req => 
+      req === 'Agency-Access' || req === 'Agency-Access-Only'
+    );
+
+    // If both token types are supported, respect user preference
+    if (needsLocationToken && needsAgencyToken) {
+      if (preferredTokenType === 'company' && companyId) {
+        return companyId;
+      }
+      if (preferredTokenType === 'location' && locationId) {
+        return locationId;
+      }
+    }
+    
+    if (needsLocationToken) {
+      return locationId;
+    }
+    if (needsAgencyToken) {
+      return companyId;
+    }
+    
     return null;
   }
 
@@ -522,9 +560,11 @@ export class HighLevel {
           
           // Try to extract resourceId from the original request
           const resourceId = this.extractResourceId(
+            [], // No security requirements available in error context
             originalRequest.headers || {},
             originalRequest.params || {},
-            originalRequest.data || {}
+            originalRequest.data || {},
+            undefined // No preference available in error context
           );
           
           if (resourceId) {
@@ -699,6 +739,9 @@ export class HighLevel {
     this.users = new Users(this.httpClient);
     // Create workflows service with the shared HTTP client
     this.workflows = new Workflows(this.httpClient);
+    
+    // Initialize webhook manager
+    this.webhooks = new WebhookManager(this.logger, this.sessionStorage, this.oauth);
   }
 
   /**

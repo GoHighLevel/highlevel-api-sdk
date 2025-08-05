@@ -39,6 +39,17 @@ export class Campaigns {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.locationId !== undefined) {
+        allParams['locationId'] = params.locationId;
+      }
+      if (params.status !== undefined) {
+        allParams['status'] = params.status;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -60,10 +71,16 @@ export class Campaigns {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         

@@ -28,6 +28,9 @@ export class Courses {
     const securityRequirements: string[] = ["bearer"];
     
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+
     const config: AxiosRequestConfig = {
       method: 'POST',
       url,
@@ -50,10 +53,16 @@ export class Courses {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           requestBody
         );
         

@@ -7,5 +7,8 @@ export { SessionStorage, MongoDBSessionStorage, MemorySessionStorage, type ISess
 // Logging classes and types
 export { Logger, LogLevel, type LogLevelType, type LogLevelString } from './lib/logging';
 
+// Webhook classes and types
+export { WebhookManager } from './lib/webhook';
+
 // Default export - HighLevel wrapper class
 export { HighLevel as default } from './lib/HighLevel';

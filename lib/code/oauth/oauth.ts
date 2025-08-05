@@ -68,7 +68,7 @@ export class Oauth {
    */
   async getAccessToken(
     requestBody: Models.GetAccessCodebodyDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetAccessCodeSuccessfulResponseDto> {
     let url = '/oauth/token';
     const queryParams: Record<string, any> = {};
@@ -77,6 +77,9 @@ export class Oauth {
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = [];
 
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
 
     const config: AxiosRequestConfig = {
       method: 'POST',
@@ -97,7 +100,18 @@ export class Oauth {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          // Combine queryParams with allParams for token resolution
+          const combinedQuery = {
+            ...queryParams,
+            ...allParams
+          };
+          
+          const authToken = await ghlInstance.getTokenForSecurity(
+            securityRequirements,
+            { ...headerParams, ...options?.headers },
+            combinedQuery,
+            requestBody
+          );
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -118,7 +132,7 @@ export class Oauth {
    */
   async getLocationAccessToken(
     requestBody: Models.GetLocationAccessCodeBodyDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetLocationAccessTokenSuccessfulResponseDto> {
     let url = '/oauth/locationToken';
     const queryParams: Record<string, any> = {};
@@ -127,6 +141,9 @@ export class Oauth {
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Agency-Access-Only"];
 
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
 
     const config: AxiosRequestConfig = {
       method: 'POST',
@@ -147,7 +164,18 @@ export class Oauth {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          // Combine queryParams with allParams for token resolution
+          const combinedQuery = {
+            ...queryParams,
+            ...allParams
+          };
+          
+          const authToken = await ghlInstance.getTokenForSecurity(
+            securityRequirements,
+            { ...headerParams, ...options?.headers },
+            combinedQuery,
+            requestBody
+          );
           config.headers = {
             ...config.headers,
             'Authorization': authToken
@@ -178,7 +206,7 @@ export class Oauth {
       onTrial?: boolean;
       planId?: string;
     },
-    options?: AxiosRequestConfig & { preferredTokenType?: 'agency' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.GetInstalledLocationsSuccessfulResponseDto> {
     let url = '/oauth/installedLocations';
     const queryParams: Record<string, any> = {};
@@ -217,6 +245,38 @@ export class Oauth {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.skip !== undefined) {
+        allParams['skip'] = params.skip;
+      }
+      if (params.limit !== undefined) {
+        allParams['limit'] = params.limit;
+      }
+      if (params.query !== undefined) {
+        allParams['query'] = params.query;
+      }
+      if (params.isInstalled !== undefined) {
+        allParams['isInstalled'] = params.isInstalled;
+      }
+      if (params.companyId !== undefined) {
+        allParams['companyId'] = params.companyId;
+      }
+      if (params.appId !== undefined) {
+        allParams['appId'] = params.appId;
+      }
+      if (params.versionId !== undefined) {
+        allParams['versionId'] = params.versionId;
+      }
+      if (params.onTrial !== undefined) {
+        allParams['onTrial'] = params.onTrial;
+      }
+      if (params.planId !== undefined) {
+        allParams['planId'] = params.planId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -234,7 +294,18 @@ export class Oauth {
       const ghlInstance = (this.client as any).__ghlInstance;
       if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
         try {
-          const authToken = ghlInstance.getTokenForSecurity(securityRequirements, options?.preferredTokenType);
+          // Combine queryParams with allParams for token resolution
+          const combinedQuery = {
+            ...queryParams,
+            ...allParams
+          };
+          
+          const authToken = await ghlInstance.getTokenForSecurity(
+            securityRequirements,
+            { ...headerParams, ...options?.headers },
+            combinedQuery,
+            {}
+          );
           config.headers = {
             ...config.headers,
             'Authorization': authToken

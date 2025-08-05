@@ -35,6 +35,14 @@ export class Calendars {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.locationId !== undefined) {
+        allParams['locationId'] = params.locationId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -56,10 +64,16 @@ export class Calendars {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         
@@ -94,6 +108,9 @@ export class Calendars {
     const securityRequirements: string[] = ["bearer"];
     
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+
     const config: AxiosRequestConfig = {
       method: 'POST',
       url,
@@ -116,10 +133,16 @@ export class Calendars {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           requestBody
         );
         
@@ -154,6 +177,9 @@ export class Calendars {
     const securityRequirements: string[] = ["bearer"];
     
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+
     const config: AxiosRequestConfig = {
       method: 'POST',
       url,
@@ -176,10 +202,16 @@ export class Calendars {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           requestBody
         );
         
@@ -221,6 +253,14 @@ export class Calendars {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.groupId !== undefined) {
+        allParams['groupId'] = params.groupId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'DELETE',
       url,
@@ -242,10 +282,16 @@ export class Calendars {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         
@@ -288,6 +334,14 @@ export class Calendars {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.groupId !== undefined) {
+        allParams['groupId'] = params.groupId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'PUT',
       url,
@@ -310,10 +364,16 @@ export class Calendars {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           requestBody
         );
         
@@ -356,6 +416,14 @@ export class Calendars {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.groupId !== undefined) {
+        allParams['groupId'] = params.groupId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'PUT',
       url,
@@ -378,10 +446,16 @@ export class Calendars {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           requestBody
         );
         
@@ -416,6 +490,9 @@ export class Calendars {
     const securityRequirements: string[] = ["bearer"];
     
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+
     const config: AxiosRequestConfig = {
       method: 'POST',
       url,
@@ -438,10 +515,16 @@ export class Calendars {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           requestBody
         );
         
@@ -484,6 +567,14 @@ export class Calendars {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.eventId !== undefined) {
+        allParams['eventId'] = params.eventId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'PUT',
       url,
@@ -506,10 +597,16 @@ export class Calendars {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           requestBody
         );
         
@@ -551,6 +648,14 @@ export class Calendars {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.eventId !== undefined) {
+        allParams['eventId'] = params.eventId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -572,10 +677,16 @@ export class Calendars {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         
@@ -637,6 +748,29 @@ export class Calendars {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.locationId !== undefined) {
+        allParams['locationId'] = params.locationId;
+      }
+      if (params.userId !== undefined) {
+        allParams['userId'] = params.userId;
+      }
+      if (params.calendarId !== undefined) {
+        allParams['calendarId'] = params.calendarId;
+      }
+      if (params.groupId !== undefined) {
+        allParams['groupId'] = params.groupId;
+      }
+      if (params.startTime !== undefined) {
+        allParams['startTime'] = params.startTime;
+      }
+      if (params.endTime !== undefined) {
+        allParams['endTime'] = params.endTime;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -658,10 +792,16 @@ export class Calendars {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         
@@ -723,6 +863,29 @@ export class Calendars {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.locationId !== undefined) {
+        allParams['locationId'] = params.locationId;
+      }
+      if (params.userId !== undefined) {
+        allParams['userId'] = params.userId;
+      }
+      if (params.calendarId !== undefined) {
+        allParams['calendarId'] = params.calendarId;
+      }
+      if (params.groupId !== undefined) {
+        allParams['groupId'] = params.groupId;
+      }
+      if (params.startTime !== undefined) {
+        allParams['startTime'] = params.startTime;
+      }
+      if (params.endTime !== undefined) {
+        allParams['endTime'] = params.endTime;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -744,10 +907,16 @@ export class Calendars {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         
@@ -782,6 +951,9 @@ export class Calendars {
     const securityRequirements: string[] = ["bearer"];
     
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+
     const config: AxiosRequestConfig = {
       method: 'POST',
       url,
@@ -804,10 +976,16 @@ export class Calendars {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           requestBody
         );
         
@@ -850,6 +1028,14 @@ export class Calendars {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.eventId !== undefined) {
+        allParams['eventId'] = params.eventId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'PUT',
       url,
@@ -872,10 +1058,16 @@ export class Calendars {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           requestBody
         );
         
@@ -937,6 +1129,29 @@ export class Calendars {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.calendarId !== undefined) {
+        allParams['calendarId'] = params.calendarId;
+      }
+      if (params.startDate !== undefined) {
+        allParams['startDate'] = params.startDate;
+      }
+      if (params.endDate !== undefined) {
+        allParams['endDate'] = params.endDate;
+      }
+      if (params.timezone !== undefined) {
+        allParams['timezone'] = params.timezone;
+      }
+      if (params.userId !== undefined) {
+        allParams['userId'] = params.userId;
+      }
+      if (params.userIds !== undefined) {
+        allParams['userIds'] = params.userIds;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -958,10 +1173,16 @@ export class Calendars {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         
@@ -1004,6 +1225,14 @@ export class Calendars {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.calendarId !== undefined) {
+        allParams['calendarId'] = params.calendarId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'PUT',
       url,
@@ -1026,10 +1255,16 @@ export class Calendars {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           requestBody
         );
         
@@ -1071,6 +1306,14 @@ export class Calendars {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.calendarId !== undefined) {
+        allParams['calendarId'] = params.calendarId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -1092,10 +1335,16 @@ export class Calendars {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         
@@ -1137,6 +1386,14 @@ export class Calendars {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.calendarId !== undefined) {
+        allParams['calendarId'] = params.calendarId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'DELETE',
       url,
@@ -1158,10 +1415,16 @@ export class Calendars {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         
@@ -1204,6 +1467,14 @@ export class Calendars {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.eventId !== undefined) {
+        allParams['eventId'] = params.eventId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'DELETE',
       url,
@@ -1226,10 +1497,16 @@ export class Calendars {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           requestBody
         );
         
@@ -1279,6 +1556,20 @@ export class Calendars {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.limit !== undefined) {
+        allParams['limit'] = params.limit;
+      }
+      if (params.offset !== undefined) {
+        allParams['offset'] = params.offset;
+      }
+      if (params.appointmentId !== undefined) {
+        allParams['appointmentId'] = params.appointmentId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -1300,10 +1591,16 @@ export class Calendars {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         
@@ -1346,6 +1643,14 @@ export class Calendars {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.appointmentId !== undefined) {
+        allParams['appointmentId'] = params.appointmentId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'POST',
       url,
@@ -1368,10 +1673,16 @@ export class Calendars {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           requestBody
         );
         
@@ -1414,6 +1725,14 @@ export class Calendars {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.appointmentId !== undefined) {
+        allParams['appointmentId'] = params.appointmentId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'PUT',
       url,
@@ -1436,10 +1755,16 @@ export class Calendars {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           requestBody
         );
         
@@ -1481,6 +1806,14 @@ export class Calendars {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.appointmentId !== undefined) {
+        allParams['appointmentId'] = params.appointmentId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'DELETE',
       url,
@@ -1502,10 +1835,16 @@ export class Calendars {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         
@@ -1551,6 +1890,17 @@ export class Calendars {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.resourceType !== undefined) {
+        allParams['resourceType'] = params.resourceType;
+      }
+      if (params.id !== undefined) {
+        allParams['id'] = params.id;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -1572,10 +1922,16 @@ export class Calendars {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         
@@ -1622,6 +1978,17 @@ export class Calendars {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.resourceType !== undefined) {
+        allParams['resourceType'] = params.resourceType;
+      }
+      if (params.id !== undefined) {
+        allParams['id'] = params.id;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'PUT',
       url,
@@ -1644,10 +2011,16 @@ export class Calendars {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           requestBody
         );
         
@@ -1693,6 +2066,17 @@ export class Calendars {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.resourceType !== undefined) {
+        allParams['resourceType'] = params.resourceType;
+      }
+      if (params.id !== undefined) {
+        allParams['id'] = params.id;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'DELETE',
       url,
@@ -1714,10 +2098,16 @@ export class Calendars {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         
@@ -1771,6 +2161,23 @@ export class Calendars {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.resourceType !== undefined) {
+        allParams['resourceType'] = params.resourceType;
+      }
+      if (params.locationId !== undefined) {
+        allParams['locationId'] = params.locationId;
+      }
+      if (params.limit !== undefined) {
+        allParams['limit'] = params.limit;
+      }
+      if (params.skip !== undefined) {
+        allParams['skip'] = params.skip;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -1792,10 +2199,16 @@ export class Calendars {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         
@@ -1838,6 +2251,14 @@ export class Calendars {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.resourceType !== undefined) {
+        allParams['resourceType'] = params.resourceType;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'POST',
       url,
@@ -1860,10 +2281,16 @@ export class Calendars {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           requestBody
         );
         
@@ -1921,6 +2348,26 @@ export class Calendars {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.calendarId !== undefined) {
+        allParams['calendarId'] = params.calendarId;
+      }
+      if (params.isActive !== undefined) {
+        allParams['isActive'] = params.isActive;
+      }
+      if (params.deleted !== undefined) {
+        allParams['deleted'] = params.deleted;
+      }
+      if (params.limit !== undefined) {
+        allParams['limit'] = params.limit;
+      }
+      if (params.skip !== undefined) {
+        allParams['skip'] = params.skip;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -1942,10 +2389,16 @@ export class Calendars {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         
@@ -1988,6 +2441,14 @@ export class Calendars {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.calendarId !== undefined) {
+        allParams['calendarId'] = params.calendarId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'POST',
       url,
@@ -2010,10 +2471,16 @@ export class Calendars {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           requestBody
         );
         
@@ -2059,6 +2526,17 @@ export class Calendars {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.calendarId !== undefined) {
+        allParams['calendarId'] = params.calendarId;
+      }
+      if (params.notificationId !== undefined) {
+        allParams['notificationId'] = params.notificationId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -2080,10 +2558,16 @@ export class Calendars {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         
@@ -2130,6 +2614,17 @@ export class Calendars {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.calendarId !== undefined) {
+        allParams['calendarId'] = params.calendarId;
+      }
+      if (params.notificationId !== undefined) {
+        allParams['notificationId'] = params.notificationId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'PUT',
       url,
@@ -2152,10 +2647,16 @@ export class Calendars {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           requestBody
         );
         
@@ -2201,6 +2702,17 @@ export class Calendars {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.calendarId !== undefined) {
+        allParams['calendarId'] = params.calendarId;
+      }
+      if (params.notificationId !== undefined) {
+        allParams['notificationId'] = params.notificationId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'DELETE',
       url,
@@ -2222,10 +2734,16 @@ export class Calendars {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         
@@ -2275,6 +2793,20 @@ export class Calendars {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.locationId !== undefined) {
+        allParams['locationId'] = params.locationId;
+      }
+      if (params.groupId !== undefined) {
+        allParams['groupId'] = params.groupId;
+      }
+      if (params.showDrafted !== undefined) {
+        allParams['showDrafted'] = params.showDrafted;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -2296,10 +2828,16 @@ export class Calendars {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         
@@ -2334,6 +2872,9 @@ export class Calendars {
     const securityRequirements: string[] = ["bearer"];
     
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+
     const config: AxiosRequestConfig = {
       method: 'POST',
       url,
@@ -2356,10 +2897,16 @@ export class Calendars {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           requestBody
         );
         

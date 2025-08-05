@@ -28,6 +28,9 @@ export class Products {
     const securityRequirements: string[] = ["Location-Access"];
     
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+
     const config: AxiosRequestConfig = {
       method: 'POST',
       url,
@@ -50,10 +53,16 @@ export class Products {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           requestBody
         );
         
@@ -81,7 +90,7 @@ export class Products {
       productId: string;
     },
     requestBody: Models.CreatePriceDto,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.CreatePriceResponseDto> {
     let url = '/products/{productId}/price';
     const queryParams: Record<string, any> = {};
@@ -93,6 +102,14 @@ export class Products {
     if (params) {
       if (params.productId !== undefined) {
         url = url.replace('{' + 'productId' + '}', encodeURIComponent(String(params.productId)));
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.productId !== undefined) {
+        allParams['productId'] = params.productId;
       }
     }
 
@@ -118,11 +135,18 @@ export class Products {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          requestBody
+          combinedQuery,
+          requestBody,
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -152,7 +176,7 @@ export class Products {
       locationId: string;
       ids?: string;
     },
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.ListPricesResponseDto> {
     let url = '/products/{productId}/price';
     const queryParams: Record<string, any> = {};
@@ -179,6 +203,26 @@ export class Products {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.productId !== undefined) {
+        allParams['productId'] = params.productId;
+      }
+      if (params.limit !== undefined) {
+        allParams['limit'] = params.limit;
+      }
+      if (params.offset !== undefined) {
+        allParams['offset'] = params.offset;
+      }
+      if (params.locationId !== undefined) {
+        allParams['locationId'] = params.locationId;
+      }
+      if (params.ids !== undefined) {
+        allParams['ids'] = params.ids;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -200,11 +244,18 @@ export class Products {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          {}
+          combinedQuery,
+          {},
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -234,7 +285,7 @@ export class Products {
       altType: string;
       search?: string;
     },
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.GetInventoryResponseDto> {
     let url = '/products/inventory';
     const queryParams: Record<string, any> = {};
@@ -261,6 +312,26 @@ export class Products {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.limit !== undefined) {
+        allParams['limit'] = params.limit;
+      }
+      if (params.offset !== undefined) {
+        allParams['offset'] = params.offset;
+      }
+      if (params.altId !== undefined) {
+        allParams['altId'] = params.altId;
+      }
+      if (params.altType !== undefined) {
+        allParams['altType'] = params.altType;
+      }
+      if (params.search !== undefined) {
+        allParams['search'] = params.search;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -282,11 +353,18 @@ export class Products {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          {}
+          combinedQuery,
+          {},
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -310,7 +388,7 @@ export class Products {
    */
   async updateInventory(
     requestBody: Models.UpdateInventoryDto,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.UpdateInventoryResponseDto> {
     let url = '/products/inventory';
     const queryParams: Record<string, any> = {};
@@ -319,6 +397,9 @@ export class Products {
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
     
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
 
     const config: AxiosRequestConfig = {
       method: 'POST',
@@ -342,11 +423,18 @@ export class Products {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          requestBody
+          combinedQuery,
+          requestBody,
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -374,7 +462,7 @@ export class Products {
       priceId: string;
       locationId: string;
     },
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.GetPriceResponseDto> {
     let url = '/products/{productId}/price/{priceId}';
     const queryParams: Record<string, any> = {};
@@ -392,6 +480,20 @@ export class Products {
       }
       if (params.locationId !== undefined) {
         queryParams['locationId'] = params.locationId;
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.productId !== undefined) {
+        allParams['productId'] = params.productId;
+      }
+      if (params.priceId !== undefined) {
+        allParams['priceId'] = params.priceId;
+      }
+      if (params.locationId !== undefined) {
+        allParams['locationId'] = params.locationId;
       }
     }
 
@@ -416,11 +518,18 @@ export class Products {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          {}
+          combinedQuery,
+          {},
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -448,7 +557,7 @@ export class Products {
       priceId: string;
     },
     requestBody: Models.UpdatePriceDto,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.UpdatePriceResponseDto> {
     let url = '/products/{productId}/price/{priceId}';
     const queryParams: Record<string, any> = {};
@@ -463,6 +572,17 @@ export class Products {
       }
       if (params.priceId !== undefined) {
         url = url.replace('{' + 'priceId' + '}', encodeURIComponent(String(params.priceId)));
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.productId !== undefined) {
+        allParams['productId'] = params.productId;
+      }
+      if (params.priceId !== undefined) {
+        allParams['priceId'] = params.priceId;
       }
     }
 
@@ -488,11 +608,18 @@ export class Products {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          requestBody
+          combinedQuery,
+          requestBody,
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -520,7 +647,7 @@ export class Products {
       priceId: string;
       locationId: string;
     },
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.DeletePriceResponseDto> {
     let url = '/products/{productId}/price/{priceId}';
     const queryParams: Record<string, any> = {};
@@ -538,6 +665,20 @@ export class Products {
       }
       if (params.locationId !== undefined) {
         queryParams['locationId'] = params.locationId;
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.productId !== undefined) {
+        allParams['productId'] = params.productId;
+      }
+      if (params.priceId !== undefined) {
+        allParams['priceId'] = params.priceId;
+      }
+      if (params.locationId !== undefined) {
+        allParams['locationId'] = params.locationId;
       }
     }
 
@@ -562,11 +703,18 @@ export class Products {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          {}
+          combinedQuery,
+          {},
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -623,6 +771,26 @@ export class Products {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.storeId !== undefined) {
+        allParams['storeId'] = params.storeId;
+      }
+      if (params.altId !== undefined) {
+        allParams['altId'] = params.altId;
+      }
+      if (params.altType !== undefined) {
+        allParams['altType'] = params.altType;
+      }
+      if (params.search !== undefined) {
+        allParams['search'] = params.search;
+      }
+      if (params.collectionIds !== undefined) {
+        allParams['collectionIds'] = params.collectionIds;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -644,10 +812,16 @@ export class Products {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         
@@ -690,6 +864,14 @@ export class Products {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.storeId !== undefined) {
+        allParams['storeId'] = params.storeId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'POST',
       url,
@@ -712,10 +894,16 @@ export class Products {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           requestBody
         );
         
@@ -777,6 +965,29 @@ export class Products {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.limit !== undefined) {
+        allParams['limit'] = params.limit;
+      }
+      if (params.offset !== undefined) {
+        allParams['offset'] = params.offset;
+      }
+      if (params.altId !== undefined) {
+        allParams['altId'] = params.altId;
+      }
+      if (params.altType !== undefined) {
+        allParams['altType'] = params.altType;
+      }
+      if (params.collectionIds !== undefined) {
+        allParams['collectionIds'] = params.collectionIds;
+      }
+      if (params.name !== undefined) {
+        allParams['name'] = params.name;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -798,10 +1009,16 @@ export class Products {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         
@@ -836,6 +1053,9 @@ export class Products {
     const securityRequirements: string[] = ["Location-Access"];
     
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+
     const config: AxiosRequestConfig = {
       method: 'POST',
       url,
@@ -858,10 +1078,16 @@ export class Products {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           requestBody
         );
         
@@ -903,6 +1129,14 @@ export class Products {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.collectionId !== undefined) {
+        allParams['collectionId'] = params.collectionId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -924,10 +1158,16 @@ export class Products {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         
@@ -970,6 +1210,14 @@ export class Products {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.collectionId !== undefined) {
+        allParams['collectionId'] = params.collectionId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'PUT',
       url,
@@ -992,10 +1240,16 @@ export class Products {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           requestBody
         );
         
@@ -1045,6 +1299,20 @@ export class Products {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.collectionId !== undefined) {
+        allParams['collectionId'] = params.collectionId;
+      }
+      if (params.altId !== undefined) {
+        allParams['altId'] = params.altId;
+      }
+      if (params.altType !== undefined) {
+        allParams['altType'] = params.altType;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'DELETE',
       url,
@@ -1066,10 +1334,16 @@ export class Products {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         
@@ -1151,6 +1425,44 @@ export class Products {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.altId !== undefined) {
+        allParams['altId'] = params.altId;
+      }
+      if (params.altType !== undefined) {
+        allParams['altType'] = params.altType;
+      }
+      if (params.limit !== undefined) {
+        allParams['limit'] = params.limit;
+      }
+      if (params.offset !== undefined) {
+        allParams['offset'] = params.offset;
+      }
+      if (params.sortField !== undefined) {
+        allParams['sortField'] = params.sortField;
+      }
+      if (params.sortOrder !== undefined) {
+        allParams['sortOrder'] = params.sortOrder;
+      }
+      if (params.rating !== undefined) {
+        allParams['rating'] = params.rating;
+      }
+      if (params.startDate !== undefined) {
+        allParams['startDate'] = params.startDate;
+      }
+      if (params.endDate !== undefined) {
+        allParams['endDate'] = params.endDate;
+      }
+      if (params.productId !== undefined) {
+        allParams['productId'] = params.productId;
+      }
+      if (params.storeId !== undefined) {
+        allParams['storeId'] = params.storeId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -1172,10 +1484,16 @@ export class Products {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         
@@ -1241,6 +1559,32 @@ export class Products {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.altId !== undefined) {
+        allParams['altId'] = params.altId;
+      }
+      if (params.altType !== undefined) {
+        allParams['altType'] = params.altType;
+      }
+      if (params.rating !== undefined) {
+        allParams['rating'] = params.rating;
+      }
+      if (params.startDate !== undefined) {
+        allParams['startDate'] = params.startDate;
+      }
+      if (params.endDate !== undefined) {
+        allParams['endDate'] = params.endDate;
+      }
+      if (params.productId !== undefined) {
+        allParams['productId'] = params.productId;
+      }
+      if (params.storeId !== undefined) {
+        allParams['storeId'] = params.storeId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -1262,10 +1606,16 @@ export class Products {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         
@@ -1308,6 +1658,14 @@ export class Products {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.reviewId !== undefined) {
+        allParams['reviewId'] = params.reviewId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'PUT',
       url,
@@ -1330,10 +1688,16 @@ export class Products {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           requestBody
         );
         
@@ -1387,6 +1751,23 @@ export class Products {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.reviewId !== undefined) {
+        allParams['reviewId'] = params.reviewId;
+      }
+      if (params.altId !== undefined) {
+        allParams['altId'] = params.altId;
+      }
+      if (params.altType !== undefined) {
+        allParams['altType'] = params.altType;
+      }
+      if (params.productId !== undefined) {
+        allParams['productId'] = params.productId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'DELETE',
       url,
@@ -1408,10 +1789,16 @@ export class Products {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         
@@ -1446,6 +1833,9 @@ export class Products {
     const securityRequirements: string[] = ["Location-Access"];
     
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+
     const config: AxiosRequestConfig = {
       method: 'POST',
       url,
@@ -1468,10 +1858,16 @@ export class Products {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           requestBody
         );
         
@@ -1499,7 +1895,7 @@ export class Products {
       productId: string;
       locationId: string;
     },
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.GetProductResponseDto> {
     let url = '/products/{productId}';
     const queryParams: Record<string, any> = {};
@@ -1514,6 +1910,17 @@ export class Products {
       }
       if (params.locationId !== undefined) {
         queryParams['locationId'] = params.locationId;
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.productId !== undefined) {
+        allParams['productId'] = params.productId;
+      }
+      if (params.locationId !== undefined) {
+        allParams['locationId'] = params.locationId;
       }
     }
 
@@ -1538,11 +1945,18 @@ export class Products {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          {}
+          combinedQuery,
+          {},
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -1569,7 +1983,7 @@ export class Products {
       productId: string;
       locationId: string;
     },
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.DeleteProductResponseDto> {
     let url = '/products/{productId}';
     const queryParams: Record<string, any> = {};
@@ -1584,6 +1998,17 @@ export class Products {
       }
       if (params.locationId !== undefined) {
         queryParams['locationId'] = params.locationId;
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.productId !== undefined) {
+        allParams['productId'] = params.productId;
+      }
+      if (params.locationId !== undefined) {
+        allParams['locationId'] = params.locationId;
       }
     }
 
@@ -1608,11 +2033,18 @@ export class Products {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          {}
+          combinedQuery,
+          {},
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -1639,7 +2071,7 @@ export class Products {
       productId: string;
     },
     requestBody: Models.UpdateProductDto,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.UpdateProductResponseDto> {
     let url = '/products/{productId}';
     const queryParams: Record<string, any> = {};
@@ -1651,6 +2083,14 @@ export class Products {
     if (params) {
       if (params.productId !== undefined) {
         url = url.replace('{' + 'productId' + '}', encodeURIComponent(String(params.productId)));
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.productId !== undefined) {
+        allParams['productId'] = params.productId;
       }
     }
 
@@ -1676,11 +2116,18 @@ export class Products {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          requestBody
+          combinedQuery,
+          requestBody,
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -1704,7 +2151,7 @@ export class Products {
    */
   async createProduct(
     requestBody: Models.CreateProductDto,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.CreateProductResponseDto> {
     let url = '/products/';
     const queryParams: Record<string, any> = {};
@@ -1713,6 +2160,9 @@ export class Products {
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Location-Access","Agency-Access"];
     
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
 
     const config: AxiosRequestConfig = {
       method: 'POST',
@@ -1736,11 +2186,18 @@ export class Products {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          requestBody
+          combinedQuery,
+          requestBody,
+          options?.preferredTokenType
         );
         
         if (authToken) {
@@ -1777,7 +2234,7 @@ export class Products {
       availableInStore?: boolean;
       sortOrder?: string;
     },
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.ListProductsResponseDto> {
     let url = '/products/';
     const queryParams: Record<string, any> = {};
@@ -1825,6 +2282,47 @@ export class Products {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.limit !== undefined) {
+        allParams['limit'] = params.limit;
+      }
+      if (params.offset !== undefined) {
+        allParams['offset'] = params.offset;
+      }
+      if (params.locationId !== undefined) {
+        allParams['locationId'] = params.locationId;
+      }
+      if (params.search !== undefined) {
+        allParams['search'] = params.search;
+      }
+      if (params.collectionIds !== undefined) {
+        allParams['collectionIds'] = params.collectionIds;
+      }
+      if (params.collectionSlug !== undefined) {
+        allParams['collectionSlug'] = params.collectionSlug;
+      }
+      if (params.expand !== undefined) {
+        allParams['expand'] = params.expand;
+      }
+      if (params.productIds !== undefined) {
+        allParams['productIds'] = params.productIds;
+      }
+      if (params.storeId !== undefined) {
+        allParams['storeId'] = params.storeId;
+      }
+      if (params.includedInStore !== undefined) {
+        allParams['includedInStore'] = params.includedInStore;
+      }
+      if (params.availableInStore !== undefined) {
+        allParams['availableInStore'] = params.availableInStore;
+      }
+      if (params.sortOrder !== undefined) {
+        allParams['sortOrder'] = params.sortOrder;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -1846,11 +2344,18 @@ export class Products {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
-          {}
+          combinedQuery,
+          {},
+          options?.preferredTokenType
         );
         
         if (authToken) {

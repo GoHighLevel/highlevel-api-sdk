@@ -75,6 +75,44 @@ export class Emails {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.locationId !== undefined) {
+        allParams['locationId'] = params.locationId;
+      }
+      if (params.limit !== undefined) {
+        allParams['limit'] = params.limit;
+      }
+      if (params.offset !== undefined) {
+        allParams['offset'] = params.offset;
+      }
+      if (params.status !== undefined) {
+        allParams['status'] = params.status;
+      }
+      if (params.emailStatus !== undefined) {
+        allParams['emailStatus'] = params.emailStatus;
+      }
+      if (params.name !== undefined) {
+        allParams['name'] = params.name;
+      }
+      if (params.parentId !== undefined) {
+        allParams['parentId'] = params.parentId;
+      }
+      if (params.limitedFields !== undefined) {
+        allParams['limitedFields'] = params.limitedFields;
+      }
+      if (params.archived !== undefined) {
+        allParams['archived'] = params.archived;
+      }
+      if (params.campaignsOnly !== undefined) {
+        allParams['campaignsOnly'] = params.campaignsOnly;
+      }
+      if (params.showStats !== undefined) {
+        allParams['showStats'] = params.showStats;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -96,10 +134,16 @@ export class Emails {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         
@@ -134,6 +178,9 @@ export class Emails {
     const securityRequirements: string[] = ["Location-Access"];
     
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+
     const config: AxiosRequestConfig = {
       method: 'POST',
       url,
@@ -156,10 +203,16 @@ export class Emails {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           requestBody
         );
         
@@ -241,6 +294,44 @@ export class Emails {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.locationId !== undefined) {
+        allParams['locationId'] = params.locationId;
+      }
+      if (params.limit !== undefined) {
+        allParams['limit'] = params.limit;
+      }
+      if (params.offset !== undefined) {
+        allParams['offset'] = params.offset;
+      }
+      if (params.search !== undefined) {
+        allParams['search'] = params.search;
+      }
+      if (params.sortByDate !== undefined) {
+        allParams['sortByDate'] = params.sortByDate;
+      }
+      if (params.archived !== undefined) {
+        allParams['archived'] = params.archived;
+      }
+      if (params.builderVersion !== undefined) {
+        allParams['builderVersion'] = params.builderVersion;
+      }
+      if (params.name !== undefined) {
+        allParams['name'] = params.name;
+      }
+      if (params.parentId !== undefined) {
+        allParams['parentId'] = params.parentId;
+      }
+      if (params.originId !== undefined) {
+        allParams['originId'] = params.originId;
+      }
+      if (params.templatesOnly !== undefined) {
+        allParams['templatesOnly'] = params.templatesOnly;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -262,10 +353,16 @@ export class Emails {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         
@@ -311,6 +408,17 @@ export class Emails {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.locationId !== undefined) {
+        allParams['locationId'] = params.locationId;
+      }
+      if (params.templateId !== undefined) {
+        allParams['templateId'] = params.templateId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'DELETE',
       url,
@@ -332,10 +440,16 @@ export class Emails {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         
@@ -370,6 +484,9 @@ export class Emails {
     const securityRequirements: string[] = ["Location-Access"];
     
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+
     const config: AxiosRequestConfig = {
       method: 'POST',
       url,
@@ -392,10 +509,16 @@ export class Emails {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           requestBody
         );
         

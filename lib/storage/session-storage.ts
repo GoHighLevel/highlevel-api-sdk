@@ -72,4 +72,14 @@ export abstract class SessionStorage {
    * @returns Refresh token or null if not found
    */
   abstract getRefreshToken(resourceId: string): Promise<string | null>;
+
+  /**
+   * Get all sessions for the current application (optional method)
+   * This method is optional and can be overridden by implementations that support it
+   * @returns Array of session data for the current application
+   * @throws Error if not implemented by the storage implementation
+   */
+  async getSessionsByApplication(): Promise<any[]> {
+    throw new Error('getSessionsByApplication is not implemented by this storage provider');
+  }
 } 

@@ -38,6 +38,9 @@ export class Marketplace {
     const securityRequirements: string[] = ["Location-Access-Only"];
     
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+
     const config: AxiosRequestConfig = {
       method: 'POST',
       url,
@@ -60,10 +63,16 @@ export class Marketplace {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           requestBody
         );
         
@@ -139,6 +148,32 @@ export class Marketplace {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.meterId !== undefined) {
+        allParams['meterId'] = params.meterId;
+      }
+      if (params.eventId !== undefined) {
+        allParams['eventId'] = params.eventId;
+      }
+      if (params.userId !== undefined) {
+        allParams['userId'] = params.userId;
+      }
+      if (params.startDate !== undefined) {
+        allParams['startDate'] = params.startDate;
+      }
+      if (params.endDate !== undefined) {
+        allParams['endDate'] = params.endDate;
+      }
+      if (params.skip !== undefined) {
+        allParams['skip'] = params.skip;
+      }
+      if (params.limit !== undefined) {
+        allParams['limit'] = params.limit;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -160,10 +195,16 @@ export class Marketplace {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         
@@ -215,6 +256,14 @@ export class Marketplace {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.chargeId !== undefined) {
+        allParams['chargeId'] = params.chargeId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'DELETE',
       url,
@@ -236,10 +285,16 @@ export class Marketplace {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         
@@ -291,6 +346,14 @@ export class Marketplace {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.chargeId !== undefined) {
+        allParams['chargeId'] = params.chargeId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -312,10 +375,16 @@ export class Marketplace {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         
@@ -359,6 +428,9 @@ export class Marketplace {
     const securityRequirements: string[] = ["Location-Access-Only"];
     
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -380,10 +452,16 @@ export class Marketplace {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         

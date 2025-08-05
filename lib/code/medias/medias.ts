@@ -67,6 +67,38 @@ export class Medias {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.offset !== undefined) {
+        allParams['offset'] = params.offset;
+      }
+      if (params.limit !== undefined) {
+        allParams['limit'] = params.limit;
+      }
+      if (params.sortBy !== undefined) {
+        allParams['sortBy'] = params.sortBy;
+      }
+      if (params.sortOrder !== undefined) {
+        allParams['sortOrder'] = params.sortOrder;
+      }
+      if (params.type !== undefined) {
+        allParams['type'] = params.type;
+      }
+      if (params.query !== undefined) {
+        allParams['query'] = params.query;
+      }
+      if (params.altType !== undefined) {
+        allParams['altType'] = params.altType;
+      }
+      if (params.altId !== undefined) {
+        allParams['altId'] = params.altId;
+      }
+      if (params.parentId !== undefined) {
+        allParams['parentId'] = params.parentId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
@@ -88,10 +120,16 @@ export class Medias {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         
@@ -126,6 +164,9 @@ export class Medias {
     const securityRequirements: string[] = ["Location-Access-Only"];
     
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+
     const config: AxiosRequestConfig = {
       method: 'POST',
       url,
@@ -148,10 +189,16 @@ export class Medias {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           requestBody
         );
         
@@ -201,6 +248,20 @@ export class Medias {
       }
     }
 
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.id !== undefined) {
+        allParams['id'] = params.id;
+      }
+      if (params.altType !== undefined) {
+        allParams['altType'] = params.altType;
+      }
+      if (params.altId !== undefined) {
+        allParams['altId'] = params.altId;
+      }
+    }
+
     const config: AxiosRequestConfig = {
       method: 'DELETE',
       url,
@@ -222,10 +283,16 @@ export class Medias {
           ...options?.headers
         };
         
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
         const authToken = await ghlInstance.getTokenForSecurity(
           securityRequirements,
           combinedHeaders,
-          queryParams,
+          combinedQuery,
           {}
         );
         

@@ -8,6 +8,7 @@ The official TypeScript/JavaScript SDK for the HighLevel (GoHighLevel) API. This
 - [Authentication](#authentication)
 - [Getting Started](#getting-started)
 - [Token Management](#token-management)
+- [Webhooks](#webhooks)
 - [Usage Examples](#usage-examples)
 - [Error Handling](#error-handling)
 - [TypeScript Support](#typescript-support)
@@ -158,7 +159,39 @@ The SDK automatically attempts to refresh expired tokens when:
 - Valid refresh tokens are available
 - OAuth client credentials are configured
 
+## Webhooks
+
+Handle HighLevel webhooks with built-in signature verification and handles INSTALL and UNINSTALL events for your application.
+- INSTALL: In case of bulk installation, it will generate and store the token for all the locations for which installation was triggered
+- UNINSTALL: If your app is uninstalled at any location or company, it will remove token for that from the storage which is used by SDK.
+
+**NOTE**: The endpoint which you use should be the one which is configured in `Default Webhook URL` for your application in marketplace. We send INSTALL and UNINSTALL events to default url only.
+
+```typescript
+import express from 'express';
+
+const app = express();
+
+// SDK middleware processes webhook 
+app.use(bodyParser.json()) // This is required to parse the request body properly
+app.use('/webhooks/ghl', ghl.webhooks.subscribe());
+
+// Your handler runs after SDK processing
+app.post('/webhooks/ghl', async (req, res) => {
+  console.log(req.isSignatureValid)
+  // your logic for webhook goes here
+  res.json({ success: true });
+});
+
+// you can also use SDK to verify signature
+ghl.webhooks.verifySignature(payload, signature, ghlPublicKey)
+```
+
+The SDK automatically handles signature verification, if it is valid then you will get the flag `isSignatureValid` as true.
+
 ## Usage Examples
+
+**NOTE**: If companyId or locationId is part of query, body or header parameter then you don't need to pass it specifically. But if it is not, then you need to pass it in headers as shown below.
 
 ### Working with Contacts
 
@@ -167,12 +200,15 @@ The SDK automatically attempts to refresh expired tokens when:
 try {
   const contact = await ghl.contacts.getContact({
     contactId: 'contact-uuid-here'
+  },
+  {
+    headers: {
+      locationId // need to pass locationId here so that SDK can fetch the token for the location (as it is not part of body or query parameter)
+    },
   });
   
   console.log('Contact details:', contact);
   console.log('Contact name:', contact.contact.name);
-  console.log('Contact email:', contact.contact.email);
-  console.log('Contact phone:', contact.contact.phone);
 } catch (error) {
   console.error('Error fetching contact:', error.message);
 }
@@ -204,10 +240,15 @@ try {
 // Get all locations
 const locations = await ghl.locations.getLocations();
 
-// Get specific location
-const location = await ghl.locations.getLocation({
-  locationId: 'location-id'
-});
+// As getLocation supports both agency and location token, you can pass which token you want to use using preferredTokenType
+const location = await ghl.locations.getLocation(
+{
+  locationId
+},
+{
+  preferredTokenType: 'location'
+}
+)
 ```
 
 #### Campaigns
@@ -225,22 +266,6 @@ const opportunities = await ghl.opportunities.getOpportunities({
   locationId: 'location-id',
   limit: 20
 });
-```
-
-### Preferred Token Type
-
-You can specify which token type to prefer for specific API calls where both agency and sub-account token are supported:
-
-```typescript
-// Prefer agency token for this call
-const location = await ghl.locations.getLocation(
-  {
-    locationId: 'location-id'
-  }, 
-  { 
-    preferredTokenType: 'agency' 
-  }
-);
 ```
 
 ## Error Handling
