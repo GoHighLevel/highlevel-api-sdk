@@ -13,7 +13,7 @@ export class Medias {
   }
 
   /**
-   * Get List of Files
+   * Get List of Files/ Folders
    * Fetches list of files and folders from the media library
    */
   async fetchMediaContent(
@@ -22,11 +22,12 @@ export class Medias {
       limit?: string;
       sortBy: string;
       sortOrder: string;
-      type?: string;
+      type: string;
       query?: string;
       altType: string;
       altId: string;
       parentId?: string;
+      fetchAll?: string;
     },
     options?: AxiosRequestConfig
   ): Promise<Models.GetFilesResponseDTO> {
@@ -35,7 +36,7 @@ export class Medias {
     const headerParams: Record<string, string> = {};
     
     // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access-Only"];
+    const securityRequirements: string[] = ["Location-Access"];
     
     if (params) {
       if (params.offset !== undefined) {
@@ -64,6 +65,9 @@ export class Medias {
       }
       if (params.parentId !== undefined) {
         queryParams['parentId'] = params.parentId;
+      }
+      if (params.fetchAll !== undefined) {
+        queryParams['fetchAll'] = params.fetchAll;
       }
     }
 
@@ -96,6 +100,9 @@ export class Medias {
       }
       if (params.parentId !== undefined) {
         allParams['parentId'] = params.parentId;
+      }
+      if (params.fetchAll !== undefined) {
+        allParams['fetchAll'] = params.fetchAll;
       }
     }
 
@@ -161,7 +168,7 @@ export class Medias {
     const headerParams: Record<string, string> = {};
     
     // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access-Only"];
+    const securityRequirements: string[] = ["Location-Access"];
     
 
     // Collect all parameters for token resolution (including path params)
@@ -234,7 +241,7 @@ export class Medias {
     const headerParams: Record<string, string> = {};
     
     // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access-Only"];
+    const securityRequirements: string[] = ["Location-Access"];
     
     if (params) {
       if (params.id !== undefined) {
@@ -294,6 +301,295 @@ export class Medias {
           combinedHeaders,
           combinedQuery,
           {}
+        );
+        
+        if (authToken) {
+          config.headers = {
+            ...config.headers,
+            'Authorization': authToken
+          };
+        }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
+      }
+    }
+
+    const response: AxiosResponse<any> = await this.client.request(config);
+    return response.data;
+  }
+
+  /**
+   * Update File/ Folder
+   * Updates a single file or folder by ID
+   */
+  async updateMediaObject(
+    params: {
+      id: string;
+    },
+    requestBody: Models.UpdateObject,
+    options?: AxiosRequestConfig
+  ): Promise<any> {
+    let url = '/medias/{id}';
+    const queryParams: Record<string, any> = {};
+    const headerParams: Record<string, string> = {};
+    
+    // Extract security requirements for this endpoint
+    const securityRequirements: string[] = ["Location-Access"];
+    
+    if (params) {
+      if (params.id !== undefined) {
+        url = url.replace('{' + 'id' + '}', encodeURIComponent(String(params.id)));
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.id !== undefined) {
+        allParams['id'] = params.id;
+      }
+    }
+
+    const config: AxiosRequestConfig = {
+      method: 'POST',
+      url,
+      params: queryParams,
+      headers: {
+        ...headerParams,
+        ...options?.headers
+      },
+      data: requestBody,
+      ...options
+    };
+
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          combinedQuery,
+          requestBody
+        );
+        
+        if (authToken) {
+          config.headers = {
+            ...config.headers,
+            'Authorization': authToken
+          };
+        }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
+      }
+    }
+
+    const response: AxiosResponse<any> = await this.client.request(config);
+    return response.data;
+  }
+
+  /**
+   * Create Folder
+   * Creates a new folder in the media library
+   */
+  async createMediaFolder(
+    requestBody: Models.CreateFolderParams,
+    options?: AxiosRequestConfig
+  ): Promise<Models.FolderDTO> {
+    let url = '/medias/folder';
+    const queryParams: Record<string, any> = {};
+    const headerParams: Record<string, string> = {};
+    
+    // Extract security requirements for this endpoint
+    const securityRequirements: string[] = ["Location-Access"];
+    
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+
+    const config: AxiosRequestConfig = {
+      method: 'POST',
+      url,
+      params: queryParams,
+      headers: {
+        ...headerParams,
+        ...options?.headers
+      },
+      data: requestBody,
+      ...options
+    };
+
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          combinedQuery,
+          requestBody
+        );
+        
+        if (authToken) {
+          config.headers = {
+            ...config.headers,
+            'Authorization': authToken
+          };
+        }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
+      }
+    }
+
+    const response: AxiosResponse<Models.FolderDTO> = await this.client.request(config);
+    return response.data;
+  }
+
+  /**
+   * Bulk Update Files/ Folders
+   * Updates metadata or status of multiple files and folders
+   */
+  async bulkUpdateMediaObjects(
+    requestBody: Models.UpdateMediaObjects,
+    options?: AxiosRequestConfig
+  ): Promise<any> {
+    let url = '/medias/update-files';
+    const queryParams: Record<string, any> = {};
+    const headerParams: Record<string, string> = {};
+    
+    // Extract security requirements for this endpoint
+    const securityRequirements: string[] = ["Location-Access"];
+    
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+
+    const config: AxiosRequestConfig = {
+      method: 'PUT',
+      url,
+      params: queryParams,
+      headers: {
+        ...headerParams,
+        ...options?.headers
+      },
+      data: requestBody,
+      ...options
+    };
+
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          combinedQuery,
+          requestBody
+        );
+        
+        if (authToken) {
+          config.headers = {
+            ...config.headers,
+            'Authorization': authToken
+          };
+        }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
+      }
+    }
+
+    const response: AxiosResponse<any> = await this.client.request(config);
+    return response.data;
+  }
+
+  /**
+   * Bulk Delete / Trash Files or Folders
+   * Soft-deletes or trashes multiple files and folders in a single request
+   */
+  async bulkDeleteMediaObjects(
+    requestBody: Models.DeleteMediaObjectsBodyParams,
+    options?: AxiosRequestConfig
+  ): Promise<any> {
+    let url = '/medias/delete-files';
+    const queryParams: Record<string, any> = {};
+    const headerParams: Record<string, string> = {};
+    
+    // Extract security requirements for this endpoint
+    const securityRequirements: string[] = ["Location-Access"];
+    
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+
+    const config: AxiosRequestConfig = {
+      method: 'PUT',
+      url,
+      params: queryParams,
+      headers: {
+        ...headerParams,
+        ...options?.headers
+      },
+      data: requestBody,
+      ...options
+    };
+
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          combinedQuery,
+          requestBody
         );
         
         if (authToken) {

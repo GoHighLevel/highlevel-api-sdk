@@ -1,11 +1,11 @@
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import * as Models from './models/social-planner';
+import * as Models from './models/social-media-posting';
 
 /**
- * SocialPlanner Service
+ * SocialMediaPosting Service
  * Documentation for Social Media Posting API
  */
-export class SocialPlanner {
+export class SocialMediaPosting {
   private client: AxiosInstance;
 
   constructor(httpClient: AxiosInstance) {
@@ -766,7 +766,7 @@ Note:
     const headerParams: Record<string, string> = {};
     
     // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
+    const securityRequirements: string[] = [];
     
 
     // Collect all parameters for token resolution (including path params)
@@ -1899,7 +1899,23 @@ Note:
 
   /**
    * Starts OAuth For Twitter Account
-   * As of December 4, 2024, X (formerly Twitter) is no longer supported. We apologise for any inconvenience.
+   * &lt;div&gt;&lt;div&gt;
+  &lt;span style&#x3D; &quot;display: inline-block;
+    width: 25px; height: 25px;
+    background-color: red;
+    color: black;
+    font-weight: bold;
+    font-size: 24px;
+    text-align: center;
+    line-height: 20px;
+    border: 2px solid black;
+    border-radius: 20%;
+    margin-right: 10px;&quot;&gt;
+    !
+  &lt;/span&gt;
+  &lt;span&gt;&lt;strong&gt;As of December 4, 2024, X (formerly Twitter) is no longer supported. We apologise for any inconvenience.&lt;/strong&gt;&lt;/span&gt;
+&lt;/div&gt;&lt;/div&gt;
+   * @deprecated This method is deprecated
    */
   async startTwitterOauth(
     params: {
@@ -2000,7 +2016,23 @@ Note:
 
   /**
    * Get Twitter profile
-   * As of December 4, 2024, X (formerly Twitter) is no longer supported. We apologise for any inconvenience.
+   * &lt;div&gt;&lt;div&gt;
+  &lt;span style&#x3D; &quot;display: inline-block;
+    width: 25px; height: 25px;
+    background-color: red;
+    color: black;
+    font-weight: bold;
+    font-size: 24px;
+    text-align: center;
+    line-height: 20px;
+    border: 2px solid black;
+    border-radius: 20%;
+    margin-right: 10px;&quot;&gt;
+    !
+  &lt;/span&gt;
+  &lt;span&gt;&lt;strong&gt;As of December 4, 2024, X (formerly Twitter) is no longer supported. We apologise for any inconvenience.&lt;/strong&gt;&lt;/span&gt;
+&lt;/div&gt;&lt;/div&gt;
+   * @deprecated This method is deprecated
    */
   async getTwitterProfile(
     params: {
@@ -2087,7 +2119,23 @@ Note:
 
   /**
    * Attach Twitter profile
-   * As of December 4, 2024, X (formerly Twitter) is no longer supported. We apologise for any inconvenience.
+   * &lt;div&gt;&lt;div&gt;
+  &lt;span style&#x3D; &quot;display: inline-block;
+    width: 25px; height: 25px;
+    background-color: red;
+    color: black;
+    font-weight: bold;
+    font-size: 24px;
+    text-align: center;
+    line-height: 20px;
+    border: 2px solid black;
+    border-radius: 20%;
+    margin-right: 10px;&quot;&gt;
+    !
+  &lt;/span&gt;
+  &lt;span&gt;&lt;strong&gt;As of December 4, 2024, X (formerly Twitter) is no longer supported. We apologise for any inconvenience.&lt;/strong&gt;&lt;/span&gt;
+&lt;/div&gt;&lt;/div&gt;
+   * @deprecated This method is deprecated
    */
   async attachTwitterProfile(
     params: {
@@ -3779,4 +3827,4 @@ Note:
 
 }
 
-export default SocialPlanner; 
+export default SocialMediaPosting; 

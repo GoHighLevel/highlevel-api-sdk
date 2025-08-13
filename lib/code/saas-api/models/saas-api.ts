@@ -1,7 +1,18 @@
 /**
- * Saas Models and Types
+ * SaasApi Models and Types
  * Generated from OpenAPI schema definitions
  */
+
+export interface BadRequestDTO {
+  statusCode?: number;
+  message?: string;
+}
+
+export interface UnauthorizedDTO {
+  statusCode?: number;
+  message?: string;
+  error?: string;
+}
 
 export interface ResourceNotFoundDTO {
   statusCode?: number;

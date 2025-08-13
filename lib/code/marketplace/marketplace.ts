@@ -14,17 +14,7 @@ export class Marketplace {
 
   /**
    * Create a new wallet charge
-   * &lt;div&gt;
-                  &lt;p&gt;Create a new wallet charge&lt;/p&gt; 
-                  &lt;div&gt;
-&lt;span&gt;
-                     :::info
- This feature is currently in Private Beta and not available to all developers.
- :::  
- &lt;/span&gt;
-                  &lt;/div&gt;
-                &lt;/div&gt;
-    
+   * Create a new wallet charge
    */
   async charge(
     requestBody: Models.RaiseChargeBodyDTO,
@@ -93,17 +83,7 @@ export class Marketplace {
 
   /**
    * Get all wallet charges
-   * &lt;div&gt;
-                  &lt;p&gt;Get all wallet charges&lt;/p&gt; 
-                  &lt;div&gt;
-&lt;span&gt;
-                     :::info
- This feature is currently in Private Beta and not available to all developers.
- :::  
- &lt;/span&gt;
-                  &lt;/div&gt;
-                &lt;/div&gt;
-    
+   * Get all wallet charges
    */
   async getCharges(
     params: {
@@ -225,17 +205,7 @@ export class Marketplace {
 
   /**
    * Delete a wallet charge
-   * &lt;div&gt;
-                  &lt;p&gt;Delete a wallet charge&lt;/p&gt; 
-                  &lt;div&gt;
-&lt;span&gt;
-                     :::info
- This feature is currently in Private Beta and not available to all developers.
- :::  
- &lt;/span&gt;
-                  &lt;/div&gt;
-                &lt;/div&gt;
-    
+   * Delete a wallet charge
    */
   async deleteCharge(
     params: {
@@ -315,17 +285,7 @@ export class Marketplace {
 
   /**
    * Get specific wallet charge details
-   * &lt;div&gt;
-                  &lt;p&gt;Get specific wallet charge details&lt;/p&gt; 
-                  &lt;div&gt;
-&lt;span&gt;
-                     :::info
- This feature is currently in Private Beta and not available to all developers.
- :::  
- &lt;/span&gt;
-                  &lt;/div&gt;
-                &lt;/div&gt;
-    
+   * Get specific wallet charge details
    */
   async getSpecificCharge(
     params: {
@@ -405,17 +365,7 @@ export class Marketplace {
 
   /**
    * Check if account has sufficient funds
-   * &lt;div&gt;
-                  &lt;p&gt;Check if account has sufficient funds&lt;/p&gt; 
-                  &lt;div&gt;
-&lt;span&gt;
-                     :::info
- This feature is currently in Private Beta and not available to all developers.
- :::  
- &lt;/span&gt;
-                  &lt;/div&gt;
-                &lt;/div&gt;
-    
+   * Check if account has sufficient funds
    */
   async hasFunds(
     options?: AxiosRequestConfig
@@ -477,6 +427,169 @@ export class Marketplace {
     }
 
     const response: AxiosResponse<any> = await this.client.request(config);
+    return response.data;
+  }
+
+  /**
+   * Uninstall an application
+   * Uninstalls an application from your company or a specific location. This will remove the application&#x60;s access and stop all its functionalities
+   */
+  async uninstallApplication(
+    params: {
+      appId: string;
+    },
+    requestBody: Models.DeleteIntegrationBodyDto,
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
+  ): Promise<Models.DeleteIntegrationResponse> {
+    let url = '/marketplace/app/{appId}/installations';
+    const queryParams: Record<string, any> = {};
+    const headerParams: Record<string, string> = {};
+    
+    // Extract security requirements for this endpoint
+    const securityRequirements: string[] = ["Location-Access-Only","Agency-Access"];
+    
+    if (params) {
+      if (params.appId !== undefined) {
+        url = url.replace('{' + 'appId' + '}', encodeURIComponent(String(params.appId)));
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.appId !== undefined) {
+        allParams['appId'] = params.appId;
+      }
+    }
+
+    const config: AxiosRequestConfig = {
+      method: 'DELETE',
+      url,
+      params: queryParams,
+      headers: {
+        ...headerParams,
+        ...options?.headers
+      },
+      data: requestBody,
+      ...options
+    };
+
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          combinedQuery,
+          requestBody,
+          options?.preferredTokenType
+        );
+        
+        if (authToken) {
+          config.headers = {
+            ...config.headers,
+            'Authorization': authToken
+          };
+        }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
+      }
+    }
+
+    const response: AxiosResponse<Models.DeleteIntegrationResponse> = await this.client.request(config);
+    return response.data;
+  }
+
+  /**
+   * Get Installer Details
+   * Fetches installer details for the authenticated user. This endpoint returns information about the company, location, user, and installation details associated with the current OAuth token.
+   */
+  async getInstallerDetails(
+    params: {
+      appId: string;
+    },
+    options?: AxiosRequestConfig
+  ): Promise<Models.GetInstallerDetailsResponseDTO> {
+    let url = '/marketplace/app/{appId}/installer-details';
+    const queryParams: Record<string, any> = {};
+    const headerParams: Record<string, string> = {};
+    
+    // Extract security requirements for this endpoint
+    const securityRequirements: string[] = [];
+    
+    if (params) {
+      if (params.appId !== undefined) {
+        url = url.replace('{' + 'appId' + '}', encodeURIComponent(String(params.appId)));
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.appId !== undefined) {
+        allParams['appId'] = params.appId;
+      }
+    }
+
+    const config: AxiosRequestConfig = {
+      method: 'GET',
+      url,
+      params: queryParams,
+      headers: {
+        ...headerParams,
+        ...options?.headers
+      },
+      ...options
+    };
+
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          combinedQuery,
+          {}
+        );
+        
+        if (authToken) {
+          config.headers = {
+            ...config.headers,
+            'Authorization': authToken
+          };
+        }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
+      }
+    }
+
+    const response: AxiosResponse<Models.GetInstallerDetailsResponseDTO> = await this.client.request(config);
     return response.data;
   }
 

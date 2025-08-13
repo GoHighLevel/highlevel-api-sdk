@@ -1374,7 +1374,7 @@ export class Contacts {
     const headerParams: Record<string, string> = {};
     
     // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access"];
+    const securityRequirements: string[] = [];
     
     if (params) {
       if (params.type !== undefined) {
@@ -1753,7 +1753,7 @@ export class Contacts {
 
   /**
    * Upsert Contact
-   * Please find the list of acceptable values for the &#x60;country&#x60; field  &lt;a href&#x3D;&quot;https://highlevel.stoplight.io/docs/integrations/ZG9jOjI4MzUzNDIy-country-list&quot; target&#x3D;&quot;_blank&quot;&gt;here&lt;/a&gt;&lt;br/&gt;&lt;br/&gt;The Upsert API will adhere to the configuration defined under the “Allow Duplicate Contact” setting at the Location level. If the setting is configured to check both Email and Phone, the API will attempt to identify an existing contact based on the priority sequence specified in the setting, and will create or update the contact accordingly.&lt;br/&gt;&lt;br/&gt;If two separate contacts already exist—one with the same email and another with the same phone—and an upsert request includes both the email and phone, the API will update the contact that matches the first field in the configured sequence, and ignore the second field to prevent duplication.
+   * Please find the list of acceptable values for the &#x60;country&#x60; field  &lt;a href&#x3D;&quot;https://highlevel.stoplight.io/docs/integrations/ZG9jOjI4MzUzNDIy-country-list&quot; target&#x3D;&quot;_blank&quot;&gt;here&lt;/a&gt;&lt;br&gt;&lt;br&gt;The Upsert API will adhere to the configuration defined under the “Allow Duplicate Contact” setting at the Location level. If the setting is configured to check both Email and Phone, the API will attempt to identify an existing contact based on the priority sequence specified in the setting, and will create or update the contact accordingly.&lt;br&gt;&lt;br&gt;If two separate contacts already exist—one with the same email and another with the same phone—and an upsert request includes both the email and phone, the API will update the contact that matches the first field in the configured sequence, and ignore the second field to prevent duplication.
    */
   async upsertContact(
     requestBody: Models.UpsertContactDto,
@@ -2600,6 +2600,7 @@ export class Contacts {
    * Get Contacts
 
  **Note:** This API endpoint is deprecated. Please use the [Search Contacts](https://highlevel.stoplight.io/docs/integrations/dbe4f3a00a106-search-contacts) endpoint instead.
+   * @deprecated deprecated. Use the [Search Contacts](https://highlevel instead.
    */
   async getContacts(
     params: {

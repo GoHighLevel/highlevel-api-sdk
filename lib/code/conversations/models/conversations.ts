@@ -3,6 +3,23 @@
  * Generated from OpenAPI schema definitions
  */
 
+export interface BadRequestDTO {
+  statusCode?: number;
+  message?: string;
+}
+
+export interface UnauthorizedDTO {
+  statusCode?: number;
+  message?: string;
+  error?: string;
+}
+
+export interface ForbiddenDTO {
+  statusCode?: number;
+  message?: string;
+  error?: string;
+}
+
 export interface StartAfterNumberSchema {
   startAfterDate?: number;
 }
@@ -131,6 +148,7 @@ export interface MessageMeta {
 
 export interface GetMessageResponseDto {
   id: string;
+  altId?: string;
   type: number;
   messageType: string;
   locationId: string;
@@ -149,9 +167,7 @@ export interface GetMessageResponseDto {
 }
 
 export interface GetMessagesByConversationResponseDto {
-  lastMessageId: string;
-  nextPage: boolean;
-  messages: GetMessageResponseDto[];
+  messages: any;
 }
 
 export interface SendMessageBodyDto {

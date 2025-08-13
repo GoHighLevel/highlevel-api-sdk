@@ -71,6 +71,21 @@ export interface SearchUserSuccessfulResponseDto {
   count?: number;
 }
 
+export interface UnprocessableDTO {
+  statusCode?: number;
+  message?: string[];
+  error?: string;
+}
+
+export interface FilterByEmailDto {
+  companyId: string;
+  emails: string[];
+  deleted?: boolean;
+  skip?: string;
+  limit?: string;
+  projection?: string;
+}
+
 export interface LocationSuccessfulResponseDto {
   users?: UserSchema[];
 }

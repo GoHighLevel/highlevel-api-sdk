@@ -24,9 +24,9 @@ import { Objects } from './code/objects/objects';
 import { Opportunities } from './code/opportunities/opportunities';
 import { Payments } from './code/payments/payments';
 import { Products } from './code/products/products';
-import { Saas } from './code/saas/saas';
+import { SaasApi } from './code/saas-api/saas-api';
 import { Snapshots } from './code/snapshots/snapshots';
-import { SocialPlanner } from './code/social-planner/social-planner';
+import { SocialMediaPosting } from './code/social-media-posting/social-media-posting';
 import { Surveys } from './code/surveys/surveys';
 import { Users } from './code/users/users';
 import { Workflows } from './code/workflows/workflows';
@@ -130,9 +130,9 @@ export class HighLevel {
   public opportunities!: Opportunities;
   public payments!: Payments;
   public products!: Products;
-  public saas!: Saas;
+  public saasApi!: SaasApi;
   public snapshots!: Snapshots;
-  public socialPlanner!: SocialPlanner;
+  public socialMediaPosting!: SocialMediaPosting;
   public surveys!: Surveys;
   public users!: Users;
   public workflows!: Workflows;
@@ -727,12 +727,12 @@ export class HighLevel {
     this.payments = new Payments(this.httpClient);
     // Create products service with the shared HTTP client
     this.products = new Products(this.httpClient);
-    // Create saas service with the shared HTTP client
-    this.saas = new Saas(this.httpClient);
+    // Create saasApi service with the shared HTTP client
+    this.saasApi = new SaasApi(this.httpClient);
     // Create snapshots service with the shared HTTP client
     this.snapshots = new Snapshots(this.httpClient);
-    // Create socialPlanner service with the shared HTTP client
-    this.socialPlanner = new SocialPlanner(this.httpClient);
+    // Create socialMediaPosting service with the shared HTTP client
+    this.socialMediaPosting = new SocialMediaPosting(this.httpClient);
     // Create surveys service with the shared HTTP client
     this.surveys = new Surveys(this.httpClient);
     // Create users service with the shared HTTP client

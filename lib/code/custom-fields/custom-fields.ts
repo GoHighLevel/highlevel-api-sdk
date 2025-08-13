@@ -15,11 +15,28 @@ export class CustomFields {
   /**
    * Get Custom Field / Folder By Id
    * &lt;div&gt;
-&lt;p&gt; Get Custom Field / Folder By Id.&lt;/p&gt; 
- &lt;/div&gt; 
- :::info
- Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.
- :::
+                  &lt;p&gt; Get Custom Field / Folder By Id.&lt;/p&gt; 
+                  &lt;div&gt;
+                    &lt;span style&#x3D; &quot;display: inline-block;
+                                width: 25px; height: 25px;
+                                background-color: yellow;
+                                color: black;
+                                font-weight: bold;
+                                font-size: 24px;
+                                text-align: center;
+                                line-height: 22px;
+                                border: 2px solid black;
+                                border-radius: 10%;
+                                margin-right: 10px;&quot;&gt;
+                                !
+                      &lt;/span&gt;
+                      &lt;span&gt;
+                        &lt;strong&gt;
+                        Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.
+                        &lt;/strong&gt;
+                      &lt;/span&gt;
+                  &lt;/div&gt;
+                &lt;/div&gt;
    */
   async getCustomFieldById(
     params: {
@@ -100,11 +117,28 @@ export class CustomFields {
   /**
    * Update Custom Field By Id
    * &lt;div&gt;
- &lt;p&gt; Update Custom Field By Id &lt;/p&gt; 
- &lt;/div&gt; 
- :::info
- Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.
- :::
+    &lt;p&gt; Update Custom Field By Id &lt;/p&gt; 
+    &lt;div&gt;
+      &lt;span style&#x3D; &quot;display: inline-block;
+                  width: 25px; height: 25px;
+                  background-color: yellow;
+                  color: black;
+                  font-weight: bold;
+                  font-size: 24px;
+                  text-align: center;
+                  line-height: 22px;
+                  border: 2px solid black;
+                  border-radius: 10%;
+                  margin-right: 10px;&quot;&gt;
+                  !
+        &lt;/span&gt;
+        &lt;span&gt;
+          &lt;strong&gt;
+          Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.
+          &lt;/strong&gt;
+        &lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
    */
   async updateCustomField(
     params: {
@@ -187,11 +221,28 @@ export class CustomFields {
   /**
    * Delete Custom Field By Id
    * &lt;div&gt;
- &lt;p&gt; Delete Custom Field By Id &lt;/p&gt; 
- &lt;/div&gt; 
- :::info
- Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.
- :::
+    &lt;p&gt; Delete Custom Field By Id &lt;/p&gt; 
+    &lt;div&gt;
+      &lt;span style&#x3D; &quot;display: inline-block;
+                  width: 25px; height: 25px;
+                  background-color: yellow;
+                  color: black;
+                  font-weight: bold;
+                  font-size: 24px;
+                  text-align: center;
+                  line-height: 22px;
+                  border: 2px solid black;
+                  border-radius: 10%;
+                  margin-right: 10px;&quot;&gt;
+                  !
+        &lt;/span&gt;
+        &lt;span&gt;
+          &lt;strong&gt;
+          Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.
+          &lt;/strong&gt;
+        &lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
    */
   async deleteCustomField(
     params: {
@@ -272,11 +323,28 @@ export class CustomFields {
   /**
    * Get Custom Fields By Object Key
    * &lt;div&gt;
- &lt;p&gt; Get Custom Fields By Object Key &lt;/p&gt; 
- &lt;/div&gt; 
- :::info
- Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.
- :::
+                  &lt;p&gt; Get Custom Fields By Object Key&lt;/p&gt; 
+                  &lt;div&gt;
+                    &lt;span style&#x3D; &quot;display: inline-block;
+                                width: 25px; height: 25px;
+                                background-color: yellow;
+                                color: black;
+                                font-weight: bold;
+                                font-size: 24px;
+                                text-align: center;
+                                line-height: 22px;
+                                border: 2px solid black;
+                                border-radius: 10%;
+                                margin-right: 10px;&quot;&gt;
+                                !
+                      &lt;/span&gt;
+                      &lt;span&gt;
+                        &lt;strong&gt;
+                        Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.
+                        &lt;/strong&gt;
+                      &lt;/span&gt;
+                  &lt;/div&gt;
+                &lt;/div&gt;
    */
   async getCustomFieldsByObjectKey(
     params: {
@@ -364,11 +432,28 @@ export class CustomFields {
   /**
    * Create Custom Field Folder
    * &lt;div&gt;
- &lt;p&gt; Create Custom Field Folder &lt;/p&gt; 
- &lt;/div&gt; 
- :::info
- Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.
- :::
+    &lt;p&gt; Create Custom Field Folder &lt;/p&gt; 
+    &lt;div&gt;
+      &lt;span style&#x3D; &quot;display: inline-block;
+                  width: 25px; height: 25px;
+                  background-color: yellow;
+                  color: black;
+                  font-weight: bold;
+                  font-size: 24px;
+                  text-align: center;
+                  line-height: 22px;
+                  border: 2px solid black;
+                  border-radius: 10%;
+                  margin-right: 10px;&quot;&gt;
+                  !
+        &lt;/span&gt;
+        &lt;span&gt;
+          &lt;strong&gt;
+          Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.
+          &lt;/strong&gt;
+        &lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
    */
   async createCustomFieldFolder(
     requestBody: Models.CreateFolder,
@@ -438,11 +523,28 @@ export class CustomFields {
   /**
    * Update Custom Field Folder Name
    * &lt;div&gt;
- &lt;p&gt; Create Custom Field Folder &lt;/p&gt; 
- &lt;/div&gt; 
- :::info
- Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.
- :::
+    &lt;p&gt; Create Custom Field Folder &lt;/p&gt; 
+    &lt;div&gt;
+      &lt;span style&#x3D; &quot;display: inline-block;
+                  width: 25px; height: 25px;
+                  background-color: yellow;
+                  color: black;
+                  font-weight: bold;
+                  font-size: 24px;
+                  text-align: center;
+                  line-height: 22px;
+                  border: 2px solid black;
+                  border-radius: 10%;
+                  margin-right: 10px;&quot;&gt;
+                  !
+        &lt;/span&gt;
+        &lt;span&gt;
+          &lt;strong&gt;
+          Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.
+          &lt;/strong&gt;
+        &lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
    */
   async updateCustomFieldFolder(
     params: {
@@ -525,11 +627,28 @@ export class CustomFields {
   /**
    * Delete Custom Field Folder
    * &lt;div&gt;
-&lt;p&gt; Create Custom Field Folder &lt;/p&gt; 
- &lt;/div&gt; 
- :::info
- Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.
- :::
+    &lt;p&gt; Create Custom Field Folder &lt;/p&gt; 
+    &lt;div&gt;
+      &lt;span style&#x3D; &quot;display: inline-block;
+                  width: 25px; height: 25px;
+                  background-color: yellow;
+                  color: black;
+                  font-weight: bold;
+                  font-size: 24px;
+                  text-align: center;
+                  line-height: 22px;
+                  border: 2px solid black;
+                  border-radius: 10%;
+                  margin-right: 10px;&quot;&gt;
+                  !
+        &lt;/span&gt;
+        &lt;span&gt;
+          &lt;strong&gt;
+          Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.
+          &lt;/strong&gt;
+        &lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
    */
   async deleteCustomFieldFolder(
     params: {
@@ -617,11 +736,28 @@ export class CustomFields {
   /**
    * Create Custom Field
    * &lt;div&gt;
-&lt;p&gt; Create Custom Field &lt;/p&gt; 
- &lt;/div&gt; 
- :::info
- Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.
- :::
+                  &lt;p&gt; Create Custom Field &lt;/p&gt; 
+                  &lt;div&gt;
+                    &lt;span style&#x3D; &quot;display: inline-block;
+                                width: 25px; height: 25px;
+                                background-color: yellow;
+                                color: black;
+                                font-weight: bold;
+                                font-size: 24px;
+                                text-align: center;
+                                line-height: 22px;
+                                border: 2px solid black;
+                                border-radius: 10%;
+                                margin-right: 10px;&quot;&gt;
+                                !
+                      &lt;/span&gt;
+                      &lt;span&gt;
+                        &lt;strong&gt;
+                        Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.
+                        &lt;/strong&gt;
+                      &lt;/span&gt;
+                  &lt;/div&gt;
+                &lt;/div&gt;
    */
   async createCustomField(
     requestBody: Models.CreateCustomFieldsDTO,

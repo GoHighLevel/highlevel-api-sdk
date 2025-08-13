@@ -2091,11 +2091,24 @@ export class Locations {
    * &lt;div&gt;
                   &lt;p&gt;Create a new Sub-Account (Formerly Location) based on the data provided&lt;/p&gt; 
                   &lt;div&gt;
-&lt;span&gt;
-                     :::info
- This feature is only available on Agency Pro ($497) plan.
- :::  
- &lt;/span&gt;
+                    &lt;span style&#x3D; &quot;display: inline-block;
+                                width: 25px; height: 25px;
+                                background-color: yellow;
+                                color: black;
+                                font-weight: bold;
+                                font-size: 24px;
+                                text-align: center;
+                                line-height: 22px;
+                                border: 2px solid black;
+                                border-radius: 10%;
+                                margin-right: 10px;&quot;&gt;
+                                !
+                      &lt;/span&gt;
+                      &lt;span&gt;
+                        &lt;strong&gt;
+                          This feature is only available on Agency Pro ($497) plan.
+                        &lt;/strong&gt;
+                      &lt;/span&gt;
                   &lt;/div&gt;
                 &lt;/div&gt;
     

@@ -1,5 +1,5 @@
 /**
- * SocialPlanner Models and Types
+ * SocialMediaPosting Models and Types
  * Generated from OpenAPI schema definitions
  */
 
