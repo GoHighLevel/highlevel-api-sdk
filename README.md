@@ -444,5 +444,5 @@ const httpClient = ghl.getHttpClient();
 
 ## License
 
-ISC License - see the [LICENSE](LICENSE) file for details.
+MIT License - see the [LICENSE](LICENSE) file for details.
 
