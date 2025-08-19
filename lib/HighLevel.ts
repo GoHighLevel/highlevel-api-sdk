@@ -30,9 +30,10 @@ import { SocialMediaPosting } from './code/social-media-posting/social-media-pos
 import { Surveys } from './code/surveys/surveys';
 import { Users } from './code/users/users';
 import { Workflows } from './code/workflows/workflows';
-import { SessionStorage, MemorySessionStorage } from './storage';
+import { SessionStorage, MemorySessionStorage, type ISessionData } from './storage';
 import { Logger, LogLevelType } from './logging';
 import { WebhookManager } from './webhook';
+import { UserType } from './constants';
 
 // Extend AxiosRequestConfig to support retry tracking
 declare module 'axios' {
@@ -291,7 +292,7 @@ export class HighLevel {
    * @param sessionData - Session data containing expiration info
    * @returns True if token should be refreshed
    */
-  private shouldRefreshToken(sessionData: any): boolean {
+  private shouldRefreshToken(sessionData: ISessionData): boolean {
     if (!sessionData.expire_at) return false;
     
     // Refresh if token expires within 30 seconds
@@ -304,7 +305,7 @@ export class HighLevel {
    * @param sessionData - Session data containing expiration info
    * @returns True if token is expired
    */
-  private isTokenExpired(sessionData: any): boolean {
+  private isTokenExpired(sessionData: ISessionData): boolean {
     if (!sessionData.expire_at) return false;
     
     const bufferTime = 30 * 1000;
@@ -317,7 +318,7 @@ export class HighLevel {
    * @param sessionData - Current session data
    * @returns New Bearer token if successful, null otherwise
    */
-  private async refreshTokenIfNeeded(resourceId: string, sessionData: any): Promise<string | null> {
+  private async refreshTokenIfNeeded(resourceId: string, sessionData: ISessionData): Promise<string | null> {
     if (!sessionData.refresh_token) {
       this.logger.warn(`No refresh token available for ${resourceId}`);
       return null;
@@ -331,8 +332,8 @@ export class HighLevel {
     try {
       this.logger.info(`Refreshing token for ${resourceId}`);
       
-      // Determine user type from session data (default to 'Location' if not specified)
-      const userType = sessionData.userType || 'Location';
+      // Determine user type from session data (default to Location if not specified)
+      const userType = sessionData.userType || UserType.Location;
       
       // Use the OAuth service to refresh the token
       const newTokenData = await this.oauth.refreshToken(
@@ -354,6 +355,90 @@ export class HighLevel {
       
     } catch (error) {
       this.logger.error(`Failed to refresh token for ${resourceId}:`, error);
+      
+      // If this is a location token refresh failure, try fallback to company token
+      if (sessionData.userType === UserType.Location && sessionData.companyId) {
+        this.logger.info(`Attempting fallback to company token for location ${resourceId}`);
+        return await this.handleLocationTokenFallback(resourceId, sessionData);
+      }
+      
+      return null;
+    }
+  }
+
+  /**
+   * Handle location token refresh fallback using company token
+   * @param locationId - The location ID that failed to refresh
+   * @param locationSessionData - The location session data
+   * @returns New Bearer token if successful, null otherwise
+   */
+  private async handleLocationTokenFallback(locationId: string, locationSessionData: ISessionData): Promise<string | null> {
+    if (!locationSessionData.companyId) {
+      this.logger.error(`No companyId available for location token fallback`);
+      return null;
+    }
+
+    try {
+      // Fetch company session data
+      const companySessionData = await this.sessionStorage.getSession(locationSessionData.companyId);
+      
+      if (!companySessionData) {
+        this.logger.error(`No company session found for companyId: ${locationSessionData.companyId}`);
+        return null;
+      }
+
+      // Check if company token needs refresh
+      if (this.shouldRefreshToken(companySessionData)) {
+        this.logger.info(`Company token needs refresh for companyId: ${locationSessionData.companyId}`);
+        
+        if (!companySessionData.refresh_token) {
+          this.logger.error(`No refresh token available for company: ${locationSessionData.companyId}`);
+          return null;
+        }
+
+        try {
+          // Refresh company token
+          const newCompanyTokenData = await this.oauth.refreshToken(
+            companySessionData.refresh_token,
+            this.config.clientId!,
+            this.config.clientSecret!,
+            'refresh_token',
+            UserType.Company
+          );
+
+          // Store the refreshed company token
+          await this.sessionStorage.setSession(locationSessionData.companyId, {
+            ...companySessionData,
+            ...newCompanyTokenData
+          });
+          this.logger.info(`Company token refreshed successfully for companyId: ${locationSessionData.companyId}`);
+        } catch (companyRefreshError) {
+          this.logger.error(`Failed to refresh company token for companyId: ${locationSessionData.companyId}:`, companyRefreshError);
+          return null;
+        }
+      }
+
+      // Use company token to fetch new location token
+      this.logger.info(`Fetching new location token using company token for locationId: ${locationId}`);
+      const newLocationTokenData = await this.oauth.getLocationAccessToken(
+        {
+          companyId: locationSessionData.companyId,
+          locationId: locationId
+        }
+      );
+
+      // Store the new location token
+      await this.sessionStorage.setSession(locationId, {
+        ...locationSessionData,
+        ...newLocationTokenData,
+        companyId: locationSessionData.companyId // Preserve companyId
+      });
+
+      this.logger.info(`Location token fetched successfully using company token fallback for locationId: ${locationId}`);
+      return `Bearer ${newLocationTokenData.access_token}`;
+
+    } catch (error) {
+      this.logger.error(`Failed to handle location token fallback for locationId: ${locationId}:`, error);
       return null;
     }
   }

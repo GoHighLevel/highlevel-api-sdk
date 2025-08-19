@@ -1,20 +1,7 @@
 import { MongoClient, Db, Collection } from 'mongodb';
 import { SessionStorage } from './session-storage';
+import { ISessionData } from './interfaces';
 import { Logger } from '../logging';
-
-export interface ISessionData {
-  access_token?: string;
-  refresh_token?: string;
-  token_type?: string;
-  scope?: string;
-  userType?: 'Company' | 'Location';
-  companyId?: string;
-  locationId?: string;
-  userId?: string;
-  expires_in?: number; // Original expires_in from OAuth response (seconds)
-  expire_at?: number; // Calculated expiration timestamp (milliseconds since epoch)
-  [key: string]: any; // Allow additional properties
-}
 /**
  * MongoDB implementation of SessionStorage
  * Provides MongoDB-based storage for sessions, tokens, and related data

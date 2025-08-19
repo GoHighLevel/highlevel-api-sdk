@@ -10,5 +10,8 @@ export { Logger, LogLevel, type LogLevelType, type LogLevelString } from './lib/
 // Webhook classes and types
 export { WebhookManager } from './lib/webhook';
 
+// Constants and enums
+export { UserType, type UserTypeValue } from './lib/constants';
+
 // Default export - HighLevel wrapper class
 export { HighLevel as default } from './lib/HighLevel';

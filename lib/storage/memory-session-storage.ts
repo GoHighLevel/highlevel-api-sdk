@@ -1,5 +1,5 @@
 import { SessionStorage } from './session-storage';
-import { ISessionData } from './mongodb-session-storage';
+import { ISessionData } from './interfaces';
 import { Logger } from '../logging';
 
 /**

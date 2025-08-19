@@ -1,4 +1,5 @@
 import { Logger } from '../logging';
+import { ISessionData } from './interfaces';
 
 /**
  * Abstract base class for session storage implementations
@@ -44,14 +45,14 @@ export abstract class SessionStorage {
    * @param resourceId - Unique identifier for the resource (companyId or locationId)
    * @param sessionData - Session data to store
    */
-  abstract setSession(resourceId: string, sessionData: any): Promise<void>;
+  abstract setSession(resourceId: string, sessionData: ISessionData): Promise<void>;
 
   /**
    * Retrieve a session from the storage
    * @param resourceId - Unique identifier for the resource (companyId or locationId)
    * @returns Session data or null if not found
    */
-  abstract getSession(resourceId: string): Promise<any | null>;
+  abstract getSession(resourceId: string): Promise<ISessionData | null>;
 
   /**
    * Delete a session from the storage
@@ -79,7 +80,7 @@ export abstract class SessionStorage {
    * @returns Array of session data for the current application
    * @throws Error if not implemented by the storage implementation
    */
-  async getSessionsByApplication(): Promise<any[]> {
+  async getSessionsByApplication(): Promise<ISessionData[]> {
     throw new Error('getSessionsByApplication is not implemented by this storage provider');
   }
 } 

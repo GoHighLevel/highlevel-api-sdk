@@ -1,5 +1,6 @@
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as Models from './models/oauth';
+import { UserType, UserTypeValue } from '../../constants';
 
 /**
  * Oauth Service
@@ -36,21 +37,21 @@ export class Oauth {
    * @param clientId OAuth client ID
    * @param clientSecret OAuth client secret
    * @param grantType Grant type (must be 'refresh_token')
-   * @param userType User type ('Location' or 'Company')
+   * @param userType User type (UserType.Location or UserType.Company)
    */
   public async refreshToken(
     refreshToken: string,
     clientId: string,
     clientSecret: string,
     grantType: 'refresh_token',
-    userType: 'Location' | 'Company'
+    userType: UserTypeValue
   ): Promise<any> {
     if (grantType !== 'refresh_token') {
       throw new Error('grantType must be "refresh_token"');
     }
 
-    if (!['Location', 'Company'].includes(userType)) {
-      throw new Error('userType must be "Location" or "Company"');
+    if (!Object.values(UserType).includes(userType as UserType)) {
+      throw new Error(`userType must be "${UserType.Location}" or "${UserType.Company}"`);
     }
 
     return this.getAccessToken({
