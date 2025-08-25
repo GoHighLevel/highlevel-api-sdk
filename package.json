@@ -1,5 +1,5 @@
 {
-  "name": "@highlevel/api-client",
+  "name": "@gohighlevel/api-client",
   "version": "0.1.0",
   "description": "Official SDK for HighLevel Public APIs",
   "main": "dist/index.js",
@@ -17,7 +17,8 @@
     "prebuild": "npm run clean",
     "prepare": "npm run build",
     "prepublishOnly": "npm run build",
-    "dev": "tsc --watch"
+    "dev": "tsc --watch",
+    "publish": "npm publish"
   },
   "engines": {
     "node": ">=18.0.0"

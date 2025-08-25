@@ -17,7 +17,7 @@ The official TypeScript/JavaScript SDK for the HighLevel (GoHighLevel) API. This
 ## Installation
 
 ```bash
-npm install @highlevel/api-client
+npm install @gohighlevel/api-client
 ```
 
 ### Requirements
@@ -50,9 +50,9 @@ The HighLevel API supports three types of authentication tokens with different l
 
 #### TypeScript
 ```typescript
-import HighLevel, { MongoDBSessionStorage, LogLevel } from '@highlevel/api-client';
+import HighLevel, { MongoDBSessionStorage, LogLevel } from '@gohighlevel/api-client';
 // or
-import { HighLevel } from '@highlevel/api-client';
+import { HighLevel } from '@gohighlevel/api-client';
 
 // Initialize with private integration token
 const ghl = new HighLevel({
@@ -74,9 +74,9 @@ const ghl = new HighLevel({
 
 #### JavaScript (CommonJS)
 ```javascript
-const HighLevel = require('@highlevel/api-client').default;
+const HighLevel = require('@gohighlevel/api-client').default;
 // or
-const { HighLevel } = require('@highlevel/api-client');
+const { HighLevel } = require('@gohighlevel/api-client');
 
 const ghl = new HighLevel({
   privateIntegrationToken: 'your-private-integration-token'
@@ -85,7 +85,7 @@ const ghl = new HighLevel({
 
 #### JavaScript (ES Modules)
 ```javascript
-import HighLevel from '@highlevel/api-client';
+import HighLevel from '@gohighlevel/api-client';
 
 const ghl = new HighLevel({
   locationAccessToken: 'your-location-access-token'
@@ -99,7 +99,7 @@ const ghl = new HighLevel({
 Configure MongoDB storage to store token data and automatically fetch it while making API calls:
 
 ```typescript
-import { HighLevel, MongoDBSessionStorage } from '@highlevel/api-client';
+import { HighLevel, MongoDBSessionStorage } from '@gohighlevel/api-client';
 
 const ghl = new HighLevel({
   clientId: 'your-client-id',
@@ -118,7 +118,7 @@ const ghl = new HighLevel({
 You can also implement your own storage by extending the `SessionStorage` class:
 
 ```typescript
-import { SessionStorage, ISessionData } from '@highlevel/api-client';
+import { SessionStorage, ISessionData } from '@gohighlevel/api-client';
 
 class RedisSessionStorage extends SessionStorage {
   async init(): Promise<void> {
@@ -273,7 +273,7 @@ const opportunities = await ghl.opportunities.getOpportunities({
 The SDK uses a custom `GHLError` class that provides detailed error information:
 
 ```typescript
-import { GHLError } from '@highlevel/api-client';
+import { GHLError } from '@gohighlevel/api-client';
 
 try {
   const contact = await ghl.contacts.getContact({
@@ -318,7 +318,7 @@ import HighLevel, {
   GHLError,
   RequestInterceptor,
   ResponseInterceptor 
-} from '@highlevel/api-client';
+} from '@gohighlevel/api-client';
 
 // Type-safe configuration
 const config: HighLevelConfig = {
