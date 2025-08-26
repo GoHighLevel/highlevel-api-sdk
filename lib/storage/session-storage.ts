@@ -83,4 +83,17 @@ export abstract class SessionStorage {
   async getSessionsByApplication(): Promise<ISessionData[]> {
     throw new Error('getSessionsByApplication is not implemented by this storage provider');
   }
+
+  /**
+   * Calculate the expiration timestamp in milliseconds
+   * @param expiresIn - The number of seconds until expiration (optional)
+   * @returns The timestamp in milliseconds
+   */
+  protected readonly calculateExpireAt = (expiresIn?: number): number => {
+    if (expiresIn === undefined || expiresIn === null) {
+      // Default to 24 hours if no expires_in provided
+      return Date.now() + (24 * 60 * 60 * 1000);
+    }
+    return Date.now() + (expiresIn * 1000);
+  };
 } 

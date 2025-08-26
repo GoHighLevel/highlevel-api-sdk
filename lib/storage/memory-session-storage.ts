@@ -17,31 +17,6 @@ export class MemorySessionStorage extends SessionStorage {
   }
 
   /**
-   * Calculate the expiration timestamp in milliseconds
-   * @param expiresIn - The number of seconds until expiration (optional)
-   * @returns The timestamp in milliseconds
-   */
-  private calculateExpireAt(expiresIn?: number): number {
-    if (expiresIn === undefined || expiresIn === null) {
-      // Default to 24 hours if no expires_in provided
-      return Date.now() + (24 * 60 * 60 * 1000);
-    }
-    return Date.now() + (expiresIn * 1000);
-  }
-
-  /**
-   * Check if a session is expired
-   * @param sessionData - The session data to check
-   * @returns True if expired, false otherwise
-   */
-  private isSessionExpired(sessionData: ISessionData): boolean {
-    if (sessionData.expire_at === undefined) {
-      return false; // No expiration, so not expired
-    }
-    return Date.now() >= sessionData.expire_at;
-  }
-
-  /**
    * Set the client ID (called automatically by HighLevel class)
    * @param clientId - The client ID from HighLevel configuration
    */
