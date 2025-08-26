@@ -1,6 +1,6 @@
 {
   "name": "@gohighlevel/api-client",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Official SDK for HighLevel Public APIs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

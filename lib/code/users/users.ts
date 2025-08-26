@@ -238,6 +238,9 @@ export class Users {
    * Get User
    */
   async getUser(
+    params: {
+      userId: string;
+    },
     options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.UserSuccessfulResponseDto> {
     let url = '/users/{userId}';
@@ -247,9 +250,19 @@ export class Users {
     // Extract security requirements for this endpoint
     const securityRequirements: string[] = ["Agency-Access","Location-Access"];
     
+    if (params) {
+      if (params.userId !== undefined) {
+        url = url.replace('{' + 'userId' + '}', encodeURIComponent(String(params.userId)));
+      }
+    }
 
     // Collect all parameters for token resolution (including path params)
     const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.userId !== undefined) {
+        allParams['userId'] = params.userId;
+      }
+    }
 
     const config: AxiosRequestConfig = {
       method: 'GET',

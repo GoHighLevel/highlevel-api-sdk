@@ -164,6 +164,7 @@ export interface GetMessageResponseDto {
   source?: string;
   userId?: string;
   conversationProviderId?: string;
+  chatWidgetId?: string;
 }
 
 export interface GetMessagesByConversationResponseDto {

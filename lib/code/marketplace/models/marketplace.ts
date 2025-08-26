@@ -11,6 +11,7 @@ export interface RaiseChargeBodyDTO {
   locationId: string;
   companyId: string;
   description: string;
+  price?: number;
   units: string;
   eventTime?: string;
 }

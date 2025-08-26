@@ -523,7 +523,7 @@ export class Marketplace {
     },
     options?: AxiosRequestConfig
   ): Promise<Models.GetInstallerDetailsResponseDTO> {
-    let url = '/marketplace/app/{appId}/installer-details';
+    let url = '/marketplace/app/{appId}/installations';
     const queryParams: Record<string, any> = {};
     const headerParams: Record<string, string> = {};
     
