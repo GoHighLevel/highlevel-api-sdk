@@ -7,6 +7,11 @@
 # Build artifacts that should be rebuilt
 tsconfig.tsbuildinfo
 
+# Source code (not needed in package)
+lib/
+index.ts
+tsconfig.json
+
 # IDE files
 .vscode/
 .idea/
@@ -24,9 +29,6 @@ Thumbs.db
 # CI/CD
 .github/
 .gitlab-ci.yml
-
-# Documentation
-README.md
 
 # Examples (optional, uncomment if you have examples you don't want to publish)
 # examples/

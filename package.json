@@ -5,10 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist/**/*",
-    "lib/**/*",
-    "index.ts",
-    "tsconfig.json"
+    "dist/**/*"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -16,7 +13,6 @@
     "clean": "rimraf dist",
     "prebuild": "npm run clean",
     "prepare": "npm run build",
-    "prepublishOnly": "npm run build",
     "dev": "tsc --watch",
     "publish": "npm publish"
   },
