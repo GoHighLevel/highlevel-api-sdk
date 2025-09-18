@@ -9,7 +9,7 @@ export interface ISessionData {
   refresh_token?: string;
   token_type?: string;
   scope?: string;
-  userType?: UserType;
+  userType?: UserType | string;
   companyId?: string;
   locationId?: string;
   userId?: string;

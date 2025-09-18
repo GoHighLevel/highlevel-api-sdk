@@ -110,6 +110,33 @@ export interface GetOrderResponseSchema {
   meta?: any;
   markAsTest?: boolean;
   traceId?: string;
+  automaticTaxesCalculated?: boolean;
+  taxCalculationProvider?: any;
+}
+
+export interface CardDto {
+  type: string;
+  last4: string;
+}
+
+export interface ChequeDto {
+  number: string;
+}
+
+export interface PostRecordOrderPaymentBody {
+  altId: string;
+  altType: string;
+  mode: string;
+  card?: any;
+  cheque?: any;
+  notes?: string;
+  amount?: number;
+  meta?: any;
+  isPartialPayment?: boolean;
+}
+
+export interface PostRecordOrderPaymentResponse {
+  success: boolean;
 }
 
 export interface FulfillmentTracking {
@@ -179,6 +206,7 @@ export interface DefaultProductResponseDto {
   collectionIds?: string[];
   isTaxesEnabled?: boolean;
   taxes?: string[];
+  automaticTaxCategoryId?: string;
   isLabelEnabled?: boolean;
   label?: any;
   slug?: string;
@@ -249,6 +277,7 @@ export interface TxnResponseSchema {
   altId: string;
   altType: string;
   contactId?: string;
+  mergedFromContactId?: string;
   contactName?: string;
   contactEmail?: string;
   currency?: string;
@@ -272,6 +301,7 @@ export interface TxnResponseSchema {
   updatedAt: string;
   amountRefunded?: number;
   paymentMethod?: any;
+  fulfilledAt: string;
 }
 
 export interface ListTxnsResponseDto {
@@ -308,6 +338,7 @@ export interface GetTxnResponseSchema {
   qboSynced?: boolean;
   qboResponse?: any;
   traceId?: string;
+  mergedFromContactId?: string;
 }
 
 export interface SubscriptionResponseSchema {
@@ -400,8 +431,6 @@ export interface ApplyToFuturePaymentsConfigDto {
 export interface CouponDto {
   _id: string;
   usageCount: number;
-  hasAffiliateCoupon: boolean;
-  deleted: boolean;
   limitPerCustomer: number;
   altId: string;
   altType: string;
@@ -502,6 +531,7 @@ export interface CreateCustomProvidersDto {
   paymentsUrl: string;
   queryUrl: string;
   imageUrl: string;
+  supportsSubscriptionSchedule: boolean;
 }
 
 export interface CreateCustomProvidersResponseSchema {
@@ -571,6 +601,16 @@ export interface DeleteCustomProvidersConfigDto {
 }
 
 export interface DisconnectCustomProvidersResponseSchema {
+  success: boolean;
+}
+
+export interface UpdateCustomProviderCapabilitiesDto {
+  supportsSubscriptionSchedules: boolean;
+  companyId?: string;
+  locationId?: string;
+}
+
+export interface UpdateCustomProviderCapabilitiesResponseSchema {
   success: boolean;
 }
 

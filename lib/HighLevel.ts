@@ -23,12 +23,16 @@ import { Oauth } from './code/oauth/oauth';
 import { Objects } from './code/objects/objects';
 import { Opportunities } from './code/opportunities/opportunities';
 import { Payments } from './code/payments/payments';
+import { PhoneSystem } from './code/phone-system/phone-system';
 import { Products } from './code/products/products';
+import { Proposals } from './code/proposals/proposals';
 import { SaasApi } from './code/saas-api/saas-api';
 import { Snapshots } from './code/snapshots/snapshots';
 import { SocialMediaPosting } from './code/social-media-posting/social-media-posting';
+import { Store } from './code/store/store';
 import { Surveys } from './code/surveys/surveys';
 import { Users } from './code/users/users';
+import { VoiceAi } from './code/voice-ai/voice-ai';
 import { Workflows } from './code/workflows/workflows';
 import { SessionStorage, MemorySessionStorage, type ISessionData } from './storage';
 import { Logger, LogLevelType } from './logging';
@@ -130,12 +134,16 @@ export class HighLevel {
   public objects!: Objects;
   public opportunities!: Opportunities;
   public payments!: Payments;
+  public phoneSystem!: PhoneSystem;
   public products!: Products;
+  public proposals!: Proposals;
   public saasApi!: SaasApi;
   public snapshots!: Snapshots;
   public socialMediaPosting!: SocialMediaPosting;
+  public store!: Store;
   public surveys!: Surveys;
   public users!: Users;
+  public voiceAi!: VoiceAi;
   public workflows!: Workflows;
   
   // Webhook manager
@@ -810,18 +818,26 @@ export class HighLevel {
     this.opportunities = new Opportunities(this.httpClient);
     // Create payments service with the shared HTTP client
     this.payments = new Payments(this.httpClient);
+    // Create phoneSystem service with the shared HTTP client
+    this.phoneSystem = new PhoneSystem(this.httpClient);
     // Create products service with the shared HTTP client
     this.products = new Products(this.httpClient);
+    // Create proposals service with the shared HTTP client
+    this.proposals = new Proposals(this.httpClient);
     // Create saasApi service with the shared HTTP client
     this.saasApi = new SaasApi(this.httpClient);
     // Create snapshots service with the shared HTTP client
     this.snapshots = new Snapshots(this.httpClient);
     // Create socialMediaPosting service with the shared HTTP client
     this.socialMediaPosting = new SocialMediaPosting(this.httpClient);
+    // Create store service with the shared HTTP client
+    this.store = new Store(this.httpClient);
     // Create surveys service with the shared HTTP client
     this.surveys = new Surveys(this.httpClient);
     // Create users service with the shared HTTP client
     this.users = new Users(this.httpClient);
+    // Create voiceAi service with the shared HTTP client
+    this.voiceAi = new VoiceAi(this.httpClient);
     // Create workflows service with the shared HTTP client
     this.workflows = new Workflows(this.httpClient);
     

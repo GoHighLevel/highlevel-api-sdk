@@ -19,7 +19,7 @@ export class Contacts {
   async searchContactsAdvanced(
     requestBody: Models.SearchBodyV2DTO,
     options?: AxiosRequestConfig
-  ): Promise<Models.SearchContactSuccessResponseDto> {
+  ): Promise<any> {
     let url = '/contacts/search';
     const queryParams: Record<string, any> = {};
     const headerParams: Record<string, string> = {};
@@ -77,7 +77,7 @@ export class Contacts {
       }
     }
 
-    const response: AxiosResponse<Models.SearchContactSuccessResponseDto> = await this.client.request(config);
+    const response: AxiosResponse<any> = await this.client.request(config);
     return response.data;
   }
 
@@ -2438,10 +2438,10 @@ export class Contacts {
   }
 
   /**
-   * Delete Contact to Workflow
-   * Delete Contact to Workflow
+   * Delete Contact from Workflow
+   * Delete Contact from Workflow
    */
-  async deleteContactToWorkflow(
+  async deleteContactFromWorkflow(
     params: {
       contactId: string;
       workflowId: string;

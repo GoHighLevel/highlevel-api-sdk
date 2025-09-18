@@ -34,24 +34,6 @@ export interface BulkUpdateResponseDto {
   message?: string;
 }
 
-export interface RecurringDto {
-  interval: string;
-  intervalCount: number;
-}
-
-export interface MembershipOfferDto {
-  label: string;
-  value: string;
-  _id: string;
-}
-
-export interface PriceMetaDto {
-  source: string;
-  sourceId?: string;
-  stripePriceId: string;
-  internalSource: string;
-}
-
 export interface WeightOptionsDto {
   value: number;
   unit: string;
@@ -67,6 +49,77 @@ export interface PriceDimensionsDto {
 export interface ShippingOptionsDto {
   weight?: any;
   dimensions?: any;
+}
+
+export interface RecurringDto {
+  interval: string;
+  intervalCount: number;
+}
+
+export interface BulkEditPriceDto {
+  _id: string;
+  name?: string;
+  amount?: number;
+  currency?: string;
+  compareAtPrice?: number;
+  availableQuantity?: number;
+  trackInventory?: boolean;
+  allowOutOfStockPurchases?: boolean;
+  sku?: string;
+  trialPeriod?: number;
+  totalCycles?: number;
+  setupFee?: number;
+  shippingOptions?: any;
+  recurring?: any;
+}
+
+export interface ProductSEODto {
+  title?: string;
+  description?: string;
+}
+
+export interface BulkEditProductDto {
+  _id: string;
+  name?: string;
+  description?: string;
+  image?: string;
+  availableInStore?: boolean;
+  prices?: BulkEditPriceDto[];
+  collectionIds?: string[];
+  isLabelEnabled?: boolean;
+  isTaxesEnabled?: boolean;
+  seo?: any;
+  slug?: string;
+  automaticTaxCategoryId?: string;
+  taxInclusive?: boolean;
+  taxes?: any[];
+  medias?: any[];
+  label?: any;
+}
+
+export interface BulkEditRequestDto {
+  altId: string;
+  altType: string;
+  products: BulkEditProductDto[];
+}
+
+export interface BulkEditResponseDto {
+  message: string;
+  status: boolean;
+  updatedCount: number;
+}
+
+export interface MembershipOfferDto {
+  label: string;
+  value: string;
+  _id: string;
+}
+
+export interface PriceMetaDto {
+  source: string;
+  sourceId?: string;
+  stripePriceId: string;
+  internalSource: string;
 }
 
 export interface CreatePriceDto {
@@ -249,6 +302,8 @@ export interface GetProductStatsResponseDto {
 }
 
 export interface UpdateProductStoreDto {
+  altId: string;
+  altType: string;
   action: string;
   productIds: string[];
 }
@@ -256,6 +311,12 @@ export interface UpdateProductStoreDto {
 export interface UpdateProductStoreResponseDto {
   status: boolean;
   message?: string;
+}
+
+export interface UpdateDisplayPriorityBodyDto {
+  altId: string;
+  altType: string;
+  products: any[][];
 }
 
 export interface ListCollectionResponseDto {
@@ -386,36 +447,20 @@ export interface ProductVariantDto {
   options: ProductVariantOptionDto[];
 }
 
-export interface ProductMediaDto {
-  id: string;
-  title?: string;
-  url: string;
-  type: string;
-  isFeatured?: boolean;
-  priceIds?: any[][];
-}
-
 export interface ProductLabelDto {
   title: string;
   startDate?: string;
   endDate?: string;
 }
 
-export interface ProductSEODto {
-  title?: string;
-  description?: string;
-}
-
 export interface GetProductResponseDto {
   _id: string;
   description?: string;
   variants?: ProductVariantDto[];
-  medias?: ProductMediaDto[];
   locationId: string;
   name: string;
   productType: string;
   availableInStore?: boolean;
-  userId?: string;
   createdAt: string;
   updatedAt: string;
   statementDescriptor?: string;
@@ -424,14 +469,21 @@ export interface GetProductResponseDto {
   isTaxesEnabled?: boolean;
   taxes?: string[];
   automaticTaxCategoryId?: string;
-  isLabelEnabled?: boolean;
   label?: any;
   slug?: string;
-  seo?: any;
 }
 
 export interface DeleteProductResponseDto {
   status: boolean;
+}
+
+export interface ProductMediaDto {
+  id: string;
+  title?: string;
+  url: string;
+  type: string;
+  isFeatured?: boolean;
+  priceIds?: any[][];
 }
 
 export interface CreateProductDto {
@@ -452,18 +504,17 @@ export interface CreateProductDto {
   label?: any;
   slug?: string;
   seo?: any;
+  taxInclusive?: boolean;
 }
 
 export interface CreateProductResponseDto {
   _id: string;
   description?: string;
   variants?: ProductVariantDto[];
-  medias?: ProductMediaDto[];
   locationId: string;
   name: string;
   productType: string;
   availableInStore?: boolean;
-  userId?: string;
   createdAt: string;
   updatedAt: string;
   statementDescriptor?: string;
@@ -472,10 +523,8 @@ export interface CreateProductResponseDto {
   isTaxesEnabled?: boolean;
   taxes?: string[];
   automaticTaxCategoryId?: string;
-  isLabelEnabled?: boolean;
   label?: any;
   slug?: string;
-  seo?: any;
 }
 
 export interface UpdateProductDto {
@@ -496,18 +545,18 @@ export interface UpdateProductDto {
   label?: any;
   slug?: string;
   seo?: any;
+  taxInclusive?: boolean;
+  prices?: string[];
 }
 
 export interface UpdateProductResponseDto {
   _id: string;
   description?: string;
   variants?: ProductVariantDto[];
-  medias?: ProductMediaDto[];
   locationId: string;
   name: string;
   productType: string;
   availableInStore?: boolean;
-  userId?: string;
   createdAt: string;
   updatedAt: string;
   statementDescriptor?: string;
@@ -516,22 +565,18 @@ export interface UpdateProductResponseDto {
   isTaxesEnabled?: boolean;
   taxes?: string[];
   automaticTaxCategoryId?: string;
-  isLabelEnabled?: boolean;
   label?: any;
   slug?: string;
-  seo?: any;
 }
 
 export interface DefaultProductResponseDto {
   _id: string;
   description?: string;
   variants?: ProductVariantDto[];
-  medias?: ProductMediaDto[];
   locationId: string;
   name: string;
   productType: string;
   availableInStore?: boolean;
-  userId?: string;
   createdAt: string;
   updatedAt: string;
   statementDescriptor?: string;
@@ -540,10 +585,8 @@ export interface DefaultProductResponseDto {
   isTaxesEnabled?: boolean;
   taxes?: string[];
   automaticTaxCategoryId?: string;
-  isLabelEnabled?: boolean;
   label?: any;
   slug?: string;
-  seo?: any;
 }
 
 export interface ListProductsStats {

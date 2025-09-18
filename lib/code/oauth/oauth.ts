@@ -44,7 +44,7 @@ export class Oauth {
     clientId: string,
     clientSecret: string,
     grantType: 'refresh_token',
-    userType: UserTypeValue
+    userType: UserTypeValue | string
   ): Promise<any> {
     if (grantType !== 'refresh_token') {
       throw new Error('grantType must be "refresh_token"');

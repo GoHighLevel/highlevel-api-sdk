@@ -82,6 +82,75 @@ export class Products {
   }
 
   /**
+   * Bulk Edit Products and Prices
+   * API to bulk edit products and their associated prices (max 30 entities)
+   */
+  async bulkEdit(
+    requestBody: Models.BulkEditRequestDto,
+    options?: AxiosRequestConfig
+  ): Promise<Models.BulkEditResponseDto> {
+    let url = '/products/bulk-update/edit';
+    const queryParams: Record<string, any> = {};
+    const headerParams: Record<string, string> = {};
+    
+    // Extract security requirements for this endpoint
+    const securityRequirements: string[] = [];
+    
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+
+    const config: AxiosRequestConfig = {
+      method: 'POST',
+      url,
+      params: queryParams,
+      headers: {
+        ...headerParams,
+        ...options?.headers
+      },
+      data: requestBody,
+      ...options
+    };
+
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          combinedQuery,
+          requestBody
+        );
+        
+        if (authToken) {
+          config.headers = {
+            ...config.headers,
+            'Authorization': authToken
+          };
+        }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
+      }
+    }
+
+    const response: AxiosResponse<Models.BulkEditResponseDto> = await this.client.request(config);
+    return response.data;
+  }
+
+  /**
    * Create Price for a Product
    * The &quot;Create Price for a Product&quot; API allows adding a new price associated with a specific product to the system. Use this endpoint to create a price with the specified details for a particular product. Ensure that the required information is provided in the request payload.
    */
@@ -923,6 +992,88 @@ export class Products {
   }
 
   /**
+   * Update product display priorities in store
+   * API to set the display priority of products in a store
+   */
+  async updateDisplayPriority(
+    params: {
+      storeId: string;
+    },
+    requestBody: Models.UpdateDisplayPriorityBodyDto,
+    options?: AxiosRequestConfig
+  ): Promise<any> {
+    let url = '/products/store/{storeId}/priority';
+    const queryParams: Record<string, any> = {};
+    const headerParams: Record<string, string> = {};
+    
+    // Extract security requirements for this endpoint
+    const securityRequirements: string[] = ["Location-Access"];
+    
+    if (params) {
+      if (params.storeId !== undefined) {
+        url = url.replace('{' + 'storeId' + '}', encodeURIComponent(String(params.storeId)));
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.storeId !== undefined) {
+        allParams['storeId'] = params.storeId;
+      }
+    }
+
+    const config: AxiosRequestConfig = {
+      method: 'POST',
+      url,
+      params: queryParams,
+      headers: {
+        ...headerParams,
+        ...options?.headers
+      },
+      data: requestBody,
+      ...options
+    };
+
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          combinedQuery,
+          requestBody
+        );
+        
+        if (authToken) {
+          config.headers = {
+            ...config.headers,
+            'Authorization': authToken
+          };
+        }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
+      }
+    }
+
+    const response: AxiosResponse<any> = await this.client.request(config);
+    return response.data;
+  }
+
+  /**
    * Fetch Product Collections
    * Internal API to fetch the Product Collections
    */
@@ -1113,6 +1264,7 @@ export class Products {
   async getProductCollectionId(
     params: {
       collectionId: string;
+      altId: string;
     },
     options?: AxiosRequestConfig
   ): Promise<Models.DefaultCollectionResponseDto> {
@@ -1127,6 +1279,9 @@ export class Products {
       if (params.collectionId !== undefined) {
         url = url.replace('{' + 'collectionId' + '}', encodeURIComponent(String(params.collectionId)));
       }
+      if (params.altId !== undefined) {
+        queryParams['altId'] = params.altId;
+      }
     }
 
     // Collect all parameters for token resolution (including path params)
@@ -1134,6 +1289,9 @@ export class Products {
     if (params) {
       if (params.collectionId !== undefined) {
         allParams['collectionId'] = params.collectionId;
+      }
+      if (params.altId !== undefined) {
+        allParams['altId'] = params.altId;
       }
     }
 
@@ -1894,6 +2052,7 @@ export class Products {
     params: {
       productId: string;
       locationId: string;
+      sendWishlistStatus?: boolean;
     },
     options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.GetProductResponseDto> {
@@ -1911,6 +2070,9 @@ export class Products {
       if (params.locationId !== undefined) {
         queryParams['locationId'] = params.locationId;
       }
+      if (params.sendWishlistStatus !== undefined) {
+        queryParams['sendWishlistStatus'] = params.sendWishlistStatus;
+      }
     }
 
     // Collect all parameters for token resolution (including path params)
@@ -1921,6 +2083,9 @@ export class Products {
       }
       if (params.locationId !== undefined) {
         allParams['locationId'] = params.locationId;
+      }
+      if (params.sendWishlistStatus !== undefined) {
+        allParams['sendWishlistStatus'] = params.sendWishlistStatus;
       }
     }
 
@@ -1982,6 +2147,7 @@ export class Products {
     params: {
       productId: string;
       locationId: string;
+      sendWishlistStatus?: boolean;
     },
     options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.DeleteProductResponseDto> {
@@ -1999,6 +2165,9 @@ export class Products {
       if (params.locationId !== undefined) {
         queryParams['locationId'] = params.locationId;
       }
+      if (params.sendWishlistStatus !== undefined) {
+        queryParams['sendWishlistStatus'] = params.sendWishlistStatus;
+      }
     }
 
     // Collect all parameters for token resolution (including path params)
@@ -2009,6 +2178,9 @@ export class Products {
       }
       if (params.locationId !== undefined) {
         allParams['locationId'] = params.locationId;
+      }
+      if (params.sendWishlistStatus !== undefined) {
+        allParams['sendWishlistStatus'] = params.sendWishlistStatus;
       }
     }
 

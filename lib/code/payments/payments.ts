@@ -348,7 +348,6 @@ export class Payments {
       orderId: string;
       locationId?: string;
       altId: string;
-      altType: string;
     },
     options?: AxiosRequestConfig
   ): Promise<Models.GetOrderResponseSchema> {
@@ -369,9 +368,6 @@ export class Payments {
       if (params.altId !== undefined) {
         queryParams['altId'] = params.altId;
       }
-      if (params.altType !== undefined) {
-        queryParams['altType'] = params.altType;
-      }
     }
 
     // Collect all parameters for token resolution (including path params)
@@ -385,9 +381,6 @@ export class Payments {
       }
       if (params.altId !== undefined) {
         allParams['altId'] = params.altId;
-      }
-      if (params.altType !== undefined) {
-        allParams['altType'] = params.altType;
       }
     }
 
@@ -437,6 +430,175 @@ export class Payments {
     }
 
     const response: AxiosResponse<Models.GetOrderResponseSchema> = await this.client.request(config);
+    return response.data;
+  }
+
+  /**
+   * Record Order Payment
+   * The &quot;Record Order Payment&quot; API allows to record a payment for an order. Use this endpoint to record payment for an order and update the order status to &quot;Paid&quot;.
+   */
+  async recordOrderPayment(
+    params: {
+      orderId: string;
+    },
+    requestBody: Models.PostRecordOrderPaymentBody,
+    options?: AxiosRequestConfig
+  ): Promise<Models.PostRecordOrderPaymentResponse> {
+    let url = '/payments/orders/{orderId}/record-payment';
+    const queryParams: Record<string, any> = {};
+    const headerParams: Record<string, string> = {};
+    
+    // Extract security requirements for this endpoint
+    const securityRequirements: string[] = ["Location-Access"];
+    
+    if (params) {
+      if (params.orderId !== undefined) {
+        url = url.replace('{' + 'orderId' + '}', encodeURIComponent(String(params.orderId)));
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.orderId !== undefined) {
+        allParams['orderId'] = params.orderId;
+      }
+    }
+
+    const config: AxiosRequestConfig = {
+      method: 'POST',
+      url,
+      params: queryParams,
+      headers: {
+        ...headerParams,
+        ...options?.headers
+      },
+      data: requestBody,
+      ...options
+    };
+
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          combinedQuery,
+          requestBody
+        );
+        
+        if (authToken) {
+          config.headers = {
+            ...config.headers,
+            'Authorization': authToken
+          };
+        }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
+      }
+    }
+
+    const response: AxiosResponse<Models.PostRecordOrderPaymentResponse> = await this.client.request(config);
+    return response.data;
+  }
+
+  /**
+   * migration Endpoint for Order Payment Status
+   * Process to migrate all the older orders and based on the statuses introduce the payment statuses as well
+   */
+  async postMigrateOrderPaymentStatus(
+    params: {
+      locationId?: string;
+      altId: string;
+    },
+    options?: AxiosRequestConfig
+  ): Promise<any> {
+    let url = '/payments/orders/migrate-order-ps';
+    const queryParams: Record<string, any> = {};
+    const headerParams: Record<string, string> = {};
+    
+    // Extract security requirements for this endpoint
+    const securityRequirements: string[] = ["Location-Access"];
+    
+    if (params) {
+      if (params.locationId !== undefined) {
+        queryParams['locationId'] = params.locationId;
+      }
+      if (params.altId !== undefined) {
+        queryParams['altId'] = params.altId;
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.locationId !== undefined) {
+        allParams['locationId'] = params.locationId;
+      }
+      if (params.altId !== undefined) {
+        allParams['altId'] = params.altId;
+      }
+    }
+
+    const config: AxiosRequestConfig = {
+      method: 'POST',
+      url,
+      params: queryParams,
+      headers: {
+        ...headerParams,
+        ...options?.headers
+      },
+      ...options
+    };
+
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          combinedQuery,
+          {}
+        );
+        
+        if (authToken) {
+          config.headers = {
+            ...config.headers,
+            'Authorization': authToken
+          };
+        }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
+      }
+    }
+
+    const response: AxiosResponse<any> = await this.client.request(config);
     return response.data;
   }
 
@@ -613,6 +775,100 @@ export class Payments {
     }
 
     const response: AxiosResponse<Models.ListFulfillmentResponseDto> = await this.client.request(config);
+    return response.data;
+  }
+
+  /**
+   * List Order Notes
+   * List all notes of an order
+   */
+  async listOrderNotes(
+    params: {
+      altId: string;
+      altType: string;
+      orderId: string;
+    },
+    options?: AxiosRequestConfig
+  ): Promise<any> {
+    let url = '/payments/orders/{orderId}/notes';
+    const queryParams: Record<string, any> = {};
+    const headerParams: Record<string, string> = {};
+    
+    // Extract security requirements for this endpoint
+    const securityRequirements: string[] = ["Location-Access"];
+    
+    if (params) {
+      if (params.altId !== undefined) {
+        queryParams['altId'] = params.altId;
+      }
+      if (params.altType !== undefined) {
+        queryParams['altType'] = params.altType;
+      }
+      if (params.orderId !== undefined) {
+        url = url.replace('{' + 'orderId' + '}', encodeURIComponent(String(params.orderId)));
+      }
+    }
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+    if (params) {
+      if (params.altId !== undefined) {
+        allParams['altId'] = params.altId;
+      }
+      if (params.altType !== undefined) {
+        allParams['altType'] = params.altType;
+      }
+      if (params.orderId !== undefined) {
+        allParams['orderId'] = params.orderId;
+      }
+    }
+
+    const config: AxiosRequestConfig = {
+      method: 'GET',
+      url,
+      params: queryParams,
+      headers: {
+        ...headerParams,
+        ...options?.headers
+      },
+      ...options
+    };
+
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          combinedQuery,
+          {}
+        );
+        
+        if (authToken) {
+          config.headers = {
+            ...config.headers,
+            'Authorization': authToken
+          };
+        }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
+      }
+    }
+
+    const response: AxiosResponse<any> = await this.client.request(config);
     return response.data;
   }
 
@@ -1965,6 +2221,75 @@ export class Payments {
     }
 
     const response: AxiosResponse<Models.DisconnectCustomProvidersResponseSchema> = await this.client.request(config);
+    return response.data;
+  }
+
+  /**
+   * Custom-provider marketplace app update capabilities
+   * Toggle capabilities for the marketplace app tied to the OAuth client
+   */
+  async customProviderMarketplaceAppUpdateCapabilities(
+    requestBody: Models.UpdateCustomProviderCapabilitiesDto,
+    options?: AxiosRequestConfig
+  ): Promise<Models.UpdateCustomProviderCapabilitiesResponseSchema> {
+    let url = '/payments/custom-provider/capabilities';
+    const queryParams: Record<string, any> = {};
+    const headerParams: Record<string, string> = {};
+    
+    // Extract security requirements for this endpoint
+    const securityRequirements: string[] = ["Location-Access"];
+    
+
+    // Collect all parameters for token resolution (including path params)
+    const allParams: Record<string, any> = {};
+
+    const config: AxiosRequestConfig = {
+      method: 'PUT',
+      url,
+      params: queryParams,
+      headers: {
+        ...headerParams,
+        ...options?.headers
+      },
+      data: requestBody,
+      ...options
+    };
+
+    // Get appropriate authorization token based on security requirements
+    const ghlInstance = (this.client as any).__ghlInstance;
+    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
+      try {
+        // Combine headerParams with headers from options
+        const combinedHeaders = {
+          ...headerParams,
+          ...options?.headers
+        };
+        
+        // Combine queryParams with allParams for token resolution
+        const combinedQuery = {
+          ...queryParams,
+          ...allParams
+        };
+        
+        const authToken = await ghlInstance.getTokenForSecurity(
+          securityRequirements,
+          combinedHeaders,
+          combinedQuery,
+          requestBody
+        );
+        
+        if (authToken) {
+          config.headers = {
+            ...config.headers,
+            'Authorization': authToken
+          };
+        }
+      } catch (error) {
+        throw error; // Re-throw authentication errors
+      }
+    }
+
+    const response: AxiosResponse<Models.UpdateCustomProviderCapabilitiesResponseSchema> = await this.client.request(config);
     return response.data;
   }
 

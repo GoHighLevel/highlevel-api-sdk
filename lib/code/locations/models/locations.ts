@@ -327,3 +327,57 @@ export interface GetTemplatesSuccessfulResponseDto {
   totalCount?: number;
 }
 
+export interface CustomRRulesOptions {
+  intervalType: string;
+  interval: number;
+  startDate: string;
+  endDate?: string;
+  dayOfMonth?: number;
+  dayOfWeek?: string;
+  monthOfYear?: number;
+  count?: number;
+  createTaskIfOverDue?: boolean;
+  dueAfterSeconds: number;
+}
+
+export interface RecurringTaskResponseDTO {
+  id: string;
+  title: string;
+  description: string;
+  locationId: string;
+  updatedAt: string;
+  createdAt: string;
+  rruleOptions: any;
+  totalOccurrence: number;
+  deleted: boolean;
+  assignedTo?: string;
+  contactId?: string;
+}
+
+export interface RecurringTaskSingleResponseDTO {
+  recurringTask: any;
+}
+
+export interface RecurringTaskCreateDTO {
+  title: string;
+  description?: string;
+  contactIds?: string[];
+  owners?: string[];
+  rruleOptions: any;
+  ignoreTaskCreation?: boolean;
+}
+
+export interface RecurringTaskUpdateDTO {
+  title?: string;
+  description?: string;
+  contactIds?: string[];
+  owners?: string[];
+  rruleOptions?: any;
+  ignoreTaskCreation?: boolean;
+}
+
+export interface DeleteRecurringTaskResponseDTO {
+  id: string;
+  success: boolean;
+}
+
