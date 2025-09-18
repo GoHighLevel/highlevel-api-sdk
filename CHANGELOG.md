@@ -1,10 +1,6 @@
 ## v2.0.0 - 2025-09-18
 
-SDK changes
-
-- fix: remove extra things from package to reduce the build size (3fe5b3a)
-
-# Specs Changelog (2025-09-18) - v1.0.1 to main
+Specs changes
 
 **Contacts**:
 
@@ -125,6 +121,10 @@ Added:
 - new method `getAction` added GET /voice-ai/actions/\{actionId\}
 - new method `updateAction` added PUT /voice-ai/actions/\{actionId\}
 - new method `deleteAction` added DELETE /voice-ai/actions/\{actionId\}
+
+SDK changes
+
+- fix: remove extra things from package to reduce the build size (3fe5b3a)
 
 ## v1.0.1 - 2025-08-26
 
