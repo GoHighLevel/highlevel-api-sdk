@@ -262,7 +262,7 @@ const campaigns = await ghl.campaigns.getCampaigns({
 #### Opportunities
 ```typescript
 // Get opportunities
-const opportunities = await ghl.opportunities.getOpportunities({
+const opportunities = await ghl.opportunities.searchOpportunity({
   locationId: 'location-id',
   limit: 20
 });
