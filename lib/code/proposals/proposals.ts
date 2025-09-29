@@ -95,11 +95,14 @@ export class Proposals {
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
-      params: queryParams,
+      params: { ...queryParams, ...allParams },
       headers: {
         ...headerParams,
         ...options?.headers
       },
+      // Store security requirements for error handling
+      __secutiryRequirements: securityRequirements,
+      __preferredTokenType: options?.preferredTokenType,
       ...options
     };
 
@@ -164,12 +167,15 @@ export class Proposals {
     const config: AxiosRequestConfig = {
       method: 'POST',
       url,
-      params: queryParams,
+      params: { ...queryParams, ...allParams },
       headers: {
         ...headerParams,
         ...options?.headers
       },
       data: requestBody,
+      // Store security requirements for error handling
+      __secutiryRequirements: securityRequirements,
+      __preferredTokenType: options?.preferredTokenType,
       ...options
     };
 
@@ -302,11 +308,14 @@ export class Proposals {
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
-      params: queryParams,
+      params: { ...queryParams, ...allParams },
       headers: {
         ...headerParams,
         ...options?.headers
       },
+      // Store security requirements for error handling
+      __secutiryRequirements: securityRequirements,
+      __preferredTokenType: options?.preferredTokenType,
       ...options
     };
 
@@ -371,12 +380,15 @@ export class Proposals {
     const config: AxiosRequestConfig = {
       method: 'POST',
       url,
-      params: queryParams,
+      params: { ...queryParams, ...allParams },
       headers: {
         ...headerParams,
         ...options?.headers
       },
       data: requestBody,
+      // Store security requirements for error handling
+      __secutiryRequirements: securityRequirements,
+      __preferredTokenType: options?.preferredTokenType,
       ...options
     };
 

@@ -39,10 +39,12 @@ import { Logger, LogLevelType } from './logging';
 import { WebhookManager } from './webhook';
 import { UserType } from './constants';
 
-// Extend AxiosRequestConfig to support retry tracking
+// Extend AxiosRequestConfig to support retry tracking and security requirements
 declare module 'axios' {
   interface AxiosRequestConfig {
     __isRetryRequest?: boolean;
+    __secutiryRequirements?: string[];
+    __preferredTokenType?: 'company' | 'location';
   }
 }
 
@@ -305,18 +307,6 @@ export class HighLevel {
     
     // Refresh if token expires within 30 seconds
     const bufferTime = 30 * 1000; // 30 seconds in milliseconds
-    return Date.now() + bufferTime >= sessionData.expire_at;
-  }
-
-  /**
-   * Check if a token is expired (with 1 minute buffer for 401 retries)
-   * @param sessionData - Session data containing expiration info
-   * @returns True if token is expired
-   */
-  private isTokenExpired(sessionData: ISessionData): boolean {
-    if (!sessionData.expire_at) return false;
-    
-    const bufferTime = 30 * 1000;
     return Date.now() + bufferTime >= sessionData.expire_at;
   }
 
@@ -651,26 +641,27 @@ export class HighLevel {
         if (error.response?.status === 401 && !originalRequest.__isRetryRequest) {
           this.logger.warn('401 Unauthorized - Attempting token refresh');
           
-          // Try to extract resourceId from the original request
+          // Try to extract resourceId from the original request using stored security requirements
+          const securityRequirements = originalRequest.__secutiryRequirements || [];
+          const preferredTokenType = originalRequest.__preferredTokenType;
+          
           const resourceId = this.extractResourceId(
-            [], // No security requirements available in error context
+            securityRequirements,
             originalRequest.headers || {},
             originalRequest.params || {},
             originalRequest.data || {},
-            undefined // No preference available in error context
+            preferredTokenType
           );
           
           if (resourceId) {
             try {
               const sessionData = await this.sessionStorage.getSession(resourceId);
               
-              if (sessionData && this.isTokenExpired(sessionData)) {
+              if (sessionData) {
                 this.logger.info(`Token expired for ${resourceId}, attempting refresh`);
                 
                 const newToken = await this.refreshTokenIfNeeded(resourceId, sessionData);
                 if (newToken) {
-                  // Mark as retry request and update authorization header
-                  originalRequest.__isRetryRequest = true;
                   originalRequest.headers = originalRequest.headers || {};
                   originalRequest.headers.Authorization = newToken;
                   
@@ -680,6 +671,8 @@ export class HighLevel {
               }
             } catch (refreshError) {
               this.logger.error('Failed to refresh token on 401:', refreshError);
+            } finally {
+              originalRequest.__isRetryRequest = true;
             }
           }
         }

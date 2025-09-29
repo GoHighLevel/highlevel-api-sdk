@@ -47,12 +47,14 @@ export class EmailIsv {
     const config: AxiosRequestConfig = {
       method: 'POST',
       url,
-      params: queryParams,
+      params: { ...queryParams, ...allParams },
       headers: {
         ...headerParams,
         ...options?.headers
       },
       data: requestBody,
+      // Store security requirements for error handling
+      __secutiryRequirements: securityRequirements,
       ...options
     };
 

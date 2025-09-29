@@ -46,11 +46,13 @@ export class PhoneSystem {
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
-      params: queryParams,
+      params: { ...queryParams, ...allParams },
       headers: {
         ...headerParams,
         ...options?.headers
       },
+      // Store security requirements for error handling
+      __secutiryRequirements: securityRequirements,
       ...options
     };
 
@@ -154,11 +156,13 @@ export class PhoneSystem {
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
-      params: queryParams,
+      params: { ...queryParams, ...allParams },
       headers: {
         ...headerParams,
         ...options?.headers
       },
+      // Store security requirements for error handling
+      __secutiryRequirements: securityRequirements,
       ...options
     };
 

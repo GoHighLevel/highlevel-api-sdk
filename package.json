@@ -12,9 +12,7 @@
     "build": "tsc",
     "clean": "rimraf dist",
     "prebuild": "npm run clean",
-    "prepare": "npm run build",
-    "dev": "tsc --watch",
-    "publish": "npm publish"
+    "prepare": "npm run build"
   },
   "engines": {
     "node": ">=18.0.0"

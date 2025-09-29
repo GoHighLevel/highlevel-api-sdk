@@ -53,11 +53,13 @@ export class Links {
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
-      params: queryParams,
+      params: { ...queryParams, ...allParams },
       headers: {
         ...headerParams,
         ...options?.headers
       },
+      // Store security requirements for error handling
+      __secutiryRequirements: securityRequirements,
       ...options
     };
 
@@ -134,12 +136,14 @@ export class Links {
     const config: AxiosRequestConfig = {
       method: 'PUT',
       url,
-      params: queryParams,
+      params: { ...queryParams, ...allParams },
       headers: {
         ...headerParams,
         ...options?.headers
       },
       data: requestBody,
+      // Store security requirements for error handling
+      __secutiryRequirements: securityRequirements,
       ...options
     };
 
@@ -215,11 +219,13 @@ export class Links {
     const config: AxiosRequestConfig = {
       method: 'DELETE',
       url,
-      params: queryParams,
+      params: { ...queryParams, ...allParams },
       headers: {
         ...headerParams,
         ...options?.headers
       },
+      // Store security requirements for error handling
+      __secutiryRequirements: securityRequirements,
       ...options
     };
 
@@ -316,11 +322,13 @@ export class Links {
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
-      params: queryParams,
+      params: { ...queryParams, ...allParams },
       headers: {
         ...headerParams,
         ...options?.headers
       },
+      // Store security requirements for error handling
+      __secutiryRequirements: securityRequirements,
       ...options
     };
 
@@ -396,11 +404,13 @@ export class Links {
     const config: AxiosRequestConfig = {
       method: 'GET',
       url,
-      params: queryParams,
+      params: { ...queryParams, ...allParams },
       headers: {
         ...headerParams,
         ...options?.headers
       },
+      // Store security requirements for error handling
+      __secutiryRequirements: securityRequirements,
       ...options
     };
 
@@ -464,12 +474,14 @@ export class Links {
     const config: AxiosRequestConfig = {
       method: 'POST',
       url,
-      params: queryParams,
+      params: { ...queryParams, ...allParams },
       headers: {
         ...headerParams,
         ...options?.headers
       },
       data: requestBody,
+      // Store security requirements for error handling
+      __secutiryRequirements: securityRequirements,
       ...options
     };
 
