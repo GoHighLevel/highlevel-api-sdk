@@ -1,3 +1,10 @@
+## v2.1.0 - 2025-09-29
+
+### SDK changes
+
+- changes in config to reduce the size of the sdk (8ce6d34)
+- fix: token not getting auto refreshed when api throws 401 error (3747ddb)
+
 ## v2.0.0 - 2025-09-18
 
 Specs changes
