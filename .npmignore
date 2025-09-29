@@ -30,6 +30,10 @@ Thumbs.db
 .github/
 .gitlab-ci.yml
 
+# Source maps (not needed in published package)
+**/*.js.map
+**/*.d.ts.map
+
 # Examples (optional, uncomment if you have examples you don't want to publish)
 # examples/
 # docs/ 
