@@ -1,7 +1,4 @@
-/**
- * Invoices Models and Types
- * Generated from OpenAPI schema definitions
- */
+// Invoices Models
 
 export interface AddressDto {
   addressLine1?: string;

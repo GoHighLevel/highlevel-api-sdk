@@ -1,7 +1,4 @@
-/**
- * Locations Models and Types
- * Generated from OpenAPI schema definitions
- */
+// Locations Models
 
 export interface SettingsSchema {
   allowDuplicateContact?: boolean;

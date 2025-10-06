@@ -1,7 +1,4 @@
-/**
- * Blogs Models and Types
- * Generated from OpenAPI schema definitions
- */
+// Blogs Models
 
 export interface UrlSlugCheckResponseDTO {
   exists: boolean;

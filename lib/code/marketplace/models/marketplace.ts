@@ -1,7 +1,4 @@
-/**
- * Marketplace Models and Types
- * Generated from OpenAPI schema definitions
- */
+// Marketplace Models
 
 export interface RaiseChargeBodyDTO {
   appId: string;

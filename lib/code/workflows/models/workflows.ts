@@ -1,7 +1,4 @@
-/**
- * Workflows Models and Types
- * Generated from OpenAPI schema definitions
- */
+// Workflows Models
 
 export interface WorkflowSchema {
   id?: string;

@@ -1,7 +1,4 @@
-/**
- * Objects Models and Types
- * Generated from OpenAPI schema definitions
- */
+// Objects Models
 
 export interface CustomObjectLabelDto {
   singular: string;

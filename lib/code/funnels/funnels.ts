@@ -1,5 +1,6 @@
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as Models from './models/funnels';
+import { buildUrl, extractParams, getAuthToken } from '../../utils/request-utils';
 
 /**
  * Funnels Service
@@ -20,63 +21,24 @@ export class Funnels {
     requestBody: Models.CreateRedirectParams,
     options?: AxiosRequestConfig
   ): Promise<Models.CreateRedirectResponseDTO> {
-    let url = '/funnels/lookup/redirect';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [];
+    const extracted = extractParams(null, paramDefs);
+    const requirements: string[] = ["Location-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access"];
-    
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-
     const config: AxiosRequestConfig = {
       method: 'POST',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/funnels/lookup/redirect', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.CreateRedirectResponseDTO> = await this.client.request(config);
@@ -94,73 +56,24 @@ export class Funnels {
     requestBody: Models.UpdateRedirectParams,
     options?: AxiosRequestConfig
   ): Promise<Models.UpdateRedirectResponseDTO> {
-    let url = '/funnels/lookup/redirect/{id}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'id', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["Location-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access"];
-    
-    if (params) {
-      if (params.id !== undefined) {
-        url = url.replace('{' + 'id' + '}', encodeURIComponent(String(params.id)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.id !== undefined) {
-        allParams['id'] = params.id;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'PATCH',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/funnels/lookup/redirect/{id}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.UpdateRedirectResponseDTO> = await this.client.request(config);
@@ -178,78 +91,24 @@ export class Funnels {
     },
     options?: AxiosRequestConfig
   ): Promise<Models.DeleteRedirectResponseDTO> {
-    let url = '/funnels/lookup/redirect/{id}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'id', in: 'path'},{name: 'locationId', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["Location-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access"];
-    
-    if (params) {
-      if (params.id !== undefined) {
-        url = url.replace('{' + 'id' + '}', encodeURIComponent(String(params.id)));
-      }
-      if (params.locationId !== undefined) {
-        queryParams['locationId'] = params.locationId;
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.id !== undefined) {
-        allParams['id'] = params.id;
-      }
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'DELETE',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/funnels/lookup/redirect/{id}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.DeleteRedirectResponseDTO> = await this.client.request(config);
@@ -269,90 +128,24 @@ export class Funnels {
     },
     options?: AxiosRequestConfig
   ): Promise<Models.RedirectListResponseDTO> {
-    let url = '/funnels/lookup/redirect/list';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'query'},{name: 'limit', in: 'query'},{name: 'offset', in: 'query'},{name: 'search', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["Location-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        queryParams['locationId'] = params.locationId;
-      }
-      if (params.limit !== undefined) {
-        queryParams['limit'] = params.limit;
-      }
-      if (params.offset !== undefined) {
-        queryParams['offset'] = params.offset;
-      }
-      if (params.search !== undefined) {
-        queryParams['search'] = params.search;
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.limit !== undefined) {
-        allParams['limit'] = params.limit;
-      }
-      if (params.offset !== undefined) {
-        allParams['offset'] = params.offset;
-      }
-      if (params.search !== undefined) {
-        allParams['search'] = params.search;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/funnels/lookup/redirect/list', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.RedirectListResponseDTO> = await this.client.request(config);
@@ -375,108 +168,24 @@ export class Funnels {
     },
     options?: AxiosRequestConfig
   ): Promise<Models.FunnelListResponseDTO> {
-    let url = '/funnels/funnel/list';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'query'},{name: 'type', in: 'query'},{name: 'category', in: 'query'},{name: 'offset', in: 'query'},{name: 'limit', in: 'query'},{name: 'parentId', in: 'query'},{name: 'name', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["Location-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        queryParams['locationId'] = params.locationId;
-      }
-      if (params.type !== undefined) {
-        queryParams['type'] = params.type;
-      }
-      if (params.category !== undefined) {
-        queryParams['category'] = params.category;
-      }
-      if (params.offset !== undefined) {
-        queryParams['offset'] = params.offset;
-      }
-      if (params.limit !== undefined) {
-        queryParams['limit'] = params.limit;
-      }
-      if (params.parentId !== undefined) {
-        queryParams['parentId'] = params.parentId;
-      }
-      if (params.name !== undefined) {
-        queryParams['name'] = params.name;
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.type !== undefined) {
-        allParams['type'] = params.type;
-      }
-      if (params.category !== undefined) {
-        allParams['category'] = params.category;
-      }
-      if (params.offset !== undefined) {
-        allParams['offset'] = params.offset;
-      }
-      if (params.limit !== undefined) {
-        allParams['limit'] = params.limit;
-      }
-      if (params.parentId !== undefined) {
-        allParams['parentId'] = params.parentId;
-      }
-      if (params.name !== undefined) {
-        allParams['name'] = params.name;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/funnels/funnel/list', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.FunnelListResponseDTO> = await this.client.request(config);
@@ -497,96 +206,24 @@ export class Funnels {
     },
     options?: AxiosRequestConfig
   ): Promise<Models.FunnelPageResponseDTO> {
-    let url = '/funnels/page';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'query'},{name: 'funnelId', in: 'query'},{name: 'name', in: 'query'},{name: 'limit', in: 'query'},{name: 'offset', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["Location-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        queryParams['locationId'] = params.locationId;
-      }
-      if (params.funnelId !== undefined) {
-        queryParams['funnelId'] = params.funnelId;
-      }
-      if (params.name !== undefined) {
-        queryParams['name'] = params.name;
-      }
-      if (params.limit !== undefined) {
-        queryParams['limit'] = params.limit;
-      }
-      if (params.offset !== undefined) {
-        queryParams['offset'] = params.offset;
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.funnelId !== undefined) {
-        allParams['funnelId'] = params.funnelId;
-      }
-      if (params.name !== undefined) {
-        allParams['name'] = params.name;
-      }
-      if (params.limit !== undefined) {
-        allParams['limit'] = params.limit;
-      }
-      if (params.offset !== undefined) {
-        allParams['offset'] = params.offset;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/funnels/page', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.FunnelPageResponseDTO> = await this.client.request(config);
@@ -605,84 +242,24 @@ export class Funnels {
     },
     options?: AxiosRequestConfig
   ): Promise<Models.FunnelPageCountResponseDTO> {
-    let url = '/funnels/page/count';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'query'},{name: 'funnelId', in: 'query'},{name: 'name', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["Location-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        queryParams['locationId'] = params.locationId;
-      }
-      if (params.funnelId !== undefined) {
-        queryParams['funnelId'] = params.funnelId;
-      }
-      if (params.name !== undefined) {
-        queryParams['name'] = params.name;
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.funnelId !== undefined) {
-        allParams['funnelId'] = params.funnelId;
-      }
-      if (params.name !== undefined) {
-        allParams['name'] = params.name;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/funnels/page/count', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.FunnelPageCountResponseDTO> = await this.client.request(config);

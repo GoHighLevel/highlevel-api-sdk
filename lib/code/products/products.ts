@@ -1,5 +1,6 @@
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as Models from './models/products';
+import { buildUrl, extractParams, getAuthToken } from '../../utils/request-utils';
 
 /**
  * Products Service
@@ -20,63 +21,24 @@ export class Products {
     requestBody: Models.BulkUpdateDto,
     options?: AxiosRequestConfig
   ): Promise<Models.BulkUpdateResponseDto> {
-    let url = '/products/bulk-update';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [];
+    const extracted = extractParams(null, paramDefs);
+    const requirements: string[] = ["Location-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access"];
-    
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-
     const config: AxiosRequestConfig = {
       method: 'POST',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/products/bulk-update', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.BulkUpdateResponseDto> = await this.client.request(config);
@@ -91,63 +53,24 @@ export class Products {
     requestBody: Models.BulkEditRequestDto,
     options?: AxiosRequestConfig
   ): Promise<Models.BulkEditResponseDto> {
-    let url = '/products/bulk-update/edit';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [];
+    const extracted = extractParams(null, paramDefs);
+    const requirements: string[] = [];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = [];
-    
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-
     const config: AxiosRequestConfig = {
       method: 'POST',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/products/bulk-update/edit', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.BulkEditResponseDto> = await this.client.request(config);
@@ -165,75 +88,24 @@ export class Products {
     requestBody: Models.CreatePriceDto,
     options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.CreatePriceResponseDto> {
-    let url = '/products/{productId}/price';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'productId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-    
-    if (params) {
-      if (params.productId !== undefined) {
-        url = url.replace('{' + 'productId' + '}', encodeURIComponent(String(params.productId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.productId !== undefined) {
-        allParams['productId'] = params.productId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'POST',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/products/{productId}/price', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody,
-          options?.preferredTokenType
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody, options?.preferredTokenType);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.CreatePriceResponseDto> = await this.client.request(config);
@@ -254,98 +126,24 @@ export class Products {
     },
     options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.ListPricesResponseDto> {
-    let url = '/products/{productId}/price';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'productId', in: 'path'},{name: 'limit', in: 'query'},{name: 'offset', in: 'query'},{name: 'locationId', in: 'query'},{name: 'ids', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-    
-    if (params) {
-      if (params.productId !== undefined) {
-        url = url.replace('{' + 'productId' + '}', encodeURIComponent(String(params.productId)));
-      }
-      if (params.limit !== undefined) {
-        queryParams['limit'] = params.limit;
-      }
-      if (params.offset !== undefined) {
-        queryParams['offset'] = params.offset;
-      }
-      if (params.locationId !== undefined) {
-        queryParams['locationId'] = params.locationId;
-      }
-      if (params.ids !== undefined) {
-        queryParams['ids'] = params.ids;
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.productId !== undefined) {
-        allParams['productId'] = params.productId;
-      }
-      if (params.limit !== undefined) {
-        allParams['limit'] = params.limit;
-      }
-      if (params.offset !== undefined) {
-        allParams['offset'] = params.offset;
-      }
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.ids !== undefined) {
-        allParams['ids'] = params.ids;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/products/{productId}/price', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {},
-          options?.preferredTokenType
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {}, options?.preferredTokenType);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.ListPricesResponseDto> = await this.client.request(config);
@@ -366,98 +164,24 @@ export class Products {
     },
     options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.GetInventoryResponseDto> {
-    let url = '/products/inventory';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'limit', in: 'query'},{name: 'offset', in: 'query'},{name: 'altId', in: 'query'},{name: 'altType', in: 'query'},{name: 'search', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-    
-    if (params) {
-      if (params.limit !== undefined) {
-        queryParams['limit'] = params.limit;
-      }
-      if (params.offset !== undefined) {
-        queryParams['offset'] = params.offset;
-      }
-      if (params.altId !== undefined) {
-        queryParams['altId'] = params.altId;
-      }
-      if (params.altType !== undefined) {
-        queryParams['altType'] = params.altType;
-      }
-      if (params.search !== undefined) {
-        queryParams['search'] = params.search;
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.limit !== undefined) {
-        allParams['limit'] = params.limit;
-      }
-      if (params.offset !== undefined) {
-        allParams['offset'] = params.offset;
-      }
-      if (params.altId !== undefined) {
-        allParams['altId'] = params.altId;
-      }
-      if (params.altType !== undefined) {
-        allParams['altType'] = params.altType;
-      }
-      if (params.search !== undefined) {
-        allParams['search'] = params.search;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/products/inventory', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {},
-          options?.preferredTokenType
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {}, options?.preferredTokenType);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.GetInventoryResponseDto> = await this.client.request(config);
@@ -472,65 +196,24 @@ export class Products {
     requestBody: Models.UpdateInventoryDto,
     options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.UpdateInventoryResponseDto> {
-    let url = '/products/inventory';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [];
+    const extracted = extractParams(null, paramDefs);
+    const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-    
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-
     const config: AxiosRequestConfig = {
       method: 'POST',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/products/inventory', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody,
-          options?.preferredTokenType
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody, options?.preferredTokenType);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.UpdateInventoryResponseDto> = await this.client.request(config);
@@ -549,86 +232,24 @@ export class Products {
     },
     options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.GetPriceResponseDto> {
-    let url = '/products/{productId}/price/{priceId}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'productId', in: 'path'},{name: 'priceId', in: 'path'},{name: 'locationId', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-    
-    if (params) {
-      if (params.productId !== undefined) {
-        url = url.replace('{' + 'productId' + '}', encodeURIComponent(String(params.productId)));
-      }
-      if (params.priceId !== undefined) {
-        url = url.replace('{' + 'priceId' + '}', encodeURIComponent(String(params.priceId)));
-      }
-      if (params.locationId !== undefined) {
-        queryParams['locationId'] = params.locationId;
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.productId !== undefined) {
-        allParams['productId'] = params.productId;
-      }
-      if (params.priceId !== undefined) {
-        allParams['priceId'] = params.priceId;
-      }
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/products/{productId}/price/{priceId}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {},
-          options?.preferredTokenType
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {}, options?.preferredTokenType);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.GetPriceResponseDto> = await this.client.request(config);
@@ -647,81 +268,24 @@ export class Products {
     requestBody: Models.UpdatePriceDto,
     options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.UpdatePriceResponseDto> {
-    let url = '/products/{productId}/price/{priceId}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'productId', in: 'path'},{name: 'priceId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-    
-    if (params) {
-      if (params.productId !== undefined) {
-        url = url.replace('{' + 'productId' + '}', encodeURIComponent(String(params.productId)));
-      }
-      if (params.priceId !== undefined) {
-        url = url.replace('{' + 'priceId' + '}', encodeURIComponent(String(params.priceId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.productId !== undefined) {
-        allParams['productId'] = params.productId;
-      }
-      if (params.priceId !== undefined) {
-        allParams['priceId'] = params.priceId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'PUT',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/products/{productId}/price/{priceId}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody,
-          options?.preferredTokenType
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody, options?.preferredTokenType);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.UpdatePriceResponseDto> = await this.client.request(config);
@@ -740,86 +304,24 @@ export class Products {
     },
     options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.DeletePriceResponseDto> {
-    let url = '/products/{productId}/price/{priceId}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'productId', in: 'path'},{name: 'priceId', in: 'path'},{name: 'locationId', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-    
-    if (params) {
-      if (params.productId !== undefined) {
-        url = url.replace('{' + 'productId' + '}', encodeURIComponent(String(params.productId)));
-      }
-      if (params.priceId !== undefined) {
-        url = url.replace('{' + 'priceId' + '}', encodeURIComponent(String(params.priceId)));
-      }
-      if (params.locationId !== undefined) {
-        queryParams['locationId'] = params.locationId;
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.productId !== undefined) {
-        allParams['productId'] = params.productId;
-      }
-      if (params.priceId !== undefined) {
-        allParams['priceId'] = params.priceId;
-      }
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'DELETE',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/products/{productId}/price/{priceId}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {},
-          options?.preferredTokenType
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {}, options?.preferredTokenType);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.DeletePriceResponseDto> = await this.client.request(config);
@@ -840,96 +342,24 @@ export class Products {
     },
     options?: AxiosRequestConfig
   ): Promise<Models.GetProductStatsResponseDto> {
-    let url = '/products/store/{storeId}/stats';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'storeId', in: 'path'},{name: 'altId', in: 'query'},{name: 'altType', in: 'query'},{name: 'search', in: 'query'},{name: 'collectionIds', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["Location-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access"];
-    
-    if (params) {
-      if (params.storeId !== undefined) {
-        url = url.replace('{' + 'storeId' + '}', encodeURIComponent(String(params.storeId)));
-      }
-      if (params.altId !== undefined) {
-        queryParams['altId'] = params.altId;
-      }
-      if (params.altType !== undefined) {
-        queryParams['altType'] = params.altType;
-      }
-      if (params.search !== undefined) {
-        queryParams['search'] = params.search;
-      }
-      if (params.collectionIds !== undefined) {
-        queryParams['collectionIds'] = params.collectionIds;
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.storeId !== undefined) {
-        allParams['storeId'] = params.storeId;
-      }
-      if (params.altId !== undefined) {
-        allParams['altId'] = params.altId;
-      }
-      if (params.altType !== undefined) {
-        allParams['altType'] = params.altType;
-      }
-      if (params.search !== undefined) {
-        allParams['search'] = params.search;
-      }
-      if (params.collectionIds !== undefined) {
-        allParams['collectionIds'] = params.collectionIds;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/products/store/{storeId}/stats', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.GetProductStatsResponseDto> = await this.client.request(config);
@@ -947,73 +377,24 @@ export class Products {
     requestBody: Models.UpdateProductStoreDto,
     options?: AxiosRequestConfig
   ): Promise<Models.UpdateProductStoreResponseDto> {
-    let url = '/products/store/{storeId}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'storeId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["Location-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access"];
-    
-    if (params) {
-      if (params.storeId !== undefined) {
-        url = url.replace('{' + 'storeId' + '}', encodeURIComponent(String(params.storeId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.storeId !== undefined) {
-        allParams['storeId'] = params.storeId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'POST',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/products/store/{storeId}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.UpdateProductStoreResponseDto> = await this.client.request(config);
@@ -1031,73 +412,24 @@ export class Products {
     requestBody: Models.UpdateDisplayPriorityBodyDto,
     options?: AxiosRequestConfig
   ): Promise<any> {
-    let url = '/products/store/{storeId}/priority';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'storeId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["Location-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access"];
-    
-    if (params) {
-      if (params.storeId !== undefined) {
-        url = url.replace('{' + 'storeId' + '}', encodeURIComponent(String(params.storeId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.storeId !== undefined) {
-        allParams['storeId'] = params.storeId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'POST',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/products/store/{storeId}/priority', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<any> = await this.client.request(config);
@@ -1119,102 +451,24 @@ export class Products {
     },
     options?: AxiosRequestConfig
   ): Promise<Models.ListCollectionResponseDto> {
-    let url = '/products/collections';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'limit', in: 'query'},{name: 'offset', in: 'query'},{name: 'altId', in: 'query'},{name: 'altType', in: 'query'},{name: 'collectionIds', in: 'query'},{name: 'name', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["Location-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access"];
-    
-    if (params) {
-      if (params.limit !== undefined) {
-        queryParams['limit'] = params.limit;
-      }
-      if (params.offset !== undefined) {
-        queryParams['offset'] = params.offset;
-      }
-      if (params.altId !== undefined) {
-        queryParams['altId'] = params.altId;
-      }
-      if (params.altType !== undefined) {
-        queryParams['altType'] = params.altType;
-      }
-      if (params.collectionIds !== undefined) {
-        queryParams['collectionIds'] = params.collectionIds;
-      }
-      if (params.name !== undefined) {
-        queryParams['name'] = params.name;
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.limit !== undefined) {
-        allParams['limit'] = params.limit;
-      }
-      if (params.offset !== undefined) {
-        allParams['offset'] = params.offset;
-      }
-      if (params.altId !== undefined) {
-        allParams['altId'] = params.altId;
-      }
-      if (params.altType !== undefined) {
-        allParams['altType'] = params.altType;
-      }
-      if (params.collectionIds !== undefined) {
-        allParams['collectionIds'] = params.collectionIds;
-      }
-      if (params.name !== undefined) {
-        allParams['name'] = params.name;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/products/collections', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.ListCollectionResponseDto> = await this.client.request(config);
@@ -1229,63 +483,24 @@ export class Products {
     requestBody: Models.CreateProductCollectionsDto,
     options?: AxiosRequestConfig
   ): Promise<Models.CreateCollectionResponseDto> {
-    let url = '/products/collections';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [];
+    const extracted = extractParams(null, paramDefs);
+    const requirements: string[] = ["Location-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access"];
-    
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-
     const config: AxiosRequestConfig = {
       method: 'POST',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/products/collections', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.CreateCollectionResponseDto> = await this.client.request(config);
@@ -1303,78 +518,24 @@ export class Products {
     },
     options?: AxiosRequestConfig
   ): Promise<Models.DefaultCollectionResponseDto> {
-    let url = '/products/collections/{collectionId}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'collectionId', in: 'path'},{name: 'altId', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["Location-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access"];
-    
-    if (params) {
-      if (params.collectionId !== undefined) {
-        url = url.replace('{' + 'collectionId' + '}', encodeURIComponent(String(params.collectionId)));
-      }
-      if (params.altId !== undefined) {
-        queryParams['altId'] = params.altId;
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.collectionId !== undefined) {
-        allParams['collectionId'] = params.collectionId;
-      }
-      if (params.altId !== undefined) {
-        allParams['altId'] = params.altId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/products/collections/{collectionId}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.DefaultCollectionResponseDto> = await this.client.request(config);
@@ -1392,73 +553,24 @@ export class Products {
     requestBody: Models.UpdateProductCollectionsDto,
     options?: AxiosRequestConfig
   ): Promise<Models.UpdateProductCollectionResponseDto> {
-    let url = '/products/collections/{collectionId}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'collectionId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["Location-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access"];
-    
-    if (params) {
-      if (params.collectionId !== undefined) {
-        url = url.replace('{' + 'collectionId' + '}', encodeURIComponent(String(params.collectionId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.collectionId !== undefined) {
-        allParams['collectionId'] = params.collectionId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'PUT',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/products/collections/{collectionId}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.UpdateProductCollectionResponseDto> = await this.client.request(config);
@@ -1477,84 +589,24 @@ export class Products {
     },
     options?: AxiosRequestConfig
   ): Promise<Models.DeleteProductCollectionResponseDto> {
-    let url = '/products/collections/{collectionId}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'collectionId', in: 'path'},{name: 'altId', in: 'query'},{name: 'altType', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["Location-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access"];
-    
-    if (params) {
-      if (params.collectionId !== undefined) {
-        url = url.replace('{' + 'collectionId' + '}', encodeURIComponent(String(params.collectionId)));
-      }
-      if (params.altId !== undefined) {
-        queryParams['altId'] = params.altId;
-      }
-      if (params.altType !== undefined) {
-        queryParams['altType'] = params.altType;
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.collectionId !== undefined) {
-        allParams['collectionId'] = params.collectionId;
-      }
-      if (params.altId !== undefined) {
-        allParams['altId'] = params.altId;
-      }
-      if (params.altType !== undefined) {
-        allParams['altType'] = params.altType;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'DELETE',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/products/collections/{collectionId}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.DeleteProductCollectionResponseDto> = await this.client.request(config);
@@ -1581,132 +633,24 @@ export class Products {
     },
     options?: AxiosRequestConfig
   ): Promise<Models.ListProductReviewsResponseDto> {
-    let url = '/products/reviews';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'altId', in: 'query'},{name: 'altType', in: 'query'},{name: 'limit', in: 'query'},{name: 'offset', in: 'query'},{name: 'sortField', in: 'query'},{name: 'sortOrder', in: 'query'},{name: 'rating', in: 'query'},{name: 'startDate', in: 'query'},{name: 'endDate', in: 'query'},{name: 'productId', in: 'query'},{name: 'storeId', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["Location-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access"];
-    
-    if (params) {
-      if (params.altId !== undefined) {
-        queryParams['altId'] = params.altId;
-      }
-      if (params.altType !== undefined) {
-        queryParams['altType'] = params.altType;
-      }
-      if (params.limit !== undefined) {
-        queryParams['limit'] = params.limit;
-      }
-      if (params.offset !== undefined) {
-        queryParams['offset'] = params.offset;
-      }
-      if (params.sortField !== undefined) {
-        queryParams['sortField'] = params.sortField;
-      }
-      if (params.sortOrder !== undefined) {
-        queryParams['sortOrder'] = params.sortOrder;
-      }
-      if (params.rating !== undefined) {
-        queryParams['rating'] = params.rating;
-      }
-      if (params.startDate !== undefined) {
-        queryParams['startDate'] = params.startDate;
-      }
-      if (params.endDate !== undefined) {
-        queryParams['endDate'] = params.endDate;
-      }
-      if (params.productId !== undefined) {
-        queryParams['productId'] = params.productId;
-      }
-      if (params.storeId !== undefined) {
-        queryParams['storeId'] = params.storeId;
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.altId !== undefined) {
-        allParams['altId'] = params.altId;
-      }
-      if (params.altType !== undefined) {
-        allParams['altType'] = params.altType;
-      }
-      if (params.limit !== undefined) {
-        allParams['limit'] = params.limit;
-      }
-      if (params.offset !== undefined) {
-        allParams['offset'] = params.offset;
-      }
-      if (params.sortField !== undefined) {
-        allParams['sortField'] = params.sortField;
-      }
-      if (params.sortOrder !== undefined) {
-        allParams['sortOrder'] = params.sortOrder;
-      }
-      if (params.rating !== undefined) {
-        allParams['rating'] = params.rating;
-      }
-      if (params.startDate !== undefined) {
-        allParams['startDate'] = params.startDate;
-      }
-      if (params.endDate !== undefined) {
-        allParams['endDate'] = params.endDate;
-      }
-      if (params.productId !== undefined) {
-        allParams['productId'] = params.productId;
-      }
-      if (params.storeId !== undefined) {
-        allParams['storeId'] = params.storeId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/products/reviews', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.ListProductReviewsResponseDto> = await this.client.request(config);
@@ -1729,108 +673,24 @@ export class Products {
     },
     options?: AxiosRequestConfig
   ): Promise<Models.CountReviewsByStatusResponseDto> {
-    let url = '/products/reviews/count';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'altId', in: 'query'},{name: 'altType', in: 'query'},{name: 'rating', in: 'query'},{name: 'startDate', in: 'query'},{name: 'endDate', in: 'query'},{name: 'productId', in: 'query'},{name: 'storeId', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["Location-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access"];
-    
-    if (params) {
-      if (params.altId !== undefined) {
-        queryParams['altId'] = params.altId;
-      }
-      if (params.altType !== undefined) {
-        queryParams['altType'] = params.altType;
-      }
-      if (params.rating !== undefined) {
-        queryParams['rating'] = params.rating;
-      }
-      if (params.startDate !== undefined) {
-        queryParams['startDate'] = params.startDate;
-      }
-      if (params.endDate !== undefined) {
-        queryParams['endDate'] = params.endDate;
-      }
-      if (params.productId !== undefined) {
-        queryParams['productId'] = params.productId;
-      }
-      if (params.storeId !== undefined) {
-        queryParams['storeId'] = params.storeId;
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.altId !== undefined) {
-        allParams['altId'] = params.altId;
-      }
-      if (params.altType !== undefined) {
-        allParams['altType'] = params.altType;
-      }
-      if (params.rating !== undefined) {
-        allParams['rating'] = params.rating;
-      }
-      if (params.startDate !== undefined) {
-        allParams['startDate'] = params.startDate;
-      }
-      if (params.endDate !== undefined) {
-        allParams['endDate'] = params.endDate;
-      }
-      if (params.productId !== undefined) {
-        allParams['productId'] = params.productId;
-      }
-      if (params.storeId !== undefined) {
-        allParams['storeId'] = params.storeId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/products/reviews/count', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.CountReviewsByStatusResponseDto> = await this.client.request(config);
@@ -1848,73 +708,24 @@ export class Products {
     requestBody: Models.UpdateProductReviewDto,
     options?: AxiosRequestConfig
   ): Promise<Models.UpdateProductReviewsResponseDto> {
-    let url = '/products/reviews/{reviewId}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'reviewId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["Location-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access"];
-    
-    if (params) {
-      if (params.reviewId !== undefined) {
-        url = url.replace('{' + 'reviewId' + '}', encodeURIComponent(String(params.reviewId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.reviewId !== undefined) {
-        allParams['reviewId'] = params.reviewId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'PUT',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/products/reviews/{reviewId}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.UpdateProductReviewsResponseDto> = await this.client.request(config);
@@ -1934,90 +745,24 @@ export class Products {
     },
     options?: AxiosRequestConfig
   ): Promise<Models.DeleteProductReviewResponseDto> {
-    let url = '/products/reviews/{reviewId}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'reviewId', in: 'path'},{name: 'altId', in: 'query'},{name: 'altType', in: 'query'},{name: 'productId', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["Location-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access"];
-    
-    if (params) {
-      if (params.reviewId !== undefined) {
-        url = url.replace('{' + 'reviewId' + '}', encodeURIComponent(String(params.reviewId)));
-      }
-      if (params.altId !== undefined) {
-        queryParams['altId'] = params.altId;
-      }
-      if (params.altType !== undefined) {
-        queryParams['altType'] = params.altType;
-      }
-      if (params.productId !== undefined) {
-        queryParams['productId'] = params.productId;
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.reviewId !== undefined) {
-        allParams['reviewId'] = params.reviewId;
-      }
-      if (params.altId !== undefined) {
-        allParams['altId'] = params.altId;
-      }
-      if (params.altType !== undefined) {
-        allParams['altType'] = params.altType;
-      }
-      if (params.productId !== undefined) {
-        allParams['productId'] = params.productId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'DELETE',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/products/reviews/{reviewId}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.DeleteProductReviewResponseDto> = await this.client.request(config);
@@ -2032,63 +777,24 @@ export class Products {
     requestBody: Models.UpdateProductReviewsDto,
     options?: AxiosRequestConfig
   ): Promise<Models.UpdateProductReviewsResponseDto> {
-    let url = '/products/reviews/bulk-update';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [];
+    const extracted = extractParams(null, paramDefs);
+    const requirements: string[] = ["Location-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access"];
-    
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-
     const config: AxiosRequestConfig = {
       method: 'POST',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/products/reviews/bulk-update', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.UpdateProductReviewsResponseDto> = await this.client.request(config);
@@ -2107,86 +813,24 @@ export class Products {
     },
     options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.GetProductResponseDto> {
-    let url = '/products/{productId}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'productId', in: 'path'},{name: 'locationId', in: 'query'},{name: 'sendWishlistStatus', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-    
-    if (params) {
-      if (params.productId !== undefined) {
-        url = url.replace('{' + 'productId' + '}', encodeURIComponent(String(params.productId)));
-      }
-      if (params.locationId !== undefined) {
-        queryParams['locationId'] = params.locationId;
-      }
-      if (params.sendWishlistStatus !== undefined) {
-        queryParams['sendWishlistStatus'] = params.sendWishlistStatus;
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.productId !== undefined) {
-        allParams['productId'] = params.productId;
-      }
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.sendWishlistStatus !== undefined) {
-        allParams['sendWishlistStatus'] = params.sendWishlistStatus;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/products/{productId}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {},
-          options?.preferredTokenType
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {}, options?.preferredTokenType);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.GetProductResponseDto> = await this.client.request(config);
@@ -2205,86 +849,24 @@ export class Products {
     },
     options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.DeleteProductResponseDto> {
-    let url = '/products/{productId}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'productId', in: 'path'},{name: 'locationId', in: 'query'},{name: 'sendWishlistStatus', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-    
-    if (params) {
-      if (params.productId !== undefined) {
-        url = url.replace('{' + 'productId' + '}', encodeURIComponent(String(params.productId)));
-      }
-      if (params.locationId !== undefined) {
-        queryParams['locationId'] = params.locationId;
-      }
-      if (params.sendWishlistStatus !== undefined) {
-        queryParams['sendWishlistStatus'] = params.sendWishlistStatus;
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.productId !== undefined) {
-        allParams['productId'] = params.productId;
-      }
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.sendWishlistStatus !== undefined) {
-        allParams['sendWishlistStatus'] = params.sendWishlistStatus;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'DELETE',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/products/{productId}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {},
-          options?.preferredTokenType
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {}, options?.preferredTokenType);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.DeleteProductResponseDto> = await this.client.request(config);
@@ -2302,75 +884,24 @@ export class Products {
     requestBody: Models.UpdateProductDto,
     options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.UpdateProductResponseDto> {
-    let url = '/products/{productId}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'productId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-    
-    if (params) {
-      if (params.productId !== undefined) {
-        url = url.replace('{' + 'productId' + '}', encodeURIComponent(String(params.productId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.productId !== undefined) {
-        allParams['productId'] = params.productId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'PUT',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/products/{productId}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody,
-          options?.preferredTokenType
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody, options?.preferredTokenType);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.UpdateProductResponseDto> = await this.client.request(config);
@@ -2385,65 +916,24 @@ export class Products {
     requestBody: Models.CreateProductDto,
     options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.CreateProductResponseDto> {
-    let url = '/products/';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [];
+    const extracted = extractParams(null, paramDefs);
+    const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-    
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-
     const config: AxiosRequestConfig = {
       method: 'POST',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/products/', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody,
-          options?.preferredTokenType
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody, options?.preferredTokenType);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.CreateProductResponseDto> = await this.client.request(config);
@@ -2471,140 +961,24 @@ export class Products {
     },
     options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.ListProductsResponseDto> {
-    let url = '/products/';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'limit', in: 'query'},{name: 'offset', in: 'query'},{name: 'locationId', in: 'query'},{name: 'search', in: 'query'},{name: 'collectionIds', in: 'query'},{name: 'collectionSlug', in: 'query'},{name: 'expand', in: 'query'},{name: 'productIds', in: 'query'},{name: 'storeId', in: 'query'},{name: 'includedInStore', in: 'query'},{name: 'availableInStore', in: 'query'},{name: 'sortOrder', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access","Agency-Access"];
-    
-    if (params) {
-      if (params.limit !== undefined) {
-        queryParams['limit'] = params.limit;
-      }
-      if (params.offset !== undefined) {
-        queryParams['offset'] = params.offset;
-      }
-      if (params.locationId !== undefined) {
-        queryParams['locationId'] = params.locationId;
-      }
-      if (params.search !== undefined) {
-        queryParams['search'] = params.search;
-      }
-      if (params.collectionIds !== undefined) {
-        queryParams['collectionIds'] = params.collectionIds;
-      }
-      if (params.collectionSlug !== undefined) {
-        queryParams['collectionSlug'] = params.collectionSlug;
-      }
-      if (params.expand !== undefined) {
-        queryParams['expand'] = params.expand;
-      }
-      if (params.productIds !== undefined) {
-        queryParams['productIds'] = params.productIds;
-      }
-      if (params.storeId !== undefined) {
-        queryParams['storeId'] = params.storeId;
-      }
-      if (params.includedInStore !== undefined) {
-        queryParams['includedInStore'] = params.includedInStore;
-      }
-      if (params.availableInStore !== undefined) {
-        queryParams['availableInStore'] = params.availableInStore;
-      }
-      if (params.sortOrder !== undefined) {
-        queryParams['sortOrder'] = params.sortOrder;
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.limit !== undefined) {
-        allParams['limit'] = params.limit;
-      }
-      if (params.offset !== undefined) {
-        allParams['offset'] = params.offset;
-      }
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.search !== undefined) {
-        allParams['search'] = params.search;
-      }
-      if (params.collectionIds !== undefined) {
-        allParams['collectionIds'] = params.collectionIds;
-      }
-      if (params.collectionSlug !== undefined) {
-        allParams['collectionSlug'] = params.collectionSlug;
-      }
-      if (params.expand !== undefined) {
-        allParams['expand'] = params.expand;
-      }
-      if (params.productIds !== undefined) {
-        allParams['productIds'] = params.productIds;
-      }
-      if (params.storeId !== undefined) {
-        allParams['storeId'] = params.storeId;
-      }
-      if (params.includedInStore !== undefined) {
-        allParams['includedInStore'] = params.includedInStore;
-      }
-      if (params.availableInStore !== undefined) {
-        allParams['availableInStore'] = params.availableInStore;
-      }
-      if (params.sortOrder !== undefined) {
-        allParams['sortOrder'] = params.sortOrder;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/products/', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {},
-          options?.preferredTokenType
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {}, options?.preferredTokenType);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.ListProductsResponseDto> = await this.client.request(config);

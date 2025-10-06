@@ -1,5 +1,6 @@
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as Models from './models/social-media-posting';
+import { buildUrl, extractParams, getAuthToken } from '../../utils/request-utils';
 
 /**
  * SocialMediaPosting Service
@@ -46,90 +47,24 @@ export class SocialMediaPosting {
     },
     options?: AxiosRequestConfig
   ): Promise<any> {
-    let url = '/social-media-posting/oauth/google/start';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'query'},{name: 'userId', in: 'query'},{name: 'page', in: 'query'},{name: 'reconnect', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        queryParams['locationId'] = params.locationId;
-      }
-      if (params.userId !== undefined) {
-        queryParams['userId'] = params.userId;
-      }
-      if (params.page !== undefined) {
-        queryParams['page'] = params.page;
-      }
-      if (params.reconnect !== undefined) {
-        queryParams['reconnect'] = params.reconnect;
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.userId !== undefined) {
-        allParams['userId'] = params.userId;
-      }
-      if (params.page !== undefined) {
-        allParams['page'] = params.page;
-      }
-      if (params.reconnect !== undefined) {
-        allParams['reconnect'] = params.reconnect;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/social-media-posting/oauth/google/start', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<any> = await this.client.request(config);
@@ -147,78 +82,24 @@ export class SocialMediaPosting {
     },
     options?: AxiosRequestConfig
   ): Promise<Models.GetGoogleLocationResponseDTO> {
-    let url = '/social-media-posting/oauth/{locationId}/google/locations/{accountId}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'},{name: 'accountId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
-      }
-      if (params.accountId !== undefined) {
-        url = url.replace('{' + 'accountId' + '}', encodeURIComponent(String(params.accountId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.accountId !== undefined) {
-        allParams['accountId'] = params.accountId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/social-media-posting/oauth/{locationId}/google/locations/{accountId}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.GetGoogleLocationResponseDTO> = await this.client.request(config);
@@ -237,79 +118,24 @@ export class SocialMediaPosting {
     requestBody: Models.AttachGMBLocationDTO,
     options?: AxiosRequestConfig
   ): Promise<Models.SocialMediaGmbAccountResponseDTO> {
-    let url = '/social-media-posting/oauth/{locationId}/google/locations/{accountId}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'},{name: 'accountId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
-      }
-      if (params.accountId !== undefined) {
-        url = url.replace('{' + 'accountId' + '}', encodeURIComponent(String(params.accountId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.accountId !== undefined) {
-        allParams['accountId'] = params.accountId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'POST',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/social-media-posting/oauth/{locationId}/google/locations/{accountId}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.SocialMediaGmbAccountResponseDTO> = await this.client.request(config);
@@ -327,73 +153,24 @@ export class SocialMediaPosting {
     requestBody: Models.SearchPostDTO,
     options?: AxiosRequestConfig
   ): Promise<Models.PostSuccessfulResponseDTO> {
-    let url = '/social-media-posting/{locationId}/posts/list';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'POST',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/social-media-posting/{locationId}/posts/list', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.PostSuccessfulResponseDTO> = await this.client.request(config);
@@ -415,73 +192,24 @@ The content and media limitations, as well as platform rate limiters correspondi
     requestBody: Models.CreatePostDTO,
     options?: AxiosRequestConfig
   ): Promise<Models.CreatePostSuccessfulResponseDTO> {
-    let url = '/social-media-posting/{locationId}/posts';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'POST',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/social-media-posting/{locationId}/posts', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.CreatePostSuccessfulResponseDTO> = await this.client.request(config);
@@ -499,78 +227,24 @@ The content and media limitations, as well as platform rate limiters correspondi
     },
     options?: AxiosRequestConfig
   ): Promise<Models.GetPostSuccessfulResponseDTO> {
-    let url = '/social-media-posting/{locationId}/posts/{id}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'},{name: 'id', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
-      }
-      if (params.id !== undefined) {
-        url = url.replace('{' + 'id' + '}', encodeURIComponent(String(params.id)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.id !== undefined) {
-        allParams['id'] = params.id;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/social-media-posting/{locationId}/posts/{id}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.GetPostSuccessfulResponseDTO> = await this.client.request(config);
@@ -593,79 +267,24 @@ The content and media limitations, as well as platform rate limiters correspondi
     requestBody: Models.PostCreateRequest,
     options?: AxiosRequestConfig
   ): Promise<Models.UpdatePostSuccessfulResponseDTO> {
-    let url = '/social-media-posting/{locationId}/posts/{id}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'},{name: 'id', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
-      }
-      if (params.id !== undefined) {
-        url = url.replace('{' + 'id' + '}', encodeURIComponent(String(params.id)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.id !== undefined) {
-        allParams['id'] = params.id;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'PUT',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/social-media-posting/{locationId}/posts/{id}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.UpdatePostSuccessfulResponseDTO> = await this.client.request(config);
@@ -683,78 +302,24 @@ The content and media limitations, as well as platform rate limiters correspondi
     },
     options?: AxiosRequestConfig
   ): Promise<Models.DeletePostSuccessfulResponseDTO> {
-    let url = '/social-media-posting/{locationId}/posts/{id}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'},{name: 'id', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
-      }
-      if (params.id !== undefined) {
-        url = url.replace('{' + 'id' + '}', encodeURIComponent(String(params.id)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.id !== undefined) {
-        allParams['id'] = params.id;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'DELETE',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/social-media-posting/{locationId}/posts/{id}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.DeletePostSuccessfulResponseDTO> = await this.client.request(config);
@@ -777,63 +342,24 @@ Note:
     requestBody: Models.DeletePostsDto,
     options?: AxiosRequestConfig
   ): Promise<Models.BulkDeleteResponseDto> {
-    let url = '/social-media-posting/{locationId}/posts/bulk-delete';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [];
+    const extracted = extractParams(null, paramDefs);
+    const requirements: string[] = [];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = [];
-    
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-
     const config: AxiosRequestConfig = {
       method: 'POST',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/social-media-posting/{locationId}/posts/bulk-delete', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.BulkDeleteResponseDto> = await this.client.request(config);
@@ -850,72 +376,24 @@ Note:
     },
     options?: AxiosRequestConfig
   ): Promise<Models.AccountsListResponseDTO> {
-    let url = '/social-media-posting/{locationId}/accounts';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/social-media-posting/{locationId}/accounts', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.AccountsListResponseDTO> = await this.client.request(config);
@@ -935,90 +413,24 @@ Note:
     },
     options?: AxiosRequestConfig
   ): Promise<Models.LocationAndAccountDeleteResponseDTO> {
-    let url = '/social-media-posting/{locationId}/accounts/{id}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'},{name: 'id', in: 'path'},{name: 'companyId', in: 'query'},{name: 'userId', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
-      }
-      if (params.id !== undefined) {
-        url = url.replace('{' + 'id' + '}', encodeURIComponent(String(params.id)));
-      }
-      if (params.companyId !== undefined) {
-        queryParams['companyId'] = params.companyId;
-      }
-      if (params.userId !== undefined) {
-        queryParams['userId'] = params.userId;
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.id !== undefined) {
-        allParams['id'] = params.id;
-      }
-      if (params.companyId !== undefined) {
-        allParams['companyId'] = params.companyId;
-      }
-      if (params.userId !== undefined) {
-        allParams['userId'] = params.userId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'DELETE',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/social-media-posting/{locationId}/accounts/{id}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.LocationAndAccountDeleteResponseDTO> = await this.client.request(config);
@@ -1059,90 +471,24 @@ Note:
     },
     options?: AxiosRequestConfig
   ): Promise<any> {
-    let url = '/social-media-posting/oauth/facebook/start';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'query'},{name: 'userId', in: 'query'},{name: 'page', in: 'query'},{name: 'reconnect', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        queryParams['locationId'] = params.locationId;
-      }
-      if (params.userId !== undefined) {
-        queryParams['userId'] = params.userId;
-      }
-      if (params.page !== undefined) {
-        queryParams['page'] = params.page;
-      }
-      if (params.reconnect !== undefined) {
-        queryParams['reconnect'] = params.reconnect;
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.userId !== undefined) {
-        allParams['userId'] = params.userId;
-      }
-      if (params.page !== undefined) {
-        allParams['page'] = params.page;
-      }
-      if (params.reconnect !== undefined) {
-        allParams['reconnect'] = params.reconnect;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/social-media-posting/oauth/facebook/start', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<any> = await this.client.request(config);
@@ -1160,78 +506,24 @@ Note:
     },
     options?: AxiosRequestConfig
   ): Promise<Models.GetFacebookAccountsResponseDTO> {
-    let url = '/social-media-posting/oauth/{locationId}/facebook/accounts/{accountId}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'},{name: 'accountId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
-      }
-      if (params.accountId !== undefined) {
-        url = url.replace('{' + 'accountId' + '}', encodeURIComponent(String(params.accountId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.accountId !== undefined) {
-        allParams['accountId'] = params.accountId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/social-media-posting/oauth/{locationId}/facebook/accounts/{accountId}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.GetFacebookAccountsResponseDTO> = await this.client.request(config);
@@ -1250,79 +542,24 @@ Note:
     requestBody: Models.AttachFBAccountDTO,
     options?: AxiosRequestConfig
   ): Promise<Models.SocialMediaFBAccountResponseDTO> {
-    let url = '/social-media-posting/oauth/{locationId}/facebook/accounts/{accountId}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'},{name: 'accountId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
-      }
-      if (params.accountId !== undefined) {
-        url = url.replace('{' + 'accountId' + '}', encodeURIComponent(String(params.accountId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.accountId !== undefined) {
-        allParams['accountId'] = params.accountId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'POST',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/social-media-posting/oauth/{locationId}/facebook/accounts/{accountId}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.SocialMediaFBAccountResponseDTO> = await this.client.request(config);
@@ -1363,90 +600,24 @@ Note:
     },
     options?: AxiosRequestConfig
   ): Promise<any> {
-    let url = '/social-media-posting/oauth/instagram/start';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'query'},{name: 'userId', in: 'query'},{name: 'page', in: 'query'},{name: 'reconnect', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        queryParams['locationId'] = params.locationId;
-      }
-      if (params.userId !== undefined) {
-        queryParams['userId'] = params.userId;
-      }
-      if (params.page !== undefined) {
-        queryParams['page'] = params.page;
-      }
-      if (params.reconnect !== undefined) {
-        queryParams['reconnect'] = params.reconnect;
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.userId !== undefined) {
-        allParams['userId'] = params.userId;
-      }
-      if (params.page !== undefined) {
-        allParams['page'] = params.page;
-      }
-      if (params.reconnect !== undefined) {
-        allParams['reconnect'] = params.reconnect;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/social-media-posting/oauth/instagram/start', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<any> = await this.client.request(config);
@@ -1464,78 +635,24 @@ Note:
     },
     options?: AxiosRequestConfig
   ): Promise<Models.GetInstagramAccountsResponseDTO> {
-    let url = '/social-media-posting/oauth/{locationId}/instagram/accounts/{accountId}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'},{name: 'accountId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
-      }
-      if (params.accountId !== undefined) {
-        url = url.replace('{' + 'accountId' + '}', encodeURIComponent(String(params.accountId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.accountId !== undefined) {
-        allParams['accountId'] = params.accountId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/social-media-posting/oauth/{locationId}/instagram/accounts/{accountId}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.GetInstagramAccountsResponseDTO> = await this.client.request(config);
@@ -1554,79 +671,24 @@ Note:
     requestBody: Models.AttachIGAccountDTO,
     options?: AxiosRequestConfig
   ): Promise<Models.SocialMediaInstagramAccountResponseDTO> {
-    let url = '/social-media-posting/oauth/{locationId}/instagram/accounts/{accountId}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'},{name: 'accountId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
-      }
-      if (params.accountId !== undefined) {
-        url = url.replace('{' + 'accountId' + '}', encodeURIComponent(String(params.accountId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.accountId !== undefined) {
-        allParams['accountId'] = params.accountId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'POST',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/social-media-posting/oauth/{locationId}/instagram/accounts/{accountId}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.SocialMediaInstagramAccountResponseDTO> = await this.client.request(config);
@@ -1667,90 +729,24 @@ Note:
     },
     options?: AxiosRequestConfig
   ): Promise<any> {
-    let url = '/social-media-posting/oauth/linkedin/start';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'query'},{name: 'userId', in: 'query'},{name: 'page', in: 'query'},{name: 'reconnect', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        queryParams['locationId'] = params.locationId;
-      }
-      if (params.userId !== undefined) {
-        queryParams['userId'] = params.userId;
-      }
-      if (params.page !== undefined) {
-        queryParams['page'] = params.page;
-      }
-      if (params.reconnect !== undefined) {
-        queryParams['reconnect'] = params.reconnect;
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.userId !== undefined) {
-        allParams['userId'] = params.userId;
-      }
-      if (params.page !== undefined) {
-        allParams['page'] = params.page;
-      }
-      if (params.reconnect !== undefined) {
-        allParams['reconnect'] = params.reconnect;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/social-media-posting/oauth/linkedin/start', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<any> = await this.client.request(config);
@@ -1768,78 +764,24 @@ Note:
     },
     options?: AxiosRequestConfig
   ): Promise<Models.GetLinkedInAccountsResponseDTO> {
-    let url = '/social-media-posting/oauth/{locationId}/linkedin/accounts/{accountId}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'},{name: 'accountId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
-      }
-      if (params.accountId !== undefined) {
-        url = url.replace('{' + 'accountId' + '}', encodeURIComponent(String(params.accountId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.accountId !== undefined) {
-        allParams['accountId'] = params.accountId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/social-media-posting/oauth/{locationId}/linkedin/accounts/{accountId}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.GetLinkedInAccountsResponseDTO> = await this.client.request(config);
@@ -1858,79 +800,24 @@ Note:
     requestBody: Models.AttachLinkedinAccountDTO,
     options?: AxiosRequestConfig
   ): Promise<Models.SocialMediaLinkedInAccountResponseDTO> {
-    let url = '/social-media-posting/oauth/{locationId}/linkedin/accounts/{accountId}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'},{name: 'accountId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
-      }
-      if (params.accountId !== undefined) {
-        url = url.replace('{' + 'accountId' + '}', encodeURIComponent(String(params.accountId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.accountId !== undefined) {
-        allParams['accountId'] = params.accountId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'POST',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/social-media-posting/oauth/{locationId}/linkedin/accounts/{accountId}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.SocialMediaLinkedInAccountResponseDTO> = await this.client.request(config);
@@ -1966,90 +853,24 @@ Note:
     },
     options?: AxiosRequestConfig
   ): Promise<any> {
-    let url = '/social-media-posting/oauth/twitter/start';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'query'},{name: 'userId', in: 'query'},{name: 'page', in: 'query'},{name: 'reconnect', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        queryParams['locationId'] = params.locationId;
-      }
-      if (params.userId !== undefined) {
-        queryParams['userId'] = params.userId;
-      }
-      if (params.page !== undefined) {
-        queryParams['page'] = params.page;
-      }
-      if (params.reconnect !== undefined) {
-        queryParams['reconnect'] = params.reconnect;
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.userId !== undefined) {
-        allParams['userId'] = params.userId;
-      }
-      if (params.page !== undefined) {
-        allParams['page'] = params.page;
-      }
-      if (params.reconnect !== undefined) {
-        allParams['reconnect'] = params.reconnect;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/social-media-posting/oauth/twitter/start', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<any> = await this.client.request(config);
@@ -2083,78 +904,24 @@ Note:
     },
     options?: AxiosRequestConfig
   ): Promise<Models.GetTwitterAccountsResponseDTO> {
-    let url = '/social-media-posting/oauth/{locationId}/twitter/accounts/{accountId}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'},{name: 'accountId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = [];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = [];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
-      }
-      if (params.accountId !== undefined) {
-        url = url.replace('{' + 'accountId' + '}', encodeURIComponent(String(params.accountId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.accountId !== undefined) {
-        allParams['accountId'] = params.accountId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/social-media-posting/oauth/{locationId}/twitter/accounts/{accountId}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.GetTwitterAccountsResponseDTO> = await this.client.request(config);
@@ -2189,79 +956,24 @@ Note:
     requestBody: Models.AttachTwitterAccountDTO,
     options?: AxiosRequestConfig
   ): Promise<Models.SocialMediaTwitterAccountResponseDTO> {
-    let url = '/social-media-posting/oauth/{locationId}/twitter/accounts/{accountId}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'},{name: 'accountId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = [];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = [];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
-      }
-      if (params.accountId !== undefined) {
-        url = url.replace('{' + 'accountId' + '}', encodeURIComponent(String(params.accountId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.accountId !== undefined) {
-        allParams['accountId'] = params.accountId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'POST',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/social-media-posting/oauth/{locationId}/twitter/accounts/{accountId}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.SocialMediaTwitterAccountResponseDTO> = await this.client.request(config);
@@ -2279,73 +991,24 @@ Note:
     requestBody: any,
     options?: AxiosRequestConfig
   ): Promise<Models.UploadFileResponseDTO> {
-    let url = '/social-media-posting/{locationId}/csv';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'POST',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/social-media-posting/{locationId}/csv', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.UploadFileResponseDTO> = await this.client.request(config);
@@ -2366,96 +1029,24 @@ Note:
     },
     options?: AxiosRequestConfig
   ): Promise<Models.GetUploadStatusResponseDTO> {
-    let url = '/social-media-posting/{locationId}/csv';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'},{name: 'skip', in: 'query'},{name: 'limit', in: 'query'},{name: 'includeUsers', in: 'query'},{name: 'userId', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
-      }
-      if (params.skip !== undefined) {
-        queryParams['skip'] = params.skip;
-      }
-      if (params.limit !== undefined) {
-        queryParams['limit'] = params.limit;
-      }
-      if (params.includeUsers !== undefined) {
-        queryParams['includeUsers'] = params.includeUsers;
-      }
-      if (params.userId !== undefined) {
-        queryParams['userId'] = params.userId;
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.skip !== undefined) {
-        allParams['skip'] = params.skip;
-      }
-      if (params.limit !== undefined) {
-        allParams['limit'] = params.limit;
-      }
-      if (params.includeUsers !== undefined) {
-        allParams['includeUsers'] = params.includeUsers;
-      }
-      if (params.userId !== undefined) {
-        allParams['userId'] = params.userId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/social-media-posting/{locationId}/csv', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.GetUploadStatusResponseDTO> = await this.client.request(config);
@@ -2473,73 +1064,24 @@ Note:
     requestBody: Models.SetAccountsDTO,
     options?: AxiosRequestConfig
   ): Promise<Models.SetAccountsResponseDTO> {
-    let url = '/social-media-posting/{locationId}/set-accounts';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'POST',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/social-media-posting/{locationId}/set-accounts', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.SetAccountsResponseDTO> = await this.client.request(config);
@@ -2559,90 +1101,24 @@ Note:
     },
     options?: AxiosRequestConfig
   ): Promise<Models.GetCsvPostResponseDTO> {
-    let url = '/social-media-posting/{locationId}/csv/{id}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'},{name: 'id', in: 'path'},{name: 'skip', in: 'query'},{name: 'limit', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
-      }
-      if (params.id !== undefined) {
-        url = url.replace('{' + 'id' + '}', encodeURIComponent(String(params.id)));
-      }
-      if (params.skip !== undefined) {
-        queryParams['skip'] = params.skip;
-      }
-      if (params.limit !== undefined) {
-        queryParams['limit'] = params.limit;
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.id !== undefined) {
-        allParams['id'] = params.id;
-      }
-      if (params.skip !== undefined) {
-        allParams['skip'] = params.skip;
-      }
-      if (params.limit !== undefined) {
-        allParams['limit'] = params.limit;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/social-media-posting/{locationId}/csv/{id}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.GetCsvPostResponseDTO> = await this.client.request(config);
@@ -2661,79 +1137,24 @@ Note:
     requestBody: Models.CSVDefaultDTO,
     options?: AxiosRequestConfig
   ): Promise<Models.CsvPostStatusResponseDTO> {
-    let url = '/social-media-posting/{locationId}/csv/{id}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'},{name: 'id', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
-      }
-      if (params.id !== undefined) {
-        url = url.replace('{' + 'id' + '}', encodeURIComponent(String(params.id)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.id !== undefined) {
-        allParams['id'] = params.id;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'PATCH',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/social-media-posting/{locationId}/csv/{id}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.CsvPostStatusResponseDTO> = await this.client.request(config);
@@ -2751,78 +1172,24 @@ Note:
     },
     options?: AxiosRequestConfig
   ): Promise<Models.DeleteCsvResponseDTO> {
-    let url = '/social-media-posting/{locationId}/csv/{id}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'},{name: 'id', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
-      }
-      if (params.id !== undefined) {
-        url = url.replace('{' + 'id' + '}', encodeURIComponent(String(params.id)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.id !== undefined) {
-        allParams['id'] = params.id;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'DELETE',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/social-media-posting/{locationId}/csv/{id}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.DeleteCsvResponseDTO> = await this.client.request(config);
@@ -2841,84 +1208,24 @@ Note:
     },
     options?: AxiosRequestConfig
   ): Promise<Models.DeletePostResponseDTO> {
-    let url = '/social-media-posting/{locationId}/csv/{csvId}/post/{postId}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'},{name: 'postId', in: 'path'},{name: 'csvId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
-      }
-      if (params.postId !== undefined) {
-        url = url.replace('{' + 'postId' + '}', encodeURIComponent(String(params.postId)));
-      }
-      if (params.csvId !== undefined) {
-        url = url.replace('{' + 'csvId' + '}', encodeURIComponent(String(params.csvId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.postId !== undefined) {
-        allParams['postId'] = params.postId;
-      }
-      if (params.csvId !== undefined) {
-        allParams['csvId'] = params.csvId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'DELETE',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/social-media-posting/{locationId}/csv/{csvId}/post/{postId}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.DeletePostResponseDTO> = await this.client.request(config);
@@ -2959,90 +1266,24 @@ Note:
     },
     options?: AxiosRequestConfig
   ): Promise<any> {
-    let url = '/social-media-posting/oauth/tiktok/start';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'query'},{name: 'userId', in: 'query'},{name: 'page', in: 'query'},{name: 'reconnect', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        queryParams['locationId'] = params.locationId;
-      }
-      if (params.userId !== undefined) {
-        queryParams['userId'] = params.userId;
-      }
-      if (params.page !== undefined) {
-        queryParams['page'] = params.page;
-      }
-      if (params.reconnect !== undefined) {
-        queryParams['reconnect'] = params.reconnect;
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.userId !== undefined) {
-        allParams['userId'] = params.userId;
-      }
-      if (params.page !== undefined) {
-        allParams['page'] = params.page;
-      }
-      if (params.reconnect !== undefined) {
-        allParams['reconnect'] = params.reconnect;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/social-media-posting/oauth/tiktok/start', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<any> = await this.client.request(config);
@@ -3060,78 +1301,24 @@ Note:
     },
     options?: AxiosRequestConfig
   ): Promise<Models.GetTiktokAccountResponseDTO> {
-    let url = '/social-media-posting/oauth/{locationId}/tiktok/accounts/{accountId}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'},{name: 'accountId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
-      }
-      if (params.accountId !== undefined) {
-        url = url.replace('{' + 'accountId' + '}', encodeURIComponent(String(params.accountId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.accountId !== undefined) {
-        allParams['accountId'] = params.accountId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/social-media-posting/oauth/{locationId}/tiktok/accounts/{accountId}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.GetTiktokAccountResponseDTO> = await this.client.request(config);
@@ -3150,79 +1337,24 @@ Note:
     requestBody: Models.AttachTiktokAccountDTO,
     options?: AxiosRequestConfig
   ): Promise<Models.SocialMediaTiktokAccountResponseDTO> {
-    let url = '/social-media-posting/oauth/{locationId}/tiktok/accounts/{accountId}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'},{name: 'accountId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
-      }
-      if (params.accountId !== undefined) {
-        url = url.replace('{' + 'accountId' + '}', encodeURIComponent(String(params.accountId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.accountId !== undefined) {
-        allParams['accountId'] = params.accountId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'POST',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/social-media-posting/oauth/{locationId}/tiktok/accounts/{accountId}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.SocialMediaTiktokAccountResponseDTO> = await this.client.request(config);
@@ -3263,90 +1395,24 @@ Note:
     },
     options?: AxiosRequestConfig
   ): Promise<any> {
-    let url = '/social-media-posting/oauth/tiktok-business/start';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'query'},{name: 'userId', in: 'query'},{name: 'page', in: 'query'},{name: 'reconnect', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        queryParams['locationId'] = params.locationId;
-      }
-      if (params.userId !== undefined) {
-        queryParams['userId'] = params.userId;
-      }
-      if (params.page !== undefined) {
-        queryParams['page'] = params.page;
-      }
-      if (params.reconnect !== undefined) {
-        queryParams['reconnect'] = params.reconnect;
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.userId !== undefined) {
-        allParams['userId'] = params.userId;
-      }
-      if (params.page !== undefined) {
-        allParams['page'] = params.page;
-      }
-      if (params.reconnect !== undefined) {
-        allParams['reconnect'] = params.reconnect;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/social-media-posting/oauth/tiktok-business/start', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<any> = await this.client.request(config);
@@ -3364,78 +1430,24 @@ Note:
     },
     options?: AxiosRequestConfig
   ): Promise<Models.GetTiktokBusinessAccountResponseDTO> {
-    let url = '/social-media-posting/oauth/{locationId}/tiktok-business/accounts/{accountId}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'},{name: 'accountId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
-      }
-      if (params.accountId !== undefined) {
-        url = url.replace('{' + 'accountId' + '}', encodeURIComponent(String(params.accountId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.accountId !== undefined) {
-        allParams['accountId'] = params.accountId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/social-media-posting/oauth/{locationId}/tiktok-business/accounts/{accountId}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.GetTiktokBusinessAccountResponseDTO> = await this.client.request(config);
@@ -3455,90 +1467,24 @@ Note:
     },
     options?: AxiosRequestConfig
   ): Promise<Models.GetByLocationIdResponseDTO> {
-    let url = '/social-media-posting/{locationId}/categories';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'},{name: 'searchText', in: 'query'},{name: 'limit', in: 'query'},{name: 'skip', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
-      }
-      if (params.searchText !== undefined) {
-        queryParams['searchText'] = params.searchText;
-      }
-      if (params.limit !== undefined) {
-        queryParams['limit'] = params.limit;
-      }
-      if (params.skip !== undefined) {
-        queryParams['skip'] = params.skip;
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.searchText !== undefined) {
-        allParams['searchText'] = params.searchText;
-      }
-      if (params.limit !== undefined) {
-        allParams['limit'] = params.limit;
-      }
-      if (params.skip !== undefined) {
-        allParams['skip'] = params.skip;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/social-media-posting/{locationId}/categories', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.GetByLocationIdResponseDTO> = await this.client.request(config);
@@ -3556,78 +1502,24 @@ Note:
     },
     options?: AxiosRequestConfig
   ): Promise<Models.GetByIdResponseDTO> {
-    let url = '/social-media-posting/{locationId}/categories/{id}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'id', in: 'path'},{name: 'locationId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.id !== undefined) {
-        url = url.replace('{' + 'id' + '}', encodeURIComponent(String(params.id)));
-      }
-      if (params.locationId !== undefined) {
-        url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.id !== undefined) {
-        allParams['id'] = params.id;
-      }
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/social-media-posting/{locationId}/categories/{id}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.GetByIdResponseDTO> = await this.client.request(config);
@@ -3647,90 +1539,24 @@ Note:
     },
     options?: AxiosRequestConfig
   ): Promise<Models.GetTagsByLocationIdResponseDTO> {
-    let url = '/social-media-posting/{locationId}/tags';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'},{name: 'searchText', in: 'query'},{name: 'limit', in: 'query'},{name: 'skip', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
-      }
-      if (params.searchText !== undefined) {
-        queryParams['searchText'] = params.searchText;
-      }
-      if (params.limit !== undefined) {
-        queryParams['limit'] = params.limit;
-      }
-      if (params.skip !== undefined) {
-        queryParams['skip'] = params.skip;
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.searchText !== undefined) {
-        allParams['searchText'] = params.searchText;
-      }
-      if (params.limit !== undefined) {
-        allParams['limit'] = params.limit;
-      }
-      if (params.skip !== undefined) {
-        allParams['skip'] = params.skip;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/social-media-posting/{locationId}/tags', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.GetTagsByLocationIdResponseDTO> = await this.client.request(config);
@@ -3748,73 +1574,24 @@ Note:
     requestBody: Models.UpdateTagDTO,
     options?: AxiosRequestConfig
   ): Promise<Models.GetTagsByIdResponseDTO> {
-    let url = '/social-media-posting/{locationId}/tags/details';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'POST',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/social-media-posting/{locationId}/tags/details', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.GetTagsByIdResponseDTO> = await this.client.request(config);
@@ -3832,73 +1609,24 @@ Note:
     requestBody?: any,
     options?: AxiosRequestConfig
   ): Promise<any> {
-    let url = '/social-media-posting/statistics';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = [];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = [];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        queryParams['locationId'] = params.locationId;
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'POST',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/social-media-posting/statistics', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<any> = await this.client.request(config);

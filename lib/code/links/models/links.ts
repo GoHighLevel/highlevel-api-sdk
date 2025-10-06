@@ -1,7 +1,4 @@
-/**
- * Links Models and Types
- * Generated from OpenAPI schema definitions
- */
+// Links Models
 
 export interface LinkSchema {
   id?: string;

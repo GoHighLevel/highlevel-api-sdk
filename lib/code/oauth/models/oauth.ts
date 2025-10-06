@@ -1,7 +1,4 @@
-/**
- * Oauth Models and Types
- * Generated from OpenAPI schema definitions
- */
+// Oauth Models
 
 export interface GetAccessCodebodyDto {
   client_id: string;

@@ -1,7 +1,4 @@
-/**
- * Users Models and Types
- * Generated from OpenAPI schema definitions
- */
+// Users Models
 
 export interface PermissionsDto {
   campaignsEnabled?: boolean;

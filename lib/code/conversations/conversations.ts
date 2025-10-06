@@ -1,5 +1,6 @@
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as Models from './models/conversations';
+import { buildUrl, extractParams, getAuthToken } from '../../utils/request-utils';
 
 /**
  * Conversations Service
@@ -40,180 +41,24 @@ export class Conversations {
     },
     options?: AxiosRequestConfig
   ): Promise<Models.SendConversationResponseDto> {
-    let url = '/conversations/search';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'query'},{name: 'contactId', in: 'query'},{name: 'assignedTo', in: 'query'},{name: 'followers', in: 'query'},{name: 'mentions', in: 'query'},{name: 'query', in: 'query'},{name: 'sort', in: 'query'},{name: 'startAfterDate', in: 'query'},{name: 'id', in: 'query'},{name: 'limit', in: 'query'},{name: 'lastMessageType', in: 'query'},{name: 'lastMessageAction', in: 'query'},{name: 'lastMessageDirection', in: 'query'},{name: 'status', in: 'query'},{name: 'sortBy', in: 'query'},{name: 'sortScoreProfile', in: 'query'},{name: 'scoreProfile', in: 'query'},{name: 'scoreProfileMin', in: 'query'},{name: 'scoreProfileMax', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        queryParams['locationId'] = params.locationId;
-      }
-      if (params.contactId !== undefined) {
-        queryParams['contactId'] = params.contactId;
-      }
-      if (params.assignedTo !== undefined) {
-        queryParams['assignedTo'] = params.assignedTo;
-      }
-      if (params.followers !== undefined) {
-        queryParams['followers'] = params.followers;
-      }
-      if (params.mentions !== undefined) {
-        queryParams['mentions'] = params.mentions;
-      }
-      if (params.query !== undefined) {
-        queryParams['query'] = params.query;
-      }
-      if (params.sort !== undefined) {
-        queryParams['sort'] = params.sort;
-      }
-      if (params.startAfterDate !== undefined) {
-        queryParams['startAfterDate'] = params.startAfterDate;
-      }
-      if (params.id !== undefined) {
-        queryParams['id'] = params.id;
-      }
-      if (params.limit !== undefined) {
-        queryParams['limit'] = params.limit;
-      }
-      if (params.lastMessageType !== undefined) {
-        queryParams['lastMessageType'] = params.lastMessageType;
-      }
-      if (params.lastMessageAction !== undefined) {
-        queryParams['lastMessageAction'] = params.lastMessageAction;
-      }
-      if (params.lastMessageDirection !== undefined) {
-        queryParams['lastMessageDirection'] = params.lastMessageDirection;
-      }
-      if (params.status !== undefined) {
-        queryParams['status'] = params.status;
-      }
-      if (params.sortBy !== undefined) {
-        queryParams['sortBy'] = params.sortBy;
-      }
-      if (params.sortScoreProfile !== undefined) {
-        queryParams['sortScoreProfile'] = params.sortScoreProfile;
-      }
-      if (params.scoreProfile !== undefined) {
-        queryParams['scoreProfile'] = params.scoreProfile;
-      }
-      if (params.scoreProfileMin !== undefined) {
-        queryParams['scoreProfileMin'] = params.scoreProfileMin;
-      }
-      if (params.scoreProfileMax !== undefined) {
-        queryParams['scoreProfileMax'] = params.scoreProfileMax;
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.contactId !== undefined) {
-        allParams['contactId'] = params.contactId;
-      }
-      if (params.assignedTo !== undefined) {
-        allParams['assignedTo'] = params.assignedTo;
-      }
-      if (params.followers !== undefined) {
-        allParams['followers'] = params.followers;
-      }
-      if (params.mentions !== undefined) {
-        allParams['mentions'] = params.mentions;
-      }
-      if (params.query !== undefined) {
-        allParams['query'] = params.query;
-      }
-      if (params.sort !== undefined) {
-        allParams['sort'] = params.sort;
-      }
-      if (params.startAfterDate !== undefined) {
-        allParams['startAfterDate'] = params.startAfterDate;
-      }
-      if (params.id !== undefined) {
-        allParams['id'] = params.id;
-      }
-      if (params.limit !== undefined) {
-        allParams['limit'] = params.limit;
-      }
-      if (params.lastMessageType !== undefined) {
-        allParams['lastMessageType'] = params.lastMessageType;
-      }
-      if (params.lastMessageAction !== undefined) {
-        allParams['lastMessageAction'] = params.lastMessageAction;
-      }
-      if (params.lastMessageDirection !== undefined) {
-        allParams['lastMessageDirection'] = params.lastMessageDirection;
-      }
-      if (params.status !== undefined) {
-        allParams['status'] = params.status;
-      }
-      if (params.sortBy !== undefined) {
-        allParams['sortBy'] = params.sortBy;
-      }
-      if (params.sortScoreProfile !== undefined) {
-        allParams['sortScoreProfile'] = params.sortScoreProfile;
-      }
-      if (params.scoreProfile !== undefined) {
-        allParams['scoreProfile'] = params.scoreProfile;
-      }
-      if (params.scoreProfileMin !== undefined) {
-        allParams['scoreProfileMin'] = params.scoreProfileMin;
-      }
-      if (params.scoreProfileMax !== undefined) {
-        allParams['scoreProfileMax'] = params.scoreProfileMax;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/conversations/search', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.SendConversationResponseDto> = await this.client.request(config);
@@ -230,72 +75,24 @@ export class Conversations {
     },
     options?: AxiosRequestConfig
   ): Promise<Models.GetConversationByIdResponse> {
-    let url = '/conversations/{conversationId}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'conversationId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.conversationId !== undefined) {
-        url = url.replace('{' + 'conversationId' + '}', encodeURIComponent(String(params.conversationId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.conversationId !== undefined) {
-        allParams['conversationId'] = params.conversationId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/conversations/{conversationId}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.GetConversationByIdResponse> = await this.client.request(config);
@@ -313,73 +110,24 @@ export class Conversations {
     requestBody: Models.UpdateConversationDto,
     options?: AxiosRequestConfig
   ): Promise<Models.GetConversationSuccessfulResponse> {
-    let url = '/conversations/{conversationId}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'conversationId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.conversationId !== undefined) {
-        url = url.replace('{' + 'conversationId' + '}', encodeURIComponent(String(params.conversationId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.conversationId !== undefined) {
-        allParams['conversationId'] = params.conversationId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'PUT',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/conversations/{conversationId}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.GetConversationSuccessfulResponse> = await this.client.request(config);
@@ -396,72 +144,24 @@ export class Conversations {
     },
     options?: AxiosRequestConfig
   ): Promise<Models.DeleteConversationSuccessfulResponse> {
-    let url = '/conversations/{conversationId}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'conversationId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.conversationId !== undefined) {
-        url = url.replace('{' + 'conversationId' + '}', encodeURIComponent(String(params.conversationId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.conversationId !== undefined) {
-        allParams['conversationId'] = params.conversationId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'DELETE',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/conversations/{conversationId}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.DeleteConversationSuccessfulResponse> = await this.client.request(config);
@@ -475,62 +175,24 @@ export class Conversations {
   async getEmailById(
     options?: AxiosRequestConfig
   ): Promise<Models.GetEmailMessageResponseDto> {
-    let url = '/conversations/messages/email/{id}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [];
+    const extracted = extractParams(null, paramDefs);
+    const requirements: string[] = [];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = [];
-    
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/conversations/messages/email/{id}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.GetEmailMessageResponseDto> = await this.client.request(config);
@@ -547,72 +209,24 @@ export class Conversations {
     },
     options?: AxiosRequestConfig
   ): Promise<Models.CancelScheduledResponseDto> {
-    let url = '/conversations/messages/email/{emailMessageId}/schedule';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'emailMessageId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = [];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = [];
-    
-    if (params) {
-      if (params.emailMessageId !== undefined) {
-        url = url.replace('{' + 'emailMessageId' + '}', encodeURIComponent(String(params.emailMessageId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.emailMessageId !== undefined) {
-        allParams['emailMessageId'] = params.emailMessageId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'DELETE',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/conversations/messages/email/{emailMessageId}/schedule', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.CancelScheduledResponseDto> = await this.client.request(config);
@@ -626,62 +240,24 @@ export class Conversations {
   async getMessage(
     options?: AxiosRequestConfig
   ): Promise<Models.GetMessageResponseDto> {
-    let url = '/conversations/messages/{id}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [];
+    const extracted = extractParams(null, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/conversations/messages/{id}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.GetMessageResponseDto> = await this.client.request(config);
@@ -701,90 +277,24 @@ export class Conversations {
     },
     options?: AxiosRequestConfig
   ): Promise<Models.GetMessagesByConversationResponseDto> {
-    let url = '/conversations/{conversationId}/messages';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'conversationId', in: 'path'},{name: 'lastMessageId', in: 'query'},{name: 'limit', in: 'query'},{name: 'type', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.conversationId !== undefined) {
-        url = url.replace('{' + 'conversationId' + '}', encodeURIComponent(String(params.conversationId)));
-      }
-      if (params.lastMessageId !== undefined) {
-        queryParams['lastMessageId'] = params.lastMessageId;
-      }
-      if (params.limit !== undefined) {
-        queryParams['limit'] = params.limit;
-      }
-      if (params.type !== undefined) {
-        queryParams['type'] = params.type;
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.conversationId !== undefined) {
-        allParams['conversationId'] = params.conversationId;
-      }
-      if (params.lastMessageId !== undefined) {
-        allParams['lastMessageId'] = params.lastMessageId;
-      }
-      if (params.limit !== undefined) {
-        allParams['limit'] = params.limit;
-      }
-      if (params.type !== undefined) {
-        allParams['type'] = params.type;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/conversations/{conversationId}/messages', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.GetMessagesByConversationResponseDto> = await this.client.request(config);
@@ -799,63 +309,24 @@ export class Conversations {
     requestBody: Models.SendMessageBodyDto,
     options?: AxiosRequestConfig
   ): Promise<Models.SendMessageResponseDto> {
-    let url = '/conversations/messages';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [];
+    const extracted = extractParams(null, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-
     const config: AxiosRequestConfig = {
       method: 'POST',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/conversations/messages', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.SendMessageResponseDto> = await this.client.request(config);
@@ -870,63 +341,24 @@ export class Conversations {
     requestBody: Models.ProcessMessageBodyDto,
     options?: AxiosRequestConfig
   ): Promise<Models.ProcessMessageResponseDto> {
-    let url = '/conversations/messages/inbound';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [];
+    const extracted = extractParams(null, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-
     const config: AxiosRequestConfig = {
       method: 'POST',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/conversations/messages/inbound', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.ProcessMessageResponseDto> = await this.client.request(config);
@@ -941,63 +373,24 @@ export class Conversations {
     requestBody: Models.ProcessOutboundMessageBodyDto,
     options?: AxiosRequestConfig
   ): Promise<Models.ProcessMessageResponseDto> {
-    let url = '/conversations/messages/outbound';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [];
+    const extracted = extractParams(null, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-
     const config: AxiosRequestConfig = {
       method: 'POST',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/conversations/messages/outbound', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.ProcessMessageResponseDto> = await this.client.request(config);
@@ -1014,72 +407,24 @@ export class Conversations {
     },
     options?: AxiosRequestConfig
   ): Promise<Models.CancelScheduledResponseDto> {
-    let url = '/conversations/messages/{messageId}/schedule';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'messageId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.messageId !== undefined) {
-        url = url.replace('{' + 'messageId' + '}', encodeURIComponent(String(params.messageId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.messageId !== undefined) {
-        allParams['messageId'] = params.messageId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'DELETE',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/conversations/messages/{messageId}/schedule', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.CancelScheduledResponseDto> = await this.client.request(config);
@@ -1094,63 +439,24 @@ export class Conversations {
     requestBody: any,
     options?: AxiosRequestConfig
   ): Promise<Models.UploadFilesResponseDto> {
-    let url = '/conversations/messages/upload';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [];
+    const extracted = extractParams(null, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-
     const config: AxiosRequestConfig = {
       method: 'POST',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/conversations/messages/upload', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.UploadFilesResponseDto> = await this.client.request(config);
@@ -1168,73 +474,24 @@ export class Conversations {
     requestBody: Models.UpdateMessageStatusDto,
     options?: AxiosRequestConfig
   ): Promise<Models.SendMessageResponseDto> {
-    let url = '/conversations/messages/{messageId}/status';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'messageId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-    if (params) {
-      if (params.messageId !== undefined) {
-        url = url.replace('{' + 'messageId' + '}', encodeURIComponent(String(params.messageId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.messageId !== undefined) {
-        allParams['messageId'] = params.messageId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'PUT',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/conversations/messages/{messageId}/status', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.SendMessageResponseDto> = await this.client.request(config);
@@ -1252,78 +509,24 @@ export class Conversations {
     },
     options?: AxiosRequestConfig
   ): Promise<any> {
-    let url = '/conversations/messages/{messageId}/locations/{locationId}/recording';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'},{name: 'messageId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer","Location-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer","Location-Access"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
-      }
-      if (params.messageId !== undefined) {
-        url = url.replace('{' + 'messageId' + '}', encodeURIComponent(String(params.messageId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.messageId !== undefined) {
-        allParams['messageId'] = params.messageId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/conversations/messages/{messageId}/locations/{locationId}/recording', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<any> = await this.client.request(config);
@@ -1341,78 +544,24 @@ export class Conversations {
     },
     options?: AxiosRequestConfig
   ): Promise<Models.GetMessageTranscriptionResponseDto> {
-    let url = '/conversations/locations/{locationId}/messages/{messageId}/transcription';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'},{name: 'messageId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer","Location-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer","Location-Access"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
-      }
-      if (params.messageId !== undefined) {
-        url = url.replace('{' + 'messageId' + '}', encodeURIComponent(String(params.messageId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.messageId !== undefined) {
-        allParams['messageId'] = params.messageId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/conversations/locations/{locationId}/messages/{messageId}/transcription', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.GetMessageTranscriptionResponseDto> = await this.client.request(config);
@@ -1430,78 +579,24 @@ export class Conversations {
     },
     options?: AxiosRequestConfig
   ): Promise<any> {
-    let url = '/conversations/locations/{locationId}/messages/{messageId}/transcription/download';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'},{name: 'messageId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer","Location-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer","Location-Access"];
-    
-    if (params) {
-      if (params.locationId !== undefined) {
-        url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
-      }
-      if (params.messageId !== undefined) {
-        url = url.replace('{' + 'messageId' + '}', encodeURIComponent(String(params.messageId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-      if (params.messageId !== undefined) {
-        allParams['messageId'] = params.messageId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/conversations/locations/{locationId}/messages/{messageId}/transcription/download', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<any> = await this.client.request(config);
@@ -1516,63 +611,24 @@ export class Conversations {
     requestBody: Models.UserTypingBody,
     options?: AxiosRequestConfig
   ): Promise<Models.CreateLiveChatMessageFeedbackResponse> {
-    let url = '/conversations/providers/live-chat/typing';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [];
+    const extracted = extractParams(null, paramDefs);
+    const requirements: string[] = ["Location-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Location-Access"];
-    
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-
     const config: AxiosRequestConfig = {
       method: 'POST',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/conversations/providers/live-chat/typing', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.CreateLiveChatMessageFeedbackResponse> = await this.client.request(config);
@@ -1587,63 +643,24 @@ export class Conversations {
     requestBody: Models.CreateConversationDto,
     options?: AxiosRequestConfig
   ): Promise<Models.CreateConversationSuccessResponse> {
-    let url = '/conversations/';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [];
+    const extracted = extractParams(null, paramDefs);
+    const requirements: string[] = ["bearer"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["bearer"];
-    
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-
     const config: AxiosRequestConfig = {
       method: 'POST',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/conversations/', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.CreateConversationSuccessResponse> = await this.client.request(config);

@@ -1,7 +1,4 @@
-/**
- * Store Models and Types
- * Generated from OpenAPI schema definitions
- */
+// Store Models
 
 export interface ShippingZoneCountryStateDto {
   code: string;

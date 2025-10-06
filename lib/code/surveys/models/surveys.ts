@@ -1,7 +1,4 @@
-/**
- * Surveys Models and Types
- * Generated from OpenAPI schema definitions
- */
+// Surveys Models
 
 export interface GetSurveysSchema {
   id?: string;

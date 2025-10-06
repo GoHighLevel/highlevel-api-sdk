@@ -1,7 +1,4 @@
-/**
- * Medias Models and Types
- * Generated from OpenAPI schema definitions
- */
+// Medias Models
 
 export interface GetFilesResponseDTO {
   files: string[];

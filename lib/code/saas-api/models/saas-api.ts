@@ -1,7 +1,4 @@
-/**
- * SaasApi Models and Types
- * Generated from OpenAPI schema definitions
- */
+// SaasApi Models
 
 export interface BadRequestDTO {
   statusCode?: number;

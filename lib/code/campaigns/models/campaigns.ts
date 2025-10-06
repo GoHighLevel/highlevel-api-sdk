@@ -1,7 +1,4 @@
-/**
- * Campaigns Models and Types
- * Generated from OpenAPI schema definitions
- */
+// Campaigns Models
 
 export interface campaignsSchema {
   id?: string;

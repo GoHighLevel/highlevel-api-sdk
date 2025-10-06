@@ -1,7 +1,4 @@
-/**
- * Forms Models and Types
- * Generated from OpenAPI schema definitions
- */
+// Forms Models
 
 export interface PageDetailsSchema {
   url?: string;

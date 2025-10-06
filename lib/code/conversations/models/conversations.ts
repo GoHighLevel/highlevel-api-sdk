@@ -1,7 +1,4 @@
-/**
- * Conversations Models and Types
- * Generated from OpenAPI schema definitions
- */
+// Conversations Models
 
 export interface BadRequestDTO {
   statusCode?: number;

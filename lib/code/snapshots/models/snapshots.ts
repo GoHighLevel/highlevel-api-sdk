@@ -1,7 +1,4 @@
-/**
- * Snapshots Models and Types
- * Generated from OpenAPI schema definitions
- */
+// Snapshots Models
 
 export interface SnapshotsSchema {
   id?: string;

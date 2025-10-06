@@ -1,7 +1,4 @@
-/**
- * Funnels Models and Types
- * Generated from OpenAPI schema definitions
- */
+// Funnels Models
 
 export interface CreateRedirectParams {
   locationId: string;

@@ -1,7 +1,4 @@
-/**
- * Emails Models and Types
- * Generated from OpenAPI schema definitions
- */
+// Emails Models
 
 export interface ScheduleDto {
   name: string;

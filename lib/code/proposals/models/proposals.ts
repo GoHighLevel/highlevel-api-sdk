@@ -1,7 +1,4 @@
-/**
- * Proposals Models and Types
- * Generated from OpenAPI schema definitions
- */
+// Proposals Models
 
 export interface EntityReference {
 }

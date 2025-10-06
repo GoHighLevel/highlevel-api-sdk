@@ -1,7 +1,4 @@
-/**
- * PhoneSystem Models and Types
- * Generated from OpenAPI schema definitions
- */
+// PhoneSystem Models
 
 export interface DetailedPhoneNumberDto {
   phoneNumber: string;

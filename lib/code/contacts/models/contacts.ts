@@ -1,7 +1,4 @@
-/**
- * Contacts Models and Types
- * Generated from OpenAPI schema definitions
- */
+// Contacts Models
 
 export interface SearchBodyV2DTO {
 }

@@ -1,7 +1,4 @@
-/**
- * CustomMenus Models and Types
- * Generated from OpenAPI schema definitions
- */
+// CustomMenus Models
 
 export interface IconSchemaOptional {
   name?: string;

@@ -1,7 +1,4 @@
-/**
- * Courses Models and Types
- * Generated from OpenAPI schema definitions
- */
+// Courses Models
 
 export interface visibility {
 }

@@ -1,7 +1,4 @@
-/**
- * SocialMediaPosting Models and Types
- * Generated from OpenAPI schema definitions
- */
+// SocialMediaPosting Models
 
 export interface GoogleLocationSchema {
   name?: string;

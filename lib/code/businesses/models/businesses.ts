@@ -1,7 +1,4 @@
-/**
- * Businesses Models and Types
- * Generated from OpenAPI schema definitions
- */
+// Businesses Models
 
 export interface BusinessCreatedByOrUpdatedBy {
 }

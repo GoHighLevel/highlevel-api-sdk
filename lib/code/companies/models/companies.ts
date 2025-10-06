@@ -1,7 +1,4 @@
-/**
- * Companies Models and Types
- * Generated from OpenAPI schema definitions
- */
+// Companies Models
 
 export interface IOnboardingDto {
   pending: boolean;

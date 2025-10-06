@@ -1,7 +1,4 @@
-/**
- * EmailIsv Models and Types
- * Generated from OpenAPI schema definitions
- */
+// EmailIsv Models
 
 export interface EmailNotVerifiedResponseDto {
   verified: boolean;

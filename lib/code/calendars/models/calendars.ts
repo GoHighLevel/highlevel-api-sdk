@@ -1,7 +1,4 @@
-/**
- * Calendars Models and Types
- * Generated from OpenAPI schema definitions
- */
+// Calendars Models
 
 export interface GroupDTO {
   locationId: string;

@@ -1,7 +1,4 @@
-/**
- * Associations Models and Types
- * Generated from OpenAPI schema definitions
- */
+// Associations Models
 
 export interface createRelationReqDto {
   locationId: string;

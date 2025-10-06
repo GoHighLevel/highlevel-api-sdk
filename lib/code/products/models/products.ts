@@ -1,7 +1,4 @@
-/**
- * Products Models and Types
- * Generated from OpenAPI schema definitions
- */
+// Products Models
 
 export interface BulkUpdateFilters {
   collectionIds?: string[];

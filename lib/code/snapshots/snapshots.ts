@@ -1,5 +1,6 @@
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as Models from './models/snapshots';
+import { buildUrl, extractParams, getAuthToken } from '../../utils/request-utils';
 
 /**
  * Snapshots Service
@@ -22,72 +23,24 @@ export class Snapshots {
     },
     options?: AxiosRequestConfig
   ): Promise<Models.GetSnapshotsSuccessfulResponseDto> {
-    let url = '/snapshots/';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'companyId', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["Agency-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Agency-Access"];
-    
-    if (params) {
-      if (params.companyId !== undefined) {
-        queryParams['companyId'] = params.companyId;
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.companyId !== undefined) {
-        allParams['companyId'] = params.companyId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/snapshots/', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.GetSnapshotsSuccessfulResponseDto> = await this.client.request(config);
@@ -105,73 +58,24 @@ export class Snapshots {
     requestBody: Models.CreateSnapshotShareLinkRequestDTO,
     options?: AxiosRequestConfig
   ): Promise<Models.CreateSnapshotShareLinkSuccessfulResponseDTO> {
-    let url = '/snapshots/share/link';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'companyId', in: 'query'},];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["Agency-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Agency-Access"];
-    
-    if (params) {
-      if (params.companyId !== undefined) {
-        queryParams['companyId'] = params.companyId;
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.companyId !== undefined) {
-        allParams['companyId'] = params.companyId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'POST',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
+      url: buildUrl('/snapshots/share/link', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          requestBody
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.CreateSnapshotShareLinkSuccessfulResponseDTO> = await this.client.request(config);
@@ -193,102 +97,24 @@ export class Snapshots {
     },
     options?: AxiosRequestConfig
   ): Promise<Models.GetSnapshotPushStatusSuccessfulResponseDTO> {
-    let url = '/snapshots/snapshot-status/{snapshotId}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'snapshotId', in: 'path'},{name: 'companyId', in: 'query'},{name: 'from', in: 'query'},{name: 'to', in: 'query'},{name: 'lastDoc', in: 'query'},{name: 'limit', in: 'query'},];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["Agency-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Agency-Access"];
-    
-    if (params) {
-      if (params.snapshotId !== undefined) {
-        url = url.replace('{' + 'snapshotId' + '}', encodeURIComponent(String(params.snapshotId)));
-      }
-      if (params.companyId !== undefined) {
-        queryParams['companyId'] = params.companyId;
-      }
-      if (params.from !== undefined) {
-        queryParams['from'] = params.from;
-      }
-      if (params.to !== undefined) {
-        queryParams['to'] = params.to;
-      }
-      if (params.lastDoc !== undefined) {
-        queryParams['lastDoc'] = params.lastDoc;
-      }
-      if (params.limit !== undefined) {
-        queryParams['limit'] = params.limit;
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.snapshotId !== undefined) {
-        allParams['snapshotId'] = params.snapshotId;
-      }
-      if (params.companyId !== undefined) {
-        allParams['companyId'] = params.companyId;
-      }
-      if (params.from !== undefined) {
-        allParams['from'] = params.from;
-      }
-      if (params.to !== undefined) {
-        allParams['to'] = params.to;
-      }
-      if (params.lastDoc !== undefined) {
-        allParams['lastDoc'] = params.lastDoc;
-      }
-      if (params.limit !== undefined) {
-        allParams['limit'] = params.limit;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/snapshots/snapshot-status/{snapshotId}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.GetSnapshotPushStatusSuccessfulResponseDTO> = await this.client.request(config);
@@ -307,84 +133,24 @@ export class Snapshots {
     },
     options?: AxiosRequestConfig
   ): Promise<Models.GetLatestSnapshotPushStatusSuccessfulResponseDTO> {
-    let url = '/snapshots/snapshot-status/{snapshotId}/location/{locationId}';
-    const queryParams: Record<string, any> = {};
-    const headerParams: Record<string, string> = {};
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'companyId', in: 'query'},{name: 'snapshotId', in: 'path'},{name: 'locationId', in: 'path'},];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["Agency-Access"];
     
-    // Extract security requirements for this endpoint
-    const securityRequirements: string[] = ["Agency-Access"];
-    
-    if (params) {
-      if (params.companyId !== undefined) {
-        queryParams['companyId'] = params.companyId;
-      }
-      if (params.snapshotId !== undefined) {
-        url = url.replace('{' + 'snapshotId' + '}', encodeURIComponent(String(params.snapshotId)));
-      }
-      if (params.locationId !== undefined) {
-        url = url.replace('{' + 'locationId' + '}', encodeURIComponent(String(params.locationId)));
-      }
-    }
-
-    // Collect all parameters for token resolution (including path params)
-    const allParams: Record<string, any> = {};
-    if (params) {
-      if (params.companyId !== undefined) {
-        allParams['companyId'] = params.companyId;
-      }
-      if (params.snapshotId !== undefined) {
-        allParams['snapshotId'] = params.snapshotId;
-      }
-      if (params.locationId !== undefined) {
-        allParams['locationId'] = params.locationId;
-      }
-    }
-
     const config: AxiosRequestConfig = {
       method: 'GET',
-      url,
-      params: { ...queryParams, ...allParams },
-      headers: {
-        ...headerParams,
-        ...options?.headers
-      },
-      // Store security requirements for error handling
-      __secutiryRequirements: securityRequirements,
+      url: buildUrl('/snapshots/snapshot-status/{snapshotId}/location/{locationId}', extracted.path),
+      params: { ...extracted.query, ...extracted.all },
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
       ...options
     };
 
-    // Get appropriate authorization token based on security requirements
-    const ghlInstance = (this.client as any).__ghlInstance;
-    if (ghlInstance && typeof ghlInstance.getTokenForSecurity === 'function') {
-      try {
-        // Combine headerParams with headers from options
-        const combinedHeaders = {
-          ...headerParams,
-          ...options?.headers
-        };
-        
-        // Combine queryParams with allParams for token resolution
-        const combinedQuery = {
-          ...queryParams,
-          ...allParams
-        };
-        
-        const authToken = await ghlInstance.getTokenForSecurity(
-          securityRequirements,
-          combinedHeaders,
-          combinedQuery,
-          {}
-        );
-        
-        if (authToken) {
-          config.headers = {
-            ...config.headers,
-            'Authorization': authToken
-          };
-        }
-      } catch (error) {
-        throw error; // Re-throw authentication errors
-      }
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
     }
 
     const response: AxiosResponse<Models.GetLatestSnapshotPushStatusSuccessfulResponseDTO> = await this.client.request(config);

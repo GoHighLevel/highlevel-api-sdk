@@ -1,7 +1,4 @@
-/**
- * CustomFields Models and Types
- * Generated from OpenAPI schema definitions
- */
+// CustomFields Models
 
 export interface OptionDTO {
   key: string;

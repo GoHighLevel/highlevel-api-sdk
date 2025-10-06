@@ -91,10 +91,7 @@ export interface ResponseInterceptor {
   onRejected?: (error: any) => any;
 }
 
-/**
- * HighLevel SDK Client
- * A comprehensive wrapper for the GHL API with interceptors, error handling, and automatic parameter injection
- */
+/** HighLevel SDK Client */
 export class HighLevel {
   private static readonly BASE_URL = 'https://services.leadconnectorhq.com';
   

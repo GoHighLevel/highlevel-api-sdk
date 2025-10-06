@@ -1,7 +1,4 @@
-/**
- * VoiceAi Models and Types
- * Generated from OpenAPI schema definitions
- */
+// VoiceAi Models
 
 export interface VoiceAILanguage {
 }

@@ -1,7 +1,4 @@
-/**
- * Opportunities Models and Types
- * Generated from OpenAPI schema definitions
- */
+// Opportunities Models
 
 export interface SearchOpportunitiesContactResponseSchema {
   id?: string;

@@ -1,7 +1,4 @@
-/**
- * Payments Models and Types
- * Generated from OpenAPI schema definitions
- */
+// Payments Models
 
 export interface CreateWhiteLabelIntegrationProviderDto {
   altId: string;
