@@ -1,3 +1,9 @@
+## v2.2.0 - 2025-10-06
+
+### SDK changes
+
+- refactor: service template params and token handle improved (6b46327)
+
 ## v2.1.0 - 2025-09-29
 
 ### SDK changes
