@@ -1,6 +1,6 @@
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as Models from './models/phone-system';
-import { buildUrl, extractParams, getAuthToken } from '../../utils/request-utils';
+import { buildUrl, extractParams, getAuthToken, RequestConfig } from '../../utils/request-utils';
 
 /**
  * PhoneSystem Service
@@ -27,18 +27,19 @@ export class PhoneSystem {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/phone-system/number-pools', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -65,18 +66,19 @@ export class PhoneSystem {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/phone-system/numbers/location/{locationId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }

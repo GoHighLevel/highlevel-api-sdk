@@ -1,6 +1,6 @@
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as Models from './models/payments';
-import { buildUrl, extractParams, getAuthToken } from '../../utils/request-utils';
+import { buildUrl, extractParams, getAuthToken, RequestConfig } from '../../utils/request-utils';
 
 /**
  * Payments Service
@@ -25,18 +25,19 @@ export class Payments {
     const extracted = extractParams(null, paramDefs);
     const requirements: string[] = ["Location-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/payments/integrations/provider/whitelabel', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -62,18 +63,19 @@ export class Payments {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/payments/integrations/provider/whitelabel', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -107,18 +109,19 @@ export class Payments {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/payments/orders', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -143,18 +146,19 @@ export class Payments {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/payments/orders/{orderId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -178,18 +182,19 @@ export class Payments {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/payments/orders/{orderId}/record-payment', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -213,18 +218,19 @@ export class Payments {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/payments/orders/migrate-order-ps', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -248,18 +254,19 @@ export class Payments {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/payments/orders/{orderId}/fulfillments', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -284,18 +291,19 @@ export class Payments {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/payments/orders/{orderId}/fulfillments', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -320,18 +328,19 @@ export class Payments {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/payments/orders/{orderId}/notes', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -367,18 +376,19 @@ export class Payments {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/payments/transactions', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -404,18 +414,19 @@ export class Payments {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/payments/transactions/{transactionId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -449,18 +460,19 @@ export class Payments {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/payments/subscriptions', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -485,18 +497,19 @@ export class Payments {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/payments/subscriptions/{subscriptionId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -524,18 +537,19 @@ export class Payments {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/payments/coupon/list', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -556,18 +570,19 @@ export class Payments {
     const extracted = extractParams(null, paramDefs);
     const requirements: string[] = ["Location-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/payments/coupon', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -588,18 +603,19 @@ export class Payments {
     const extracted = extractParams(null, paramDefs);
     const requirements: string[] = ["Location-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'PUT',
       url: buildUrl('/payments/coupon', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -620,18 +636,19 @@ export class Payments {
     const extracted = extractParams(null, paramDefs);
     const requirements: string[] = ["Location-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'DELETE',
       url: buildUrl('/payments/coupon', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -657,18 +674,19 @@ export class Payments {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/payments/coupon', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -692,18 +710,19 @@ export class Payments {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/payments/custom-provider/provider', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -726,18 +745,19 @@ export class Payments {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'DELETE',
       url: buildUrl('/payments/custom-provider/provider', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -760,18 +780,19 @@ export class Payments {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/payments/custom-provider/connect', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -795,18 +816,19 @@ export class Payments {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/payments/custom-provider/connect', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -830,18 +852,19 @@ export class Payments {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/payments/custom-provider/disconnect', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -862,18 +885,19 @@ export class Payments {
     const extracted = extractParams(null, paramDefs);
     const requirements: string[] = ["Location-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'PUT',
       url: buildUrl('/payments/custom-provider/capabilities', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }

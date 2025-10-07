@@ -1,6 +1,6 @@
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as Models from './models/contacts';
-import { buildUrl, extractParams, getAuthToken } from '../../utils/request-utils';
+import { buildUrl, extractParams, getAuthToken, RequestConfig } from '../../utils/request-utils';
 
 /**
  * Contacts Service
@@ -25,18 +25,19 @@ export class Contacts {
     const extracted = extractParams(null, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/contacts/search', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -61,18 +62,19 @@ export class Contacts {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/contacts/search/duplicate', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -95,18 +97,19 @@ export class Contacts {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/contacts/{contactId}/tasks', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -130,18 +133,19 @@ export class Contacts {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/contacts/{contactId}/tasks', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -165,18 +169,19 @@ export class Contacts {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/contacts/{contactId}/tasks/{taskId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -201,18 +206,19 @@ export class Contacts {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'PUT',
       url: buildUrl('/contacts/{contactId}/tasks/{taskId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -236,18 +242,19 @@ export class Contacts {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'DELETE',
       url: buildUrl('/contacts/{contactId}/tasks/{taskId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -272,18 +279,19 @@ export class Contacts {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'PUT',
       url: buildUrl('/contacts/{contactId}/tasks/{taskId}/completed', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -306,18 +314,19 @@ export class Contacts {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/contacts/{contactId}/appointments', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -341,18 +350,19 @@ export class Contacts {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/contacts/{contactId}/tags', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -376,18 +386,19 @@ export class Contacts {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'DELETE',
       url: buildUrl('/contacts/{contactId}/tags', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -410,18 +421,19 @@ export class Contacts {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/contacts/{contactId}/notes', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -445,18 +457,19 @@ export class Contacts {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/contacts/{contactId}/notes', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -480,18 +493,19 @@ export class Contacts {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/contacts/{contactId}/notes/{id}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -516,18 +530,19 @@ export class Contacts {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'PUT',
       url: buildUrl('/contacts/{contactId}/notes/{id}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -551,18 +566,19 @@ export class Contacts {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'DELETE',
       url: buildUrl('/contacts/{contactId}/notes/{id}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -586,18 +602,19 @@ export class Contacts {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = [];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/contacts/bulk/tags/update/{type}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -618,18 +635,19 @@ export class Contacts {
     const extracted = extractParams(null, paramDefs);
     const requirements: string[] = [];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/contacts/bulk/business', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -652,18 +670,19 @@ export class Contacts {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/contacts/{contactId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -687,18 +706,19 @@ export class Contacts {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'PUT',
       url: buildUrl('/contacts/{contactId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -721,18 +741,19 @@ export class Contacts {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'DELETE',
       url: buildUrl('/contacts/{contactId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -753,18 +774,19 @@ export class Contacts {
     const extracted = extractParams(null, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/contacts/upsert', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -791,18 +813,19 @@ export class Contacts {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/contacts/business/{businessId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -826,18 +849,19 @@ export class Contacts {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/contacts/{contactId}/followers', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -861,18 +885,19 @@ export class Contacts {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'DELETE',
       url: buildUrl('/contacts/{contactId}/followers', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -897,18 +922,19 @@ export class Contacts {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/contacts/{contactId}/campaigns/{campaignId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -932,18 +958,19 @@ export class Contacts {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'DELETE',
       url: buildUrl('/contacts/{contactId}/campaigns/{campaignId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -966,18 +993,19 @@ export class Contacts {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'DELETE',
       url: buildUrl('/contacts/{contactId}/campaigns/removeAll', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -1002,18 +1030,19 @@ export class Contacts {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/contacts/{contactId}/workflow/{workflowId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -1038,18 +1067,19 @@ export class Contacts {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'DELETE',
       url: buildUrl('/contacts/{contactId}/workflow/{workflowId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -1070,18 +1100,19 @@ export class Contacts {
     const extracted = extractParams(null, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/contacts/', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -1111,18 +1142,19 @@ export class Contacts {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/contacts/', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }

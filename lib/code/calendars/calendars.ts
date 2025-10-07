@@ -1,6 +1,6 @@
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as Models from './models/calendars';
-import { buildUrl, extractParams, getAuthToken } from '../../utils/request-utils';
+import { buildUrl, extractParams, getAuthToken, RequestConfig } from '../../utils/request-utils';
 
 /**
  * Calendars Service
@@ -27,18 +27,19 @@ export class Calendars {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/calendars/groups', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -59,18 +60,19 @@ export class Calendars {
     const extracted = extractParams(null, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/calendars/groups', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -91,18 +93,19 @@ export class Calendars {
     const extracted = extractParams(null, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/calendars/groups/validate-slug', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -125,18 +128,19 @@ export class Calendars {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'DELETE',
       url: buildUrl('/calendars/groups/{groupId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -160,18 +164,19 @@ export class Calendars {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'PUT',
       url: buildUrl('/calendars/groups/{groupId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -195,18 +200,19 @@ export class Calendars {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'PUT',
       url: buildUrl('/calendars/groups/{groupId}/status', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -227,18 +233,19 @@ export class Calendars {
     const extracted = extractParams(null, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/calendars/events/appointments', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -262,18 +269,19 @@ export class Calendars {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'PUT',
       url: buildUrl('/calendars/events/appointments/{eventId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -296,18 +304,19 @@ export class Calendars {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/calendars/events/appointments/{eventId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -335,18 +344,19 @@ export class Calendars {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/calendars/events', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -374,18 +384,19 @@ export class Calendars {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/calendars/blocked-slots', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -406,18 +417,19 @@ export class Calendars {
     const extracted = extractParams(null, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/calendars/events/block-slots', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -441,18 +453,19 @@ export class Calendars {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'PUT',
       url: buildUrl('/calendars/events/block-slots/{eventId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -480,18 +493,19 @@ export class Calendars {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/calendars/{calendarId}/free-slots', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -515,18 +529,19 @@ export class Calendars {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'PUT',
       url: buildUrl('/calendars/{calendarId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -549,18 +564,19 @@ export class Calendars {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/calendars/{calendarId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -583,18 +599,19 @@ export class Calendars {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'DELETE',
       url: buildUrl('/calendars/{calendarId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -618,18 +635,19 @@ export class Calendars {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'DELETE',
       url: buildUrl('/calendars/events/{eventId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -654,18 +672,19 @@ export class Calendars {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/calendars/appointments/{appointmentId}/notes', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -689,18 +708,19 @@ export class Calendars {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/calendars/appointments/{appointmentId}/notes', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -724,18 +744,19 @@ export class Calendars {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'PUT',
       url: buildUrl('/calendars/appointments/{appointmentId}/notes/{noteId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -758,18 +779,19 @@ export class Calendars {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'DELETE',
       url: buildUrl('/calendars/appointments/{appointmentId}/notes/{noteId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -793,18 +815,19 @@ export class Calendars {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/calendars/resources/{resourceType}/{id}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -829,18 +852,19 @@ export class Calendars {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'PUT',
       url: buildUrl('/calendars/resources/{resourceType}/{id}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -864,18 +888,19 @@ export class Calendars {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'DELETE',
       url: buildUrl('/calendars/resources/{resourceType}/{id}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -901,18 +926,19 @@ export class Calendars {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/calendars/resources/{resourceType}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -936,18 +962,19 @@ export class Calendars {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/calendars/resources/{resourceType}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -974,18 +1001,19 @@ export class Calendars {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/calendars/{calendarId}/notifications', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -1009,18 +1037,19 @@ export class Calendars {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/calendars/{calendarId}/notifications', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -1044,18 +1073,19 @@ export class Calendars {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/calendars/{calendarId}/notifications/{notificationId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -1080,18 +1110,19 @@ export class Calendars {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'PUT',
       url: buildUrl('/calendars/{calendarId}/notifications/{notificationId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -1115,18 +1146,19 @@ export class Calendars {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'DELETE',
       url: buildUrl('/calendars/{calendarId}/notifications/{notificationId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -1151,18 +1183,19 @@ export class Calendars {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/calendars/', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -1183,18 +1216,19 @@ export class Calendars {
     const extracted = extractParams(null, paramDefs);
     const requirements: string[] = ["bearer"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/calendars/', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }

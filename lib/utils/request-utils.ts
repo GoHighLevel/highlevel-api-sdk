@@ -1,6 +1,12 @@
-import { AxiosInstance } from 'axios';
+import { AxiosInstance, AxiosRequestConfig } from 'axios';
 
 export type RequestParams = Record<string, any>;
+
+export interface RequestConfig extends AxiosRequestConfig {
+  __secutiryRequirements?: string[];
+  __preferredTokenType?: 'company' | 'location';
+  __pathParams?: RequestParams;
+}
 
 export function buildUrl(template: string, pathParams: RequestParams): string {
   let url = template;

@@ -1,7 +1,7 @@
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as Models from './models/oauth';
 import { UserType, UserTypeValue } from '../../constants';
-import { buildUrl, extractParams, getAuthToken } from '../../utils/request-utils';
+import { buildUrl, extractParams, getAuthToken, RequestConfig } from '../../utils/request-utils';
 
 /**
  * Oauth Service
@@ -79,10 +79,10 @@ export class Oauth {
     const isFormData = true;
     const processedBody = new URLSearchParams(requestBody as any).toString();
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/oauth/token', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { 
         
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -93,10 +93,11 @@ export class Oauth {
       data: processedBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, processedBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, processedBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -120,10 +121,10 @@ export class Oauth {
     const isFormData = true;
     const processedBody = new URLSearchParams(requestBody as any).toString();
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/oauth/locationToken', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { 
         
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -134,10 +135,11 @@ export class Oauth {
       data: processedBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, processedBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, processedBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -169,10 +171,10 @@ export class Oauth {
     const requirements: string[] = ["Agency-Access"];
     
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/oauth/installedLocations', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { 
         
         ...extracted.header, 
@@ -181,10 +183,11 @@ export class Oauth {
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }

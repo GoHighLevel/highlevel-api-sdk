@@ -1,6 +1,6 @@
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as Models from './models/custom-menus';
-import { buildUrl, extractParams, getAuthToken } from '../../utils/request-utils';
+import { buildUrl, extractParams, getAuthToken, RequestConfig } from '../../utils/request-utils';
 
 /**
  * CustomMenus Service
@@ -27,18 +27,19 @@ export class CustomMenus {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/custom-menus/{customMenuId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -61,18 +62,19 @@ export class CustomMenus {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'DELETE',
       url: buildUrl('/custom-menus/{customMenuId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -96,18 +98,19 @@ export class CustomMenus {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'PUT',
       url: buildUrl('/custom-menus/{customMenuId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -134,18 +137,19 @@ export class CustomMenus {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/custom-menus/', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {});
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -166,18 +170,19 @@ export class CustomMenus {
     const extracted = extractParams(null, paramDefs);
     const requirements: string[] = ["Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/custom-menus/', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }

@@ -645,7 +645,7 @@ export class HighLevel {
           const resourceId = this.extractResourceId(
             securityRequirements,
             originalRequest.headers || {},
-            originalRequest.params || {},
+            { ...originalRequest.params || {}, ...originalRequest.__pathParams || {} },
             originalRequest.data || {},
             preferredTokenType
           );

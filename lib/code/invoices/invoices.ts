@@ -1,6 +1,6 @@
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as Models from './models/invoices';
-import { buildUrl, extractParams, getAuthToken } from '../../utils/request-utils';
+import { buildUrl, extractParams, getAuthToken, RequestConfig } from '../../utils/request-utils';
 
 /**
  * Invoices Service
@@ -25,18 +25,19 @@ export class Invoices {
     const extracted = extractParams(null, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/invoices/template', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -67,18 +68,19 @@ export class Invoices {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/invoices/template', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {}, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {}, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -103,18 +105,19 @@ export class Invoices {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/invoices/template/{templateId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {}, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {}, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -138,18 +141,19 @@ export class Invoices {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'PUT',
       url: buildUrl('/invoices/template/{templateId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -174,18 +178,19 @@ export class Invoices {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'DELETE',
       url: buildUrl('/invoices/template/{templateId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {}, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {}, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -209,18 +214,19 @@ export class Invoices {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'PATCH',
       url: buildUrl('/invoices/template/{templateId}/late-fees-configuration', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -244,18 +250,19 @@ export class Invoices {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'PATCH',
       url: buildUrl('/invoices/template/{templateId}/payment-methods-configuration', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -276,18 +283,19 @@ export class Invoices {
     const extracted = extractParams(null, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/invoices/schedule', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -318,18 +326,19 @@ export class Invoices {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/invoices/schedule', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {}, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {}, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -354,18 +363,19 @@ export class Invoices {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/invoices/schedule/{scheduleId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {}, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {}, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -389,18 +399,19 @@ export class Invoices {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'PUT',
       url: buildUrl('/invoices/schedule/{scheduleId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -425,18 +436,19 @@ export class Invoices {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'DELETE',
       url: buildUrl('/invoices/schedule/{scheduleId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {}, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {}, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -459,18 +471,19 @@ export class Invoices {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/invoices/schedule/{scheduleId}/updateAndSchedule', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {}, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {}, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -494,18 +507,19 @@ export class Invoices {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/invoices/schedule/{scheduleId}/schedule', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -529,18 +543,19 @@ export class Invoices {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/invoices/schedule/{scheduleId}/auto-payment', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -564,18 +579,19 @@ export class Invoices {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/invoices/schedule/{scheduleId}/cancel', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -596,18 +612,19 @@ export class Invoices {
     const extracted = extractParams(null, paramDefs);
     const requirements: string[] = ["Location-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/invoices/text2pay', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -631,18 +648,19 @@ export class Invoices {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/invoices/generate-invoice-number', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {}, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {}, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -667,18 +685,19 @@ export class Invoices {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/invoices/{invoiceId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {}, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {}, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -702,18 +721,19 @@ export class Invoices {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'PUT',
       url: buildUrl('/invoices/{invoiceId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -738,18 +758,19 @@ export class Invoices {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'DELETE',
       url: buildUrl('/invoices/{invoiceId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {}, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {}, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -773,18 +794,19 @@ export class Invoices {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'PATCH',
       url: buildUrl('/invoices/{invoiceId}/late-fees-configuration', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -808,18 +830,19 @@ export class Invoices {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/invoices/{invoiceId}/void', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -843,18 +866,19 @@ export class Invoices {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/invoices/{invoiceId}/send', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -878,18 +902,19 @@ export class Invoices {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/invoices/{invoiceId}/record-payment', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -910,18 +935,19 @@ export class Invoices {
     const extracted = extractParams(null, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'PATCH',
       url: buildUrl('/invoices/stats/last-visited-at', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -942,18 +968,19 @@ export class Invoices {
     const extracted = extractParams(null, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/invoices/estimate', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -977,18 +1004,19 @@ export class Invoices {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'PUT',
       url: buildUrl('/invoices/estimate/{estimateId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -1012,18 +1040,19 @@ export class Invoices {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'DELETE',
       url: buildUrl('/invoices/estimate/{estimateId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -1047,18 +1076,19 @@ export class Invoices {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/invoices/estimate/number/generate', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {}, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {}, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -1082,18 +1112,19 @@ export class Invoices {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/invoices/estimate/{estimateId}/send', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -1117,18 +1148,19 @@ export class Invoices {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/invoices/estimate/{estimateId}/invoice', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -1159,18 +1191,19 @@ export class Invoices {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/invoices/estimate/list', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {}, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {}, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -1191,18 +1224,19 @@ export class Invoices {
     const extracted = extractParams(null, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'PATCH',
       url: buildUrl('/invoices/estimate/stats/last-visited-at', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -1229,18 +1263,19 @@ export class Invoices {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/invoices/estimate/template', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {}, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {}, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -1261,18 +1296,19 @@ export class Invoices {
     const extracted = extractParams(null, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/invoices/estimate/template', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -1296,18 +1332,19 @@ export class Invoices {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'PUT',
       url: buildUrl('/invoices/estimate/template/{templateId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -1331,18 +1368,19 @@ export class Invoices {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'DELETE',
       url: buildUrl('/invoices/estimate/template/{templateId}', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -1367,18 +1405,19 @@ export class Invoices {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/invoices/estimate/template/preview', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {}, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {}, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -1399,18 +1438,19 @@ export class Invoices {
     const extracted = extractParams(null, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'POST',
       url: buildUrl('/invoices/', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, requestBody, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -1444,18 +1484,19 @@ export class Invoices {
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access","Agency-Access"];
     
-    const config: AxiosRequestConfig = {
+    const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/invoices/', extracted.path),
-      params: { ...extracted.query, ...extracted.all },
+      params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
       __secutiryRequirements: requirements,
       __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, config.params || {}, {}, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {}, options?.preferredTokenType);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }

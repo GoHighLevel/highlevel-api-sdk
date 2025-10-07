@@ -259,15 +259,6 @@ const campaigns = await ghl.campaigns.getCampaigns({
 });
 ```
 
-#### Opportunities
-```typescript
-// Get opportunities
-const opportunities = await ghl.opportunities.getOpportunities({
-  locationId: 'location-id',
-  limit: 20
-});
-```
-
 ## Error Handling
 
 The SDK uses a custom `GHLError` class that provides detailed error information:
