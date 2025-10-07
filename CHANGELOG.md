@@ -1,3 +1,9 @@
+## v2.2.1 - 2025-10-07
+
+### SDK changes
+
+- fix: remove all params from axios request config object which is causing 422 errors (e96f45b)
+
 ## v2.2.0 - 2025-10-06
 
 ### SDK changes
