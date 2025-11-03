@@ -37,6 +37,8 @@ interface InstallWebhookRequest {
  * Provides Express middleware for processing webhook events
  */
 export class WebhookManager {
+  private readonly BULK_INSTALL_CONCURRENCY_LIMIT = 5;
+  
   private logger: Logger;
   private sessionStorage: SessionStorage;
   private oauthService: OAuthService;
@@ -106,23 +108,40 @@ export class WebhookManager {
         
         switch (requestBody.type) {
           case 'INSTALL':
-            // Handle bulk install (multiple locations)
-            if (companyId && locationIds && locationIds.length > 0) {
-              this.logger.info(`Bulk install detected for ${locationIds.length} locations`);
-              await this.handleBulkInstall(companyId, locationIds);
-            } 
-            // Handle single location install
-            else if (companyId && locationId) {
-              await this.generateLocationAccessToken(companyId, locationId);
-            } else {
-              this.logger.warn('INSTALL webhook received but missing companyId or locationId/locationIds');
+            try {
+              // Validate that only one of locationId or locationIds is provided
+              if (locationId && locationIds && locationIds.length > 0) {
+                this.logger.warn(
+                  'INSTALL webhook received with both locationId and locationIds. Processing locationIds only.'
+                );
+              }
+
+              // Handle bulk install (multiple locations)
+              if (companyId && locationIds && locationIds.length > 0) {
+                this.logger.info(`Bulk install detected for ${locationIds.length} locations`);
+                await this.handleBulkInstall(companyId, locationIds);
+              } 
+              // Handle single location install
+              else if (companyId && locationId) {
+                await this.generateLocationAccessToken(companyId, locationId);
+              } else {
+                this.logger.warn('INSTALL webhook received but missing companyId or locationId/locationIds');
+              }
+            } catch (error) {
+              this.logger.error('INSTALL webhook processing failed:', error);
+              // Don't re-throw to allow webhook to complete
             }
             break;
           case 'UNINSTALL':
-            if (locationId || companyId) {
-              const resourceId = locationId || companyId;
-              await this.sessionStorage.deleteSession(resourceId);
-              this.logger.info(`Uninstalled: removed session for ${resourceId}`);
+            try {
+              if (locationId || companyId) {
+                const resourceId = locationId || companyId;
+                await this.sessionStorage.deleteSession(resourceId);
+                this.logger.info(`Uninstalled: removed session for ${resourceId}`);
+              }
+            } catch (error) {
+              this.logger.error('UNINSTALL webhook processing failed:', error);
+              // Don't re-throw to allow webhook to complete
             }
             break;
         }
@@ -179,26 +198,38 @@ export class WebhookManager {
       errors: [] as Array<{ locationId: string; error: string }>
     };
 
-    // Process locations in parallel with concurrency limit of 5
-    const CONCURRENT_LIMIT = 5;
-    for (let i = 0; i < locationIds.length; i += CONCURRENT_LIMIT) {
-      const batch = locationIds.slice(i, i + CONCURRENT_LIMIT);
+    // Process locations in parallel with concurrency limit
+    for (let i = 0; i < locationIds.length; i += this.BULK_INSTALL_CONCURRENCY_LIMIT) {
+      const batch = locationIds.slice(i, i + this.BULK_INSTALL_CONCURRENCY_LIMIT);
       
-      await Promise.all(
-        batch.map(async (locationId) => {
-          try {
-            await this.generateLocationAccessToken(companyId, locationId);
-            results.successful++;
-          } catch (error) {
-            results.failed++;
-            results.errors.push({
-              locationId,
-              error: error instanceof Error ? error.message : String(error)
-            });
-            this.logger.error(`Failed to generate token for location ${locationId}:`, error);
-          }
-        })
+      // Use Promise.allSettled to avoid race conditions with counter updates
+      const batchResults = await Promise.allSettled(
+        batch.map((locationId) => this.generateLocationAccessToken(companyId, locationId))
       );
+
+      // Process results after all promises have settled (thread-safe)
+      batchResults.forEach((result, index) => {
+        const locationId = batch[index];
+        
+        if (result.status === 'fulfilled') {
+          results.successful++;
+        } else {
+          results.failed++;
+          const errorMessage = result.reason instanceof Error 
+            ? result.reason.message 
+            : String(result.reason);
+          
+          results.errors.push({
+            locationId,
+            error: errorMessage
+          });
+          
+          this.logger.error(
+            `Failed to generate token for location ${locationId}:`,
+            result.reason
+          );
+        }
+      });
     }
 
     this.logger.info(
@@ -214,38 +245,35 @@ export class WebhookManager {
    * Generate location access token and store it using company token
    * @param companyId - The company ID
    * @param locationId - The location ID
+   * @throws {Error} If company token is not found or token generation fails
    */
   private async generateLocationAccessToken(
     companyId: string,
     locationId: string
   ): Promise<void> {
-    try {
-      // Get the token for the company from the store
-      const companyToken = await this.sessionStorage.getAccessToken(companyId);
-      if (!companyToken) {
-        this.logger.warn(
-          `Company token not found for companyId: ${companyId}, skipping location access token generation`
-        );
-        throw new Error(`Company token not found for companyId: ${companyId}`);
-      }
-      this.logger.debug(
-        `Generating location access token for location: ${locationId}`
-      );
-      // Get location access token using OAuth service
-      const locationTokenResponse =
-        await this.oauthService.getLocationAccessToken({
-          companyId,
-          locationId,
-        });
-      // Store the location token in session storage
-      await this.sessionStorage.setSession(locationId, locationTokenResponse);
-
-      this.logger.debug(
-        `Location access token generated and stored for location: ${locationId}`
-      );
-    } catch (error) {
-      this.logger.error(`Failed to generate location access token for ${locationId}:`, error);
-      throw error; // Re-throw to be handled by bulk install handler
+    // Get the token for the company from the store
+    const companyToken = await this.sessionStorage.getAccessToken(companyId);
+    if (!companyToken) {
+      const errorMsg = `Company token not found for companyId: ${companyId}`;
+      this.logger.warn(errorMsg);
+      throw new Error(errorMsg);
     }
+
+    this.logger.debug(
+      `Generating location access token for location: ${locationId}`
+    );
+
+    // Get location access token using OAuth service
+    const locationTokenResponse = await this.oauthService.getLocationAccessToken({
+      companyId,
+      locationId,
+    });
+
+    // Store the location token in session storage
+    await this.sessionStorage.setSession(locationId, locationTokenResponse);
+
+    this.logger.debug(
+      `Location access token generated and stored for location: ${locationId}`
+    );
   }
 }
