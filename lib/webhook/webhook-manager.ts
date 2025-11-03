@@ -17,6 +17,7 @@ interface InstallWebhookRequest {
   versionId: string;
   installType: string;
   locationId?: string;
+  locationIds?: string[]; // For bulk installs
   companyId: string;
   userId?: string;
   companyName?: string;
@@ -71,7 +72,7 @@ export class WebhookManager {
         const appId = clientId ? clientId.split('-')[0] : '';
         if (appId !== req.body.appId) {
           this.logger.warn('App ID mismatch, skipping webhook processing');
-          next();
+          return next();
         }
 
         // Initialize request flags
@@ -90,7 +91,7 @@ export class WebhookManager {
 
           if (!isValid) {
             this.logger.warn('Invalid webhook signature');
-            next();
+            return next();
           }
         } else {
           this.logger.warn(
@@ -101,16 +102,27 @@ export class WebhookManager {
         const requestBody = req.body as InstallWebhookRequest;
         const companyId = requestBody.companyId;
         const locationId = requestBody.locationId;
+        const locationIds = requestBody.locationIds;
+        
         switch (requestBody.type) {
           case 'INSTALL':
-            if (companyId && locationId) {
-              this.generateLocationAccessToken(companyId, locationId);
+            // Handle bulk install (multiple locations)
+            if (companyId && locationIds && locationIds.length > 0) {
+              this.logger.info(`Bulk install detected for ${locationIds.length} locations`);
+              await this.handleBulkInstall(companyId, locationIds);
+            } 
+            // Handle single location install
+            else if (companyId && locationId) {
+              await this.generateLocationAccessToken(companyId, locationId);
+            } else {
+              this.logger.warn('INSTALL webhook received but missing companyId or locationId/locationIds');
             }
             break;
           case 'UNINSTALL':
             if (locationId || companyId) {
               const resourceId = locationId || companyId;
-              this.sessionStorage.deleteSession(resourceId);
+              await this.sessionStorage.deleteSession(resourceId);
+              this.logger.info(`Uninstalled: removed session for ${resourceId}`);
             }
             break;
         }
@@ -151,6 +163,54 @@ export class WebhookManager {
   }
 
   /**
+   * Handle bulk install for multiple locations
+   * @param companyId - The company ID
+   * @param locationIds - Array of location IDs
+   */
+  private async handleBulkInstall(
+    companyId: string,
+    locationIds: string[]
+  ): Promise<void> {
+    this.logger.info(`Starting bulk install for ${locationIds.length} locations`);
+    
+    const results = {
+      successful: 0,
+      failed: 0,
+      errors: [] as Array<{ locationId: string; error: string }>
+    };
+
+    // Process locations in parallel with concurrency limit of 5
+    const CONCURRENT_LIMIT = 5;
+    for (let i = 0; i < locationIds.length; i += CONCURRENT_LIMIT) {
+      const batch = locationIds.slice(i, i + CONCURRENT_LIMIT);
+      
+      await Promise.all(
+        batch.map(async (locationId) => {
+          try {
+            await this.generateLocationAccessToken(companyId, locationId);
+            results.successful++;
+          } catch (error) {
+            results.failed++;
+            results.errors.push({
+              locationId,
+              error: error instanceof Error ? error.message : String(error)
+            });
+            this.logger.error(`Failed to generate token for location ${locationId}:`, error);
+          }
+        })
+      );
+    }
+
+    this.logger.info(
+      `Bulk install completed: ${results.successful} successful, ${results.failed} failed`
+    );
+    
+    if (results.failed > 0) {
+      this.logger.warn(`Failed locations:`, results.errors);
+    }
+  }
+
+  /**
    * Generate location access token and store it using company token
    * @param companyId - The company ID
    * @param locationId - The location ID
@@ -158,7 +218,7 @@ export class WebhookManager {
   private async generateLocationAccessToken(
     companyId: string,
     locationId: string
-  ) {
+  ): Promise<void> {
     try {
       // Get the token for the company from the store
       const companyToken = await this.sessionStorage.getAccessToken(companyId);
@@ -166,7 +226,7 @@ export class WebhookManager {
         this.logger.warn(
           `Company token not found for companyId: ${companyId}, skipping location access token generation`
         );
-        return;
+        throw new Error(`Company token not found for companyId: ${companyId}`);
       }
       this.logger.debug(
         `Generating location access token for location: ${locationId}`
@@ -184,7 +244,8 @@ export class WebhookManager {
         `Location access token generated and stored for location: ${locationId}`
       );
     } catch (error) {
-      this.logger.error(`Failed to generate location access token:`, error);
+      this.logger.error(`Failed to generate location access token for ${locationId}:`, error);
+      throw error; // Re-throw to be handled by bulk install handler
     }
   }
 }
