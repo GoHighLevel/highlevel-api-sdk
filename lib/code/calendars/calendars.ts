@@ -488,7 +488,7 @@ export class Calendars {
       userIds?: string[];
     },
     options?: AxiosRequestConfig
-  ): Promise<Models.GetSlotsSuccessfulResponseDto> {
+  ): Promise<any> {
     const paramDefs: Array<{name: string, in: string}> = [{name: 'calendarId', in: 'path'},{name: 'startDate', in: 'query'},{name: 'endDate', in: 'query'},{name: 'timezone', in: 'query'},{name: 'userId', in: 'query'},{name: 'userIds', in: 'query'}];
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
@@ -510,7 +510,7 @@ export class Calendars {
       config.headers = { ...config.headers, Authorization: authToken };
     }
 
-    const response: AxiosResponse<Models.GetSlotsSuccessfulResponseDto> = await this.client.request(config);
+    const response: AxiosResponse<any> = await this.client.request(config);
     return response.data;
   }
 

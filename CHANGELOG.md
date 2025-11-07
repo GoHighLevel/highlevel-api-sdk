@@ -1,3 +1,27 @@
+## v2.2.2 - 2025-11-07
+
+### Specs changes
+
+**Calendars**:
+
+Added:
+- request body field `description` added in `createAppointment` method (optional)
+- response body nested field `event.description` added in `getAppointment` method (optional)
+- request body field `description` added in `editAppointment` method (optional)
+- response body array item field `events[].description` added in `getCalendarEvents` method (optional)
+- response body array item field `events[].description` added in `getBlockedSlots` method (optional)
+- response body field `additionalPhoneNumbers` added in `findEventNotification` method (optional)
+- response body field `additionalWhatsappNumbers` added in `findEventNotification` method (optional)
+- request body field `additionalPhoneNumbers` added in `updateEventNotification` method (optional)
+- request body field `fromNumber` added in `updateEventNotification` method (optional)
+
+Removed:
+- response body `GetSlotsSuccessfulResponseDto` removed in `getSlots` method
+
+### SDK changes
+
+- fix: add return statements and await calls in webhook processing, pass raw body for oauth, remove unique key for tokens and create index for appId and resourceId (f5bd807)
+
 ## v2.2.1 - 2025-10-07
 
 ### SDK changes

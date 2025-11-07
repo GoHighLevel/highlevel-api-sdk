@@ -55,6 +55,7 @@ export interface AppointmentCreateSchema {
   overrideLocationConfig?: boolean;
   appointmentStatus?: string;
   assignedUserId?: string;
+  description?: string;
   address?: string;
   ignoreDateRange?: boolean;
   toNotify?: boolean;
@@ -90,6 +91,7 @@ export interface AppointmentEditSchema {
   overrideLocationConfig?: boolean;
   appointmentStatus?: string;
   assignedUserId?: string;
+  description?: string;
   address?: string;
   ignoreDateRange?: boolean;
   toNotify?: boolean;
@@ -117,6 +119,7 @@ export interface CalendarEventDTO {
   assignedUserId: string;
   users: string[];
   notes?: string;
+  description?: string;
   isRecurring?: boolean;
   rrule?: string;
   startTime: any;
@@ -162,10 +165,6 @@ export interface BlockSlotEditRequestDTO {
 
 export interface SlotsSchema {
   slots: string[];
-}
-
-export interface GetSlotsSuccessfulResponseDto {
-  _dates_: SlotsSchema;
 }
 
 export interface CalendarNotification {
@@ -527,9 +526,11 @@ export interface CalendarNotificationResponseDTO {
   _id?: string;
   receiverType?: string;
   additionalEmailIds?: string[];
+  additionalPhoneNumbers?: string[];
   channel?: string;
   notificationType?: string;
   isActive?: boolean;
+  additionalWhatsappNumbers?: string[];
   templateId?: string;
   body?: string;
   subject?: string;
@@ -550,14 +551,17 @@ export interface CreateCalendarNotificationDTO {
   afterTime?: SchedulesDTO[];
   beforeTime?: SchedulesDTO[];
   additionalEmailIds?: string[];
+  additionalPhoneNumbers?: string[];
   selectedUsers?: string[];
   fromAddress?: string;
   fromName?: string;
+  fromNumber?: string;
 }
 
 export interface UpdateCalendarNotificationsDTO {
   receiverType?: string;
   additionalEmailIds?: string[];
+  additionalPhoneNumbers?: string[];
   selectedUsers?: string[];
   channel?: string;
   notificationType?: string;
@@ -569,6 +573,7 @@ export interface UpdateCalendarNotificationsDTO {
   afterTime?: SchedulesDTO[];
   beforeTime?: SchedulesDTO[];
   fromAddress?: string;
+  fromNumber?: string;
   fromName?: string;
 }
 
