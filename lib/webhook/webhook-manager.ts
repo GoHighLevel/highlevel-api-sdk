@@ -71,7 +71,7 @@ export class WebhookManager {
         const appId = clientId ? clientId.split('-')[0] : '';
         if (appId !== req.body.appId) {
           this.logger.warn('App ID mismatch, skipping webhook processing');
-          next();
+          return next();
         }
 
         // Initialize request flags
@@ -90,7 +90,7 @@ export class WebhookManager {
 
           if (!isValid) {
             this.logger.warn('Invalid webhook signature');
-            next();
+            return next();
           }
         } else {
           this.logger.warn(
@@ -104,13 +104,13 @@ export class WebhookManager {
         switch (requestBody.type) {
           case 'INSTALL':
             if (companyId && locationId) {
-              this.generateLocationAccessToken(companyId, locationId);
+              await this.generateLocationAccessToken(companyId, locationId);
             }
             break;
           case 'UNINSTALL':
             if (locationId || companyId) {
               const resourceId = locationId || companyId;
-              this.sessionStorage.deleteSession(resourceId);
+              await this.sessionStorage.deleteSession(resourceId);
             }
             break;
         }

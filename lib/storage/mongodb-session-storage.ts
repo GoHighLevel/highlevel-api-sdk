@@ -15,8 +15,15 @@ export class MongoDBSessionStorage extends SessionStorage {
   private clientId: string = '';
   private isConnected: boolean = false;
 
-  constructor(dbUrl: string, dbName: string, collectionName: string = 'application_sessions', logger?: Logger) {
-    super(logger ? logger.child('MongoDB') : new Logger('warn', 'GHL SDK MongoDB'));
+  constructor(
+    dbUrl: string,
+    dbName: string,
+    collectionName: string = 'application_sessions',
+    logger?: Logger
+  ) {
+    super(
+      logger ? logger.child('MongoDB') : new Logger('warn', 'GHL SDK MongoDB')
+    );
     this.dbUrl = dbUrl;
     this.dbName = dbName;
     this.collectionName = collectionName;
@@ -31,7 +38,9 @@ export class MongoDBSessionStorage extends SessionStorage {
       throw new Error('ClientId is required for session storage');
     }
     this.clientId = clientId;
-    this.logger.debug(`SessionStorage clientId set: ${this.getApplicationId()}`);
+    this.logger.debug(
+      `SessionStorage clientId set: ${this.getApplicationId()}`
+    );
   }
 
   /**
@@ -40,19 +49,11 @@ export class MongoDBSessionStorage extends SessionStorage {
    */
   private getApplicationId(): string {
     if (!this.clientId) {
-      throw new Error('ClientId not set. Make sure HighLevel class has a valid clientId configured.');
+      throw new Error(
+        'ClientId not set. Make sure HighLevel class has a valid clientId configured.'
+      );
     }
     return this.clientId.split('-')[0];
-  }
-
-  /**
-   * Generate a unique key combining applicationId and resourceId
-   * @param resourceId - The resource identifier (companyId or locationId)
-   * @returns Unique composite key
-   */
-  private generateUniqueKey(resourceId: string): string {
-    const applicationId = this.getApplicationId();
-    return `${applicationId}:${resourceId}`;
   }
 
   /**
@@ -65,7 +66,7 @@ export class MongoDBSessionStorage extends SessionStorage {
       this.db = this.client.db(this.dbName);
       await this.createCollection(this.collectionName);
       this.isConnected = true;
-      
+
       this.logger.info(`Connected to MongoDB database: ${this.dbName}`);
     } catch (error) {
       this.logger.error('Failed to connect to MongoDB:', error);
@@ -103,13 +104,25 @@ export class MongoDBSessionStorage extends SessionStorage {
     try {
       // Get list of existing collections
       const collections = await this.db.listCollections().toArray();
-      const collectionExists = collections.some(col => col.name === collectionName);
-      
+      const collectionExists = collections.some(
+        (col) => col.name === collectionName
+      );
+
       if (!collectionExists) {
         await this.db.createCollection(collectionName);
         this.logger.debug(`Created MongoDB collection: ${collectionName}`);
+
+        // Create compound unique index on applicationId and resourceId
+        const collection = this.db.collection(collectionName);
+        await collection.createIndex(
+          { applicationId: 1, resourceId: 1 },
+          { unique: true }
+        );
+        this.logger.debug(`Created unique compound index on applicationId and resourceId`);
       } else {
-        this.logger.debug(`MongoDB collection already exists: ${collectionName}`);
+        this.logger.debug(
+          `MongoDB collection already exists: ${collectionName}`
+        );
       }
     } catch (error) {
       this.logger.error(`Error creating collection ${collectionName}:`, error);
@@ -128,7 +141,7 @@ export class MongoDBSessionStorage extends SessionStorage {
 
     // Ensure collection exists
     await this.createCollection(collectionName);
-    
+
     return this.db.collection(collectionName);
   }
 
@@ -137,31 +150,35 @@ export class MongoDBSessionStorage extends SessionStorage {
    * @param resourceId - Unique identifier: it can be a companyId or a locationId
    * @param sessionData - Session data to store
    */
-  async setSession(resourceId: string, sessionData: ISessionData): Promise<void> {
+  async setSession(
+    resourceId: string,
+    sessionData: ISessionData
+  ): Promise<void> {
+    const applicationId = this.getApplicationId();
     try {
       const collection = await this.getCollection(this.collectionName);
-      const applicationId = this.getApplicationId();
-      const uniqueKey = this.generateUniqueKey(resourceId);
-      
+
       const sessionDocument = {
-        uniqueKey,
         applicationId,
         resourceId,
         ...sessionData,
         expire_at: this.calculateExpireAt(sessionData.expires_in),
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       };
 
       await collection.findOneAndReplace(
-        { uniqueKey },
+        { applicationId, resourceId },
         sessionDocument,
         { upsert: true }
       );
 
-      this.logger.debug(`Session stored: ${uniqueKey}`);
+      this.logger.debug(`Session stored: ${applicationId}:${resourceId}`);
     } catch (error) {
-      this.logger.error(`Error storing session ${this.getApplicationId()}:${resourceId}:`, error);
+      this.logger.error(
+        `Error storing session ${applicationId}:${resourceId}:`,
+        error
+      );
       throw error;
     }
   }
@@ -172,23 +189,35 @@ export class MongoDBSessionStorage extends SessionStorage {
    * @returns Session data or null if not found
    */
   async getSession(resourceId: string): Promise<ISessionData | null> {
+    const applicationId = this.getApplicationId();
     try {
       const collection = await this.getCollection(this.collectionName);
-      const uniqueKey = this.generateUniqueKey(resourceId);
-      
-      const sessionDocument = await collection.findOne({ uniqueKey });
-      
+      const sessionDocument = await collection.findOne({
+        applicationId,
+        resourceId,
+      });
+
       if (!sessionDocument) {
         return null;
       }
 
-      this.logger.debug(`Session retrieved: ${uniqueKey}`);
-      
-              // Return the session data including expire_at but without MongoDB metadata
-        const { uniqueKey: _, applicationId: __, resourceId: ___, createdAt, updatedAt, _id, ...sessionData } = sessionDocument;
-        return sessionData as ISessionData;
+      this.logger.debug(`Session retrieved: ${applicationId}:${resourceId}`);
+
+      // Return the session data including expire_at but without MongoDB metadata
+      const {
+        applicationId: _,
+        resourceId: __,
+        createdAt,
+        updatedAt,
+        _id,
+        ...sessionData
+      } = sessionDocument;
+      return sessionData as ISessionData;
     } catch (error) {
-      this.logger.error(`Error retrieving session ${this.getApplicationId()}:${resourceId}:`, error);
+      this.logger.error(
+        `Error retrieving session ${applicationId}:${resourceId}:`,
+        error
+      );
       throw error;
     }
   }
@@ -198,19 +227,23 @@ export class MongoDBSessionStorage extends SessionStorage {
    * @param resourceId - Unique identifier: it can be a companyId or a locationId
    */
   async deleteSession(resourceId: string): Promise<void> {
+    const applicationId = this.getApplicationId();
     try {
       const collection = await this.getCollection(this.collectionName);
-      const uniqueKey = this.generateUniqueKey(resourceId);
-      
-      const result = await collection.deleteOne({ uniqueKey });
-      
+      const result = await collection.deleteOne({ applicationId, resourceId });
+
       if (result.deletedCount > 0) {
-        this.logger.debug(`Session deleted: ${uniqueKey}`);
+        this.logger.debug(`Session deleted: ${applicationId}:${resourceId}`);
       } else {
-        this.logger.debug(`Session not found for deletion: ${uniqueKey}`);
+        this.logger.debug(
+          `Session not found for deletion: ${applicationId}:${resourceId}`
+        );
       }
     } catch (error) {
-      this.logger.error(`Error deleting session ${this.getApplicationId()}:${resourceId}:`, error);
+      this.logger.error(
+        `Error deleting session ${applicationId}:${resourceId}:`,
+        error
+      );
       throw error;
     }
   }
@@ -221,15 +254,19 @@ export class MongoDBSessionStorage extends SessionStorage {
    * @returns Access token or null if not found
    */
   async getAccessToken(resourceId: string): Promise<string | null> {
+    const applicationId = this.getApplicationId();
     try {
       const collection = await this.getCollection(this.collectionName);
-      const uniqueKey = this.generateUniqueKey(resourceId);
-      
-      const sessionDocument = await collection.findOne({ uniqueKey }, { projection: { access_token: 1 } });
-      
+      const sessionDocument = await collection.findOne(
+        { applicationId, resourceId },
+        { projection: { access_token: 1 } }
+      );
       return sessionDocument?.access_token || null;
     } catch (error) {
-      this.logger.error(`Error retrieving access token ${this.getApplicationId()}:${resourceId}:`, error);
+      this.logger.error(
+        `Error retrieving access token ${applicationId}:${resourceId}:`,
+        error
+      );
       throw error;
     }
   }
@@ -240,15 +277,20 @@ export class MongoDBSessionStorage extends SessionStorage {
    * @returns Refresh token or null if not found
    */
   async getRefreshToken(resourceId: string): Promise<string | null> {
+    const applicationId = this.getApplicationId();
     try {
       const collection = await this.getCollection(this.collectionName);
-      const uniqueKey = this.generateUniqueKey(resourceId);
-      
-      const sessionDocument = await collection.findOne({ uniqueKey }, { projection: { refresh_token: 1 } });
-      
+      const sessionDocument = await collection.findOne(
+        { applicationId, resourceId },
+        { projection: { refresh_token: 1 } }
+      );
+
       return sessionDocument?.refresh_token || null;
     } catch (error) {
-      this.logger.error(`Error retrieving refresh token ${this.getApplicationId()}:${resourceId}:`, error);
+      this.logger.error(
+        `Error retrieving refresh token ${applicationId}:${resourceId}:`,
+        error
+      );
       throw error;
     }
   }
@@ -258,21 +300,33 @@ export class MongoDBSessionStorage extends SessionStorage {
    * @returns Array of session data for the application
    */
   async getSessionsByApplication(): Promise<ISessionData[]> {
+    const applicationId = this.getApplicationId();
     try {
       const collection = await this.getCollection(this.collectionName);
-      const applicationId = this.getApplicationId();
-      
       const sessions = await collection.find({ applicationId }).toArray();
-      
-      this.logger.debug(`Found ${sessions.length} sessions for application: ${applicationId}`);
-      
+
+      this.logger.debug(
+        `Found ${sessions.length} sessions for application: ${applicationId}`
+      );
+
       // Return session data without MongoDB metadata
-      return sessions.map(doc => {
-        const { uniqueKey: _, applicationId: __, resourceId: ___, createdAt, updatedAt, _id, expire_at, ...sessionData } = doc;
+      return sessions.map((doc) => {
+        const {
+          applicationId: ___,
+          resourceId: ____,
+          createdAt,
+          updatedAt,
+          _id,
+          expire_at,
+          ...sessionData
+        } = doc;
         return sessionData as ISessionData;
       });
     } catch (error) {
-      this.logger.error(`Error retrieving sessions for application ${this.getApplicationId()}:`, error);
+      this.logger.error(
+        `Error retrieving sessions for application ${applicationId}:`,
+        error
+      );
       throw error;
     }
   }
@@ -300,4 +354,4 @@ export class MongoDBSessionStorage extends SessionStorage {
   public isConnectionActive(): boolean {
     return this.isConnected;
   }
-} 
+}

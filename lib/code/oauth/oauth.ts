@@ -76,7 +76,6 @@ export class Oauth {
     const extracted = extractParams(null, paramDefs);
     const requirements: string[] = [];
     
-    const isFormData = true;
     const processedBody = new URLSearchParams(requestBody as any).toString();
     
     const config: RequestConfig = {
@@ -97,7 +96,7 @@ export class Oauth {
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, processedBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -118,7 +117,6 @@ export class Oauth {
     const extracted = extractParams(null, paramDefs);
     const requirements: string[] = ["Agency-Access-Only"];
     
-    const isFormData = true;
     const processedBody = new URLSearchParams(requestBody as any).toString();
     
     const config: RequestConfig = {
@@ -139,7 +137,7 @@ export class Oauth {
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, processedBody);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
