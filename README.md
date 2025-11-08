@@ -383,6 +383,67 @@ const toonData = ghl.leadIntelligence.exportToTOON(result.scores, {
 console.log('TOON format data:', toonData);
 ```
 
+### Using TOON Utilities for ANY AI Service 🎯
+
+The SDK provides shared TOON utilities that **ANY service** can use to reduce LLM token costs by 30-60%:
+
+```typescript
+import {
+  encodeToTOON,
+  prepareContactsForLLM,
+  formatSavingsReport,
+  calculateMonthlySavings
+} from '@gohighlevel/api-client';
+
+// Example: Prepare contacts for AI analysis
+const contacts = await ghl.contacts.searchContacts({ locationId: 'loc-123' });
+
+const { toonData, savings } = prepareContactsForLLM(
+  contacts.contacts,
+  ['id', 'name', 'email', 'phone', 'tags'] // Only include needed fields
+);
+
+console.log(formatSavingsReport(savings));
+// Output:
+// 📊 TOON Format Savings Report:
+//    Original Size: 25,000 bytes
+//    TOON Size: 10,000 bytes
+//    Saved: 15,000 bytes (60.0%)
+//    
+// 💰 Cost Savings:
+//    Tokens Saved: ~3,750 tokens
+//    Cost Saved: ~$0.1125 USD
+
+// Send to your LLM provider (OpenAI, Claude, etc.)
+const analysis = await yourLLMProvider.analyze(toonData);
+
+// Calculate potential monthly savings
+const monthlySavings = calculateMonthlySavings(
+  1000, // 1000 API calls per month
+  25000, // 25KB average data size
+  50 // 50% average savings
+);
+
+console.log(`💰 Monthly savings: $${monthlySavings.monthlyCostSavings.toFixed(2)}`);
+console.log(`💰 Yearly savings: $${monthlySavings.yearlyCostSavings.toFixed(2)}`);
+```
+
+**Available TOON Utilities:**
+- `encodeToTOON(data, options)` - Convert any data with automatic savings calculation
+- `toTOON(data, options)` - Simple conversion without metrics
+- `prepareContactsForLLM(contacts, fields)` - Optimize contacts for LLM
+- `prepareOpportunitiesForLLM(opportunities, fields)` - Optimize deals for LLM
+- `prepareConversationsForLLM(conversations, fields)` - Optimize messages for LLM
+- `formatSavingsReport(savings)` - Pretty-print savings metrics
+- `calculateMonthlySavings(requests, avgSize, savingsPercent)` - ROI calculator
+
+**Use Cases for TOON in Other Services:**
+- **Conversations** - Analyze chat histories with AI sentiment analysis
+- **Voice AI** - Process call transcriptions with LLM
+- **Campaigns** - AI-powered campaign performance analysis
+- **Workflows** - Optimize workflow triggers with AI
+- **Emails** - AI email content analysis and suggestions
+
 ## Error Handling
 
 The SDK uses a custom `GHLError` class that provides detailed error information:

@@ -1,7 +1,7 @@
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { encode } from '@toon-format/toon';
 import * as Models from './models/lead-intelligence';
 import { buildUrl, extractParams, getAuthToken, RequestConfig } from '../../utils/request-utils';
+import { encodeToTOON, toTOON } from '../../utils/toon-utils';
 
 /**
  * Lead Intelligence Service
@@ -53,8 +53,8 @@ export class LeadIntelligence {
 
       if (options.useLLM && this.llmProvider) {
         try {
-          // Convert to TOON format for 60% token savings!
-          const toonData = encode(
+          // Convert to TOON format for 60% token savings using shared utility!
+          const { toonData, savings } = encodeToTOON(
             enrichedContacts.map(c => ({
               id: c.id,
               name: c.name,
@@ -66,13 +66,12 @@ export class LeadIntelligence {
               total_revenue: c.total_revenue,
               opportunities_won: c.opportunities_won
             })),
-            { delimiter: '\t', lengthMarker: '#' as any }
+            { delimiter: '\t', lengthMarker: true }
           );
 
-          // Estimate tokens saved (approximate)
-          const jsonSize = JSON.stringify(enrichedContacts).length;
-          const toonSize = toonData.length;
-          tokensSaved = Math.floor((jsonSize - toonSize) / 4); // Rough token estimation
+          // Use calculated savings from utility
+          tokensSaved = savings.estimatedTokensSaved;
+          tokensUsed = Math.floor(savings.toonSize / 4);
 
           // Get LLM scores
           const llmScores = await this.llmProvider.scoreLeads(toonData, {
@@ -81,7 +80,6 @@ export class LeadIntelligence {
 
           // Blend rules-based + LLM scores (60% rules, 40% LLM)
           finalScores = this.blendScores(rulesScores, llmScores);
-          tokensUsed = Math.floor(toonSize / 4); // Rough token estimation
         } catch (error: any) {
           // LLM failed, fall back to rules-based scores
           console.warn('[LeadIntelligence] LLM scoring failed, using rules-based scores only:', error.message);
@@ -135,10 +133,10 @@ export class LeadIntelligence {
     // Get historical conversion data
     const conversions = await this.getHistoricalConversions(locationId, dateRange);
 
-    // Export in TOON format for 60% token savings
-    const toonData = encode(conversions, {
+    // Export in TOON format for 60% token savings using shared utility
+    const toonData = toTOON(conversions, {
       delimiter: '\t',
-      lengthMarker: '#' as any
+      lengthMarker: true
     });
 
     // Send to LLM for analysis
@@ -163,9 +161,10 @@ export class LeadIntelligence {
     // Get opportunity data
     const opportunity = await this.getOpportunityData(opportunityId, options);
 
-    // Convert to TOON format
-    const toonData = encode(opportunity, {
-      delimiter: '\t'
+    // Convert to TOON format using shared utility
+    const toonData = toTOON(opportunity, {
+      delimiter: '\t',
+      lengthMarker: true
     });
 
     // Get LLM prediction
@@ -268,11 +267,10 @@ export class LeadIntelligence {
   exportToTOON(
     scores: Models.ScoredContact[],
     options?: Models.TOONExportOptions
-  ): string {
-    return encode(scores, {
+  ): { toonData: string; savings: any } {
+    return encodeToTOON(scores, {
       delimiter: options?.delimiter || '\t',
-      lengthMarker: options?.lengthMarker ? '#' as any : false,
-      indent: options?.indent || 2
+      lengthMarker: options?.lengthMarker !== false
     });
   }
 

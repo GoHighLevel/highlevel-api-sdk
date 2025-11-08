@@ -29,5 +29,17 @@ export type {
   LLMScoringProvider
 } from './lib/code/lead-intelligence/models/lead-intelligence';
 
+// TOON utilities for AI/LLM token savings (can be used by ALL services)
+export {
+  encodeToTOON,
+  toTOON,
+  prepareContactsForLLM,
+  prepareOpportunitiesForLLM,
+  prepareConversationsForLLM,
+  formatSavingsReport,
+  calculateMonthlySavings
+} from './lib/utils/toon-utils';
+export type { TOONOptions, TokenSavings } from './lib/utils/toon-utils';
+
 // Default export - HighLevel wrapper class
 export { HighLevel as default } from './lib/HighLevel';
