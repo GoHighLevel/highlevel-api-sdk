@@ -44,7 +44,7 @@ export function encodeToTOON(
   const originalSize = originalJson.length;
   const toonSize = toonData.length;
   const bytesSaved = originalSize - toonSize;
-  const percentageSaved = ((bytesSaved / originalSize) * 100);
+  const percentageSaved = originalSize > 0 ? ((bytesSaved / originalSize) * 100) : 0;
 
   // Estimate tokens (rough: ~4 chars per token for English text)
   const estimatedTokensSaved = Math.floor(bytesSaved / 4);

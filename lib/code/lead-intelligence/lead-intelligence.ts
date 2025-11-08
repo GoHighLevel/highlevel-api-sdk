@@ -5,7 +5,7 @@ import { encodeToTOON, toTOON } from '../../utils/toon-utils';
 
 /**
  * Lead Intelligence Service
- * AI-powered lead scoring and predictive analytics with TOON format integration for 60% LLM token savings
+ * AI-powered lead scoring and predictive analytics with TOON format integration for up to 60% LLM token savings
  */
 export class LeadIntelligence {
   private client: AxiosInstance;
@@ -53,7 +53,7 @@ export class LeadIntelligence {
 
       if (options.useLLM && this.llmProvider) {
         try {
-          // Convert to TOON format for 60% token savings using shared utility!
+          // Convert to TOON format for up to 60% token savings using shared utility!
           const { toonData, savings } = encodeToTOON(
             enrichedContacts.map(c => ({
               id: c.id,

@@ -261,7 +261,7 @@ const campaigns = await ghl.campaigns.getCampaigns({
 
 ### Lead Intelligence (AI-Powered Scoring) 🚀 NEW
 
-Score leads and predict conversions using rules-based + optional LLM-powered analysis with **60% token savings** via TOON format integration.
+Score leads and predict conversions using rules-based + optional LLM-powered analysis with **up to 60% token savings** via TOON format integration.
 
 #### Basic Lead Scoring
 ```typescript
@@ -284,7 +284,7 @@ result.scores.forEach(lead => {
 });
 ```
 
-#### LLM-Powered Scoring (60% Token Savings with TOON)
+#### LLM-Powered Scoring (Up to 60% Token Savings with TOON)
 ```typescript
 // Set up LLM provider (example with OpenAI-compatible API)
 import { Configuration, OpenAIApi } from 'openai';
@@ -372,14 +372,14 @@ const result = await ghl.leadIntelligence.scoreContacts({
   locationId: 'your-location-id'
 });
 
-// Export to TOON format (60% smaller than JSON!)
-const toonData = ghl.leadIntelligence.exportToTOON(result.scores, {
+// Export to TOON format (up to 60% smaller than JSON!)
+const { toonData } = ghl.leadIntelligence.exportToTOON(result.scores, {
   delimiter: '\t',      // Tab-separated for max efficiency
   lengthMarker: true    // Add # prefix to array lengths
 });
 
 // Send to your LLM for further analysis
-// TOON format = 60% fewer tokens = 60% lower API costs!
+// TOON format = up to 60% fewer tokens = up to 60% lower API costs!
 console.log('TOON format data:', toonData);
 ```
 
@@ -533,7 +533,7 @@ The SDK provides access to all HighLevel API services:
 - **forms** - Form management
 - **funnels** - Funnel operations
 - **invoices** - Invoice management
-- **leadIntelligence** - AI-powered lead scoring and predictive analytics with TOON integration (60% token savings)
+- **leadIntelligence** - AI-powered lead scoring and predictive analytics with TOON integration (up to 60% token savings)
 - **links** - Link management
 - **locations** - Location management
 - **marketplace** - Marketplace operations

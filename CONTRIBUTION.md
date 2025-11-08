@@ -66,7 +66,7 @@ git checkout -b feature/your-feature-name
 - 💸 **30-60% Token Reduction** - Typically 30-60% fewer tokens on large uniform arrays vs formatted JSON
 - 🤿 **LLM-Friendly Guardrails** - Explicit lengths `[N]` and fields `{field1,field2}` enable validation
 - 🍱 **Minimal Syntax** - Removes redundant punctuation (braces, brackets, most quotes)
-- � **Indentation-Based** - Like YAML, uses whitespace instead of braces
+- 📝 **Indentation-Based** - Like YAML, uses whitespace instead of braces
 - 🧺 **Tabular Arrays** - Declare keys once, stream data as rows (CSV-like efficiency)
 
 ### Why TOON?
@@ -305,7 +305,7 @@ The following services have AI/LLM use cases and can benefit from TOON:
 ┌──────────────────────────────────────────────────────────────────────┐
 │               LLM Provider (OpenAI, Claude, Gemini, etc.)            │
 │                                                                       │
-│  Token Efficiency (GPT-5 o200k_base tokenizer):                     │
+│  Token Efficiency (o200k_base tokenizer used by GPT-4):             │
 │  • JSON input:  ~62 tokens                                           │
 │  • TOON input:  ~35 tokens  (44% fewer tokens!)                      │
 │                                                                       │
@@ -314,7 +314,7 @@ The following services have AI/LLM use cases and can benefit from TOON:
 │  • TOON cost:  $0.00105/request  ($0.00081 saved per request)       │
 │                                                                       │
 │  Accuracy (from official benchmarks):                                │
-│  • TOON accuracy:  73.9%  (GPT-5, Claude, Gemini average)            │
+│  • TOON accuracy:  73.9%  (GPT-4, Claude, Gemini average)            │
 │  • JSON accuracy:  69.7%  (TOON = +4.2% better!)                     │
 │                                                                       │
 │  Efficiency Score (accuracy per 1K tokens):                          │
