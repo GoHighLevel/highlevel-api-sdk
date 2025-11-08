@@ -369,16 +369,18 @@ export class LeadIntelligence {
         // - opportunities service (deal stages)
         // - payments service (revenue, transactions)
         
-        // For now, use mock data based on contact recency
+        // For now, use deterministic mock data based on contact ID hash
+        // This avoids cryptographic RNG warnings while providing consistent test data
+        const hash = this.simpleHash(contact.id);
         if (enriched.days_since_last_activity < 7) {
-          enriched.email_opens = Math.floor(Math.random() * 20) + 10;
-          enriched.page_views = Math.floor(Math.random() * 50) + 20;
-          enriched.form_fills = Math.floor(Math.random() * 5) + 2;
-          enriched.appointments_completed = Math.floor(Math.random() * 3) + 1;
+          enriched.email_opens = (hash % 20) + 10;
+          enriched.page_views = ((hash * 2) % 50) + 20;
+          enriched.form_fills = ((hash * 3) % 5) + 2;
+          enriched.appointments_completed = ((hash * 4) % 3) + 1;
         } else if (enriched.days_since_last_activity < 30) {
-          enriched.email_opens = Math.floor(Math.random() * 10) + 2;
-          enriched.page_views = Math.floor(Math.random() * 20) + 5;
-          enriched.form_fills = Math.floor(Math.random() * 2);
+          enriched.email_opens = (hash % 10) + 2;
+          enriched.page_views = ((hash * 2) % 20) + 5;
+          enriched.form_fills = (hash * 3) % 2;
         }
 
         return enriched;
@@ -581,6 +583,21 @@ export class LeadIntelligence {
       accelerators,
       recommendedActions: riskFactors.length > 0 ? ['Schedule follow-up call', 'Send proposal'] : ['Continue nurturing']
     };
+  }
+
+  /**
+   * Simple deterministic hash function for generating consistent mock data
+   * This is NOT for cryptographic use - only for generating test engagement metrics
+   * @private
+   */
+  private simpleHash(str: string): number {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      const char = str.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // Convert to 32-bit integer
+    }
+    return Math.abs(hash);
   }
 }
 
