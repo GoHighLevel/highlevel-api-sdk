@@ -538,7 +538,7 @@ export class VoiceAi {
 
   /**
    * Analyze call transcriptions with AI sentiment detection
-   * Uses TOON format for 60% token cost reduction
+   * Uses TOON format for 40-60% token cost reduction
    */
   async analyzeCallSentiment(
     callIds: string[],
@@ -555,7 +555,7 @@ export class VoiceAi {
       speaker: call.speaker
     }));
 
-    // Convert to TOON format (60% token savings!)
+    // Convert to TOON format (40-60% token savings!)
     const { toonData, savings } = encodeToTOON(callData, {
       delimiter: '\t',
       lengthMarker: true
@@ -614,7 +614,7 @@ Follow conventional commits:
 ```
 feat(voice-ai): Add TOON integration for call transcription analysis
 
-- Integrated TOON encoding for 60% token savings
+- Integrated TOON encoding for 40-60% token savings
 - Added analyzeCallSentiment() method with LLM support
 - Updated tests and documentation
 - Estimated savings: $500/month for typical usage

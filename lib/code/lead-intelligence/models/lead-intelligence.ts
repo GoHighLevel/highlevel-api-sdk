@@ -200,7 +200,7 @@ export interface TOONExportOptions {
 export interface LLMScoringProvider {
   /**
    * Score leads using LLM analysis
-   * @param toonData - Contact data in TOON format (60% token savings)
+   * @param toonData - Contact data in TOON format (40-60% token savings)
    * @param options - LLM options
    */
   scoreLeads(toonData: string, options?: {
