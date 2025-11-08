@@ -13,5 +13,21 @@ export { WebhookManager } from './lib/webhook';
 // Constants and enums
 export { UserType, type UserTypeValue } from './lib/constants';
 
+// Lead Intelligence types and models
+export { LeadIntelligence } from './lib/code/lead-intelligence/lead-intelligence';
+export type {
+  LeadScoringFactors,
+  ScoredContact,
+  EnrichedContact,
+  LeadScoringOptions,
+  ConversionPatterns,
+  ConversionRecord,
+  DealClosePrediction,
+  LeadInsights,
+  BulkScoringResult,
+  TOONExportOptions,
+  LLMScoringProvider
+} from './lib/code/lead-intelligence/models/lead-intelligence';
+
 // Default export - HighLevel wrapper class
 export { HighLevel as default } from './lib/HighLevel';
