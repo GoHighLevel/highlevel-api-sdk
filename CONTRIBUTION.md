@@ -56,14 +56,18 @@ git checkout -b feature/your-feature-name
 
 ### What is TOON?
 
-**TOON (Tabular Object Oriented Notation)** is a token-efficient data serialization format designed specifically for LLM (Large Language Model) applications. It was integrated into this SDK to dramatically reduce the cost of AI-powered features.
+**TOON (Token-Oriented Object Notation)** is a compact, human-readable serialization format designed specifically for passing structured data to Large Language Models with significantly reduced token usage. It's a lossless, drop-in representation of JSON data optimized for LLM contexts.
+
+**Official Repository:** [github.com/toon-format/toon](https://github.com/toon-format/toon)  
+**Specification:** [TOON Spec v1.4](https://github.com/toon-format/spec/blob/main/SPEC.md)  
+**NPM Package:** [@toon-format/toon](https://www.npmjs.com/package/@toon-format/toon)
 
 **Key Benefits:**
-- 🎯 **30-60% Token Reduction** - Significantly smaller than JSON
-- 💰 **Cost Savings** - Direct reduction in LLM API costs
-- 📊 **Automatic Metrics** - Built-in savings tracking
-- 🚀 **Performance** - Faster transmission and processing
-- 🔧 **Easy Integration** - Simple API, works with any data
+- 💸 **30-60% Token Reduction** - Typically 30-60% fewer tokens on large uniform arrays vs formatted JSON
+- 🤿 **LLM-Friendly Guardrails** - Explicit lengths `[N]` and fields `{field1,field2}` enable validation
+- 🍱 **Minimal Syntax** - Removes redundant punctuation (braces, brackets, most quotes)
+- � **Indentation-Based** - Like YAML, uses whitespace instead of braces
+- 🧺 **Tabular Arrays** - Declare keys once, stream data as rows (CSV-like efficiency)
 
 ### Why TOON?
 
@@ -97,15 +101,16 @@ When sending data to LLMs (OpenAI, Claude, etc.) for analysis, every byte counts
 
 TOON encodes the same data in a tabular format:
 
+```toon
+contacts[2]{id,name,email,score,tags}:
+  contact_123,John Doe,john@example.com,85,hot-lead|enterprise
+  contact_456,Jane Smith,jane@example.com,72,warm-lead
 ```
-contacts	#2
-id	name	email	score	tags	#2
-contact_123	John Doe	john@example.com	85	hot-lead	enterprise
-contact_456	Jane Smith	jane@example.com	72	warm-lead
-```
-**Size:** ~120 bytes (~30 tokens @ $0.00090/request with GPT-4)
+**Size:** ~140 bytes (~35 tokens @ $0.00105/request with GPT-4)
 
-**Savings: 52% fewer bytes = 52% lower costs! 💰**
+**Savings: 44% fewer bytes = 44% lower costs! 💰**
+
+**Note:** TOON's sweet spot is **uniform arrays of objects** (multiple fields per row, same structure across items). For deeply nested or non-uniform data, JSON may be more efficient.
 
 #### Real-World Impact
 
@@ -113,13 +118,19 @@ contact_456	Jane Smith	jane@example.com	72	warm-lead
 
 | Metric | Without TOON | With TOON | Savings |
 |--------|--------------|-----------|---------|
-| Avg Request Size | 25 KB | 12 KB | 52% |
-| Tokens per Request | ~6,250 | ~3,000 | 52% |
-| Monthly Tokens | 62.5M | 30M | 32.5M |
-| Monthly Cost (GPT-4) | $1,875 | $900 | **$975/mo** |
-| **Annual Savings** | - | - | **$11,700/yr** 🎉 |
+| Avg Request Size | 25 KB | 15 KB | 40% |
+| Tokens per Request | ~6,250 | ~3,750 | 40% |
+| Monthly Tokens | 62.5M | 37.5M | 25M |
+| Monthly Cost (GPT-4) | $1,875 | $1,125 | **$750/mo** |
+| **Annual Savings** | - | - | **$9,000/yr** 🎉 |
 
 *Based on GPT-4 pricing: $0.03 per 1K input tokens*
+
+**Official Benchmarks (from TOON repository):**
+- **Mixed-Structure Track:** 21.8% fewer tokens vs formatted JSON (289,901 → 226,613 tokens)
+- **Flat-Only Track:** 58.8% fewer tokens vs formatted JSON (164,255 → 67,696 tokens)
+- **Retrieval Accuracy:** 73.9% accuracy vs JSON's 69.7% while using 39.6% fewer tokens
+- Token counts measured using GPT-5 `o200k_base` tokenizer
 
 ### Where TOON is Used
 
@@ -257,52 +268,83 @@ The following services have AI/LLM use cases and can benefit from TOON:
 #### Encoding Process
 
 1. **Input Data** (JavaScript objects/arrays)
-2. **Field Extraction** - Identifies all unique keys
-3. **Header Creation** - Generates tab-separated header row
-4. **Array Marking** - Adds `#count` markers for arrays
-5. **Data Serialization** - Converts values to tab-separated rows
-6. **Metrics Calculation** - Compares TOON size vs JSON size
-7. **Output** - Returns TOON string + savings metrics
+2. **Field Extraction** - Identifies all unique keys in array objects
+3. **Header Creation** - Generates header with length marker and field list: `items[N]{field1,field2}:`
+4. **Tabular Detection** - Checks if array objects have identical primitive fields
+5. **Data Serialization** - Converts values to delimited rows (comma/tab/pipe)
+6. **Intelligent Quoting** - Quotes strings only when necessary (delimiter-aware)
+7. **Metrics Calculation** - Compares TOON size vs JSON size
+8. **Output** - Returns TOON string + savings metrics
+
+**TOON Syntax Rules:**
+- **Objects:** Key-value pairs with `: ` separator, indentation-based nesting
+- **Primitive Arrays:** Inline format with length: `tags[3]: admin,ops,dev`
+- **Tabular Arrays:** Header + rows: `users[2]{id,name}: 1,Alice 2,Bob`
+- **Quoting:** Minimal - only for empty strings, leading/trailing spaces, values containing delimiter/colon/quotes, or values that look like booleans/numbers
+- **Delimiters:** Comma (default), tab (`\t`), or pipe (`|`) - explicitly shown in header for non-comma
 
 #### Example Transformation
 
 **Input (JavaScript):**
 ```javascript
-const contacts = [
-  { id: '123', name: 'John', score: 85, tags: ['hot', 'vip'] },
-  { id: '456', name: 'Jane', score: 72, tags: ['warm'] }
-];
+const data = {
+  contacts: [
+    { id: '123', name: 'John', score: 85 },
+    { id: '456', name: 'Jane', score: 72 }
+  ]
+};
 ```
 
-**Step 1: Extract Fields**
-```
-Fields: id, name, score, tags
-```
+**Step 1: Detect Tabular Structure**
+- All objects in `contacts` array have identical primitive fields: `id`, `name`, `score`
+- Tabular format applies
 
 **Step 2: Create Header**
+```toon
+contacts[2]{id,name,score}:
 ```
-contacts	#2
-id	name	score	tags	#2	#1
-```
+- `[2]` = array length (2 items)
+- `{id,name,score}` = field names (order matches data)
+- `:` = header terminator
 
-**Step 3: Serialize Data**
+**Step 3: Serialize Data Rows**
+```toon
+contacts[2]{id,name,score}:
+  123,John,85
+  456,Jane,72
 ```
-contacts	#2
-id	name	score	tags	#2	#1
-123	John	85	hot	vip
-456	Jane	72	warm
-```
+- Each row is indented 2 spaces
+- Values separated by delimiter (comma is default)
+- No quotes needed (simple strings/numbers)
 
 **Step 4: Calculate Savings**
 ```javascript
+// JSON size: ~110 bytes (formatted with 2-space indent)
+// TOON size: ~60 bytes
 {
-  originalSize: 156,
-  toonSize: 78,
-  bytesSaved: 78,
-  percentageSaved: 50,
-  estimatedTokensSaved: 19,
-  estimatedCostSavings: 0.00057
+  originalSize: 110,
+  toonSize: 60,
+  bytesSaved: 50,
+  percentageSaved: 45.5,
+  estimatedTokensSaved: 12,  // ~4 chars per token
+  estimatedCostSavings: 0.00036  // @ $0.03/1K tokens
 }
+```
+
+**Alternative Delimiters for More Savings:**
+
+Using tab delimiter (`\t`) - often more token-efficient:
+```toon
+contacts[2	]{id	name	score}:
+  123	John	85
+  456	Jane	72
+```
+
+Using pipe delimiter (`|`) with length marker:
+```toon
+contacts[#2|]{id|name|score}:
+  123|John|85
+  456|Jane|72
 ```
 
 ### Adding TOON to New Services
