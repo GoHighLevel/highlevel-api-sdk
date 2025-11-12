@@ -85,7 +85,6 @@ export interface LeadScoringOptions {
   useLLM?: boolean;                     // Enable LLM-powered scoring (requires API key)
   llmModel?: 'gpt-4' | 'gpt-3.5-turbo' | 'claude-3-opus' | 'claude-3-sonnet';
   includeEnrichedData?: boolean;        // Include full enriched contact data
-  exportFormat?: 'json' | 'toon';       // Export format (TOON for LLM efficiency)
 }
 
 /**

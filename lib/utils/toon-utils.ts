@@ -1,4 +1,4 @@
-import { encode } from '@toon-format/toon';
+ import { encode } from '@toon-format/toon';
 
 /**
  * TOON Utility Functions

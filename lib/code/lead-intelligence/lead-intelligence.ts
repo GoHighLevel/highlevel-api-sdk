@@ -1,7 +1,7 @@
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as Models from './models/lead-intelligence';
 import { buildUrl, extractParams, getAuthToken, RequestConfig } from '../../utils/request-utils';
-import { encodeToTOON, toTOON } from '../../utils/toon-utils';
+import { encodeToTOON, toTOON, TokenSavings } from '../../utils/toon-utils';
 
 /**
  * Lead Intelligence Service
@@ -118,20 +118,18 @@ export class LeadIntelligence {
 
   /**
    * Analyze historical conversion patterns using LLM
-   * @param locationId - Location ID
-   * @param dateRange - Date range for historical data
+   * @param options - Options including locationId and dateRange
    * @returns Conversion patterns and insights
    */
   async analyzeConversionPatterns(
-    locationId: string,
-    dateRange: { startDate: string; endDate: string }
+    options: { locationId: string; dateRange: { startDate: string; endDate: string } }
   ): Promise<Models.ConversionPatterns> {
     if (!this.llmProvider) {
       throw new Error('LLM provider required for pattern analysis. Set provider with setLLMProvider()');
     }
 
     // Get historical conversion data
-    const conversions = await this.getHistoricalConversions(locationId, dateRange);
+    const conversions = await this.getHistoricalConversions(options.locationId, options.dateRange);
 
     // Export in TOON format for 40-60% token savings using shared utility
     const toonData = toTOON(conversions, {
@@ -267,7 +265,7 @@ export class LeadIntelligence {
   exportToTOON(
     scores: Models.ScoredContact[],
     options?: Models.TOONExportOptions
-  ): { toonData: string; savings: any } {
+  ): { toonData: string; savings: TokenSavings } {
     return encodeToTOON(scores, {
       delimiter: options?.delimiter || '\t',
       lengthMarker: options?.lengthMarker !== false

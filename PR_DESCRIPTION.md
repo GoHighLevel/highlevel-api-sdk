@@ -94,8 +94,7 @@ console.log(`Found ${result.scores.length} qualified leads`);
 const result = await ghl.leadIntelligence.scoreContacts({
   locationId: 'loc_123',
   useLLM: true,
-  llmModel: 'gpt-4',
-  exportFormat: 'toon'
+  llmModel: 'gpt-4'
 });
 
 console.log(`Tokens saved: ${result.tokensSaved}`);
