@@ -228,14 +228,12 @@ export class LeadIntelligence {
       .sort((a, b) => b.conversionRate - a.conversionRate)
       .slice(0, 10);
 
-    // Score distribution
-    const ranges = ['0-20', '21-40', '41-60', '61-80', '81-100'];
+    // Score distribution (aligned with lead segmentation: Cold 0-39, Warm 40-69, Hot 70-100)
+    const ranges = ['0-39', '40-69', '70-100'];
     const counts = [
-      scores.filter(s => s.score <= 20).length,
-      scores.filter(s => s.score > 20 && s.score <= 40).length,
-      scores.filter(s => s.score > 40 && s.score <= 60).length,
-      scores.filter(s => s.score > 60 && s.score <= 80).length,
-      scores.filter(s => s.score > 80).length
+      scores.filter(s => s.score <= 39).length,
+      scores.filter(s => s.score >= 40 && s.score <= 69).length,
+      scores.filter(s => s.score >= 70 && s.score <= 100).length
     ];
 
     return {
