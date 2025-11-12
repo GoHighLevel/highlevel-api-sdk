@@ -34,6 +34,7 @@ import { Surveys } from './code/surveys/surveys';
 import { Users } from './code/users/users';
 import { VoiceAi } from './code/voice-ai/voice-ai';
 import { Workflows } from './code/workflows/workflows';
+import { LeadIntelligence } from './code/lead-intelligence/lead-intelligence';
 import { SessionStorage, MemorySessionStorage, type ISessionData } from './storage';
 import { Logger, LogLevelType } from './logging';
 import { WebhookManager } from './webhook';
@@ -144,6 +145,9 @@ export class HighLevel {
   public users!: Users;
   public voiceAi!: VoiceAi;
   public workflows!: Workflows;
+  
+  // Lead Intelligence (AI-powered scoring)
+  public leadIntelligence!: LeadIntelligence;
   
   // Webhook manager
   public webhooks!: WebhookManager;
@@ -830,6 +834,8 @@ export class HighLevel {
     this.voiceAi = new VoiceAi(this.httpClient);
     // Create workflows service with the shared HTTP client
     this.workflows = new Workflows(this.httpClient);
+    // Create leadIntelligence service with the shared HTTP client
+    this.leadIntelligence = new LeadIntelligence(this.httpClient);
     
     // Initialize webhook manager
     this.webhooks = new WebhookManager(this.logger, this.sessionStorage, this.oauth);

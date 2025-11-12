@@ -259,6 +259,191 @@ const campaigns = await ghl.campaigns.getCampaigns({
 });
 ```
 
+### Lead Intelligence (AI-Powered Scoring) 🚀 NEW
+
+Score leads and predict conversions using rules-based + optional LLM-powered analysis with **40-60% token savings** via TOON format integration.
+
+#### Basic Lead Scoring
+```typescript
+// Score all leads in a location
+const result = await ghl.leadIntelligence.scoreContacts({
+  locationId: 'your-location-id',
+  minScore: 70,  // Only return hot leads (70+)
+  limit: 100
+});
+
+console.log(`Processed ${result.totalProcessed} leads`);
+console.log(`Found ${result.successful} hot leads`);
+
+result.scores.forEach(lead => {
+  console.log(`Contact ${lead.contactId}: Score ${lead.score}/100`);
+  console.log(`  Engagement: ${lead.factors.engagement}/40`);
+  console.log(`  Behavioral: ${lead.factors.behavioral}/30`);
+  console.log(`  Recency: ${lead.factors.recency}/30`);
+  console.log(`  Conversion Probability: ${(lead.prediction?.conversionProbability * 100).toFixed(1)}%`);
+});
+```
+
+#### LLM-Powered Scoring (40-60% Token Savings with TOON)
+```typescript
+// Set up LLM provider (example with OpenAI-compatible API)
+import { Configuration, OpenAIApi } from 'openai';
+
+const llmProvider = {
+  async scoreLeads(toonData: string, options?: any) {
+    const openai = new OpenAIApi(new Configuration({
+      apiKey: process.env.OPENAI_API_KEY
+    }));
+
+    const prompt = `Analyze these leads and score them 0-100 based on conversion likelihood:
+${toonData}
+
+Return JSON array with: contactId, score (0-100), reasoning`;
+
+    const response = await openai.createChatCompletion({
+      model: options?.model || 'gpt-4',
+      messages: [{ role: 'user', content: prompt }]
+    });
+
+    return JSON.parse(response.data.choices[0].message?.content || '[]');
+  }
+};
+
+ghl.leadIntelligence.setLLMProvider(llmProvider);
+
+// Score with LLM (uses TOON format internally = 40-60% fewer tokens!)
+const result = await ghl.leadIntelligence.scoreContacts({
+  locationId: 'your-location-id',
+  useLLM: true,
+  llmModel: 'gpt-4',
+  includeEnrichedData: true
+});
+
+console.log(`✅ Token savings: ${result.tokensSaved} tokens saved with TOON format!`);
+console.log(`💰 Cost savings: ~${(result.tokensSaved! * 0.00003).toFixed(2)} USD saved`);
+```
+
+#### Get Lead Insights
+```typescript
+const insights = await ghl.leadIntelligence.getLeadInsights(
+  'your-location-id',
+  {
+    startDate: '2024-01-01',
+    endDate: '2024-12-31'
+  }
+);
+
+console.log(`Total Leads: ${insights.totalLeads}`);
+console.log(`🔥 Hot Leads (70+): ${insights.hotLeads}`);
+console.log(`🌡️  Warm Leads (40-69): ${insights.warmLeads}`);
+console.log(`❄️  Cold Leads (<40): ${insights.coldLeads}`);
+console.log(`📊 Average Score: ${insights.averageScore.toFixed(1)}`);
+console.log(`💯 Conversion Rate: ${(insights.conversionRate * 100).toFixed(1)}%`);
+
+console.log('\nTop Performing Tags:');
+insights.topPerformingTags.forEach((tag, idx) => {
+  console.log(`${idx + 1}. ${tag.tag}: ${(tag.conversionRate * 100).toFixed(1)}% conversion`);
+});
+```
+
+#### Predict Deal Close Probability
+```typescript
+const prediction = await ghl.leadIntelligence.predictDealClose('opportunity-id');
+
+console.log(`Close Probability: ${(prediction.closeProbability * 100).toFixed(1)}%`);
+console.log(`Confidence: ${(prediction.confidence * 100).toFixed(1)}%`);
+console.log(`Estimated Close Date: ${prediction.estimatedCloseDate}`);
+console.log(`Estimated Value: $${prediction.estimatedValue}`);
+
+console.log('\n⚠️ Risk Factors:');
+prediction.riskFactors.forEach(risk => console.log(`  - ${risk}`));
+
+console.log('\n✅ Accelerators:');
+prediction.accelerators.forEach(accel => console.log(`  - ${accel}`));
+
+console.log('\n💡 Recommended Actions:');
+prediction.recommendedActions.forEach(action => console.log(`  - ${action}`));
+```
+
+#### Export to TOON Format for LLM Processing
+```typescript
+// Score leads
+const result = await ghl.leadIntelligence.scoreContacts({
+  locationId: 'your-location-id'
+});
+
+// Export to TOON format (40-60% smaller than JSON!)
+const { toonData } = ghl.leadIntelligence.exportToTOON(result.scores, {
+  delimiter: '\t',      // Tab-separated for max efficiency
+  lengthMarker: true    // Add # prefix to array lengths
+});
+
+// Send to your LLM for further analysis
+// TOON format = 40-60% fewer tokens = 40-60% lower API costs!
+console.log('TOON format data:', toonData);
+```
+
+### Using TOON Utilities for ANY AI Service 🎯
+
+The SDK provides shared TOON utilities that **ANY service** can use to reduce LLM token costs by 30-60%:
+
+```typescript
+import {
+  encodeToTOON,
+  prepareContactsForLLM,
+  formatSavingsReport,
+  calculateMonthlySavings
+} from '@gohighlevel/api-client';
+
+// Example: Prepare contacts for AI analysis
+const contacts = await ghl.contacts.searchContacts({ locationId: 'loc-123' });
+
+const { toonData, savings } = prepareContactsForLLM(
+  contacts.contacts,
+  ['id', 'name', 'email', 'phone', 'tags'] // Only include needed fields
+);
+
+console.log(formatSavingsReport(savings));
+// Output:
+// 📊 TOON Format Savings Report:
+//    Original Size: 25,000 bytes
+//    TOON Size: 10,000 bytes
+//    Saved: 15,000 bytes (60.0%)
+//    
+// 💰 Cost Savings:
+//    Tokens Saved: ~3,750 tokens
+//    Cost Saved: ~$0.1125 USD
+
+// Send to your LLM provider (OpenAI, Claude, etc.)
+const analysis = await yourLLMProvider.analyze(toonData);
+
+// Calculate potential monthly savings
+const monthlySavings = calculateMonthlySavings(
+  1000, // 1000 API calls per month
+  25000, // 25KB average data size
+  50 // 50% average savings
+);
+
+console.log(`💰 Monthly savings: $${monthlySavings.monthlyCostSavings.toFixed(2)}`);
+console.log(`💰 Yearly savings: $${monthlySavings.yearlyCostSavings.toFixed(2)}`);
+```
+
+**Available TOON Utilities:**
+- `encodeToTOON(data, options)` - Convert any data with automatic savings calculation
+- `toTOON(data, options)` - Simple conversion without metrics
+- `prepareContactsForLLM(contacts, fields)` - Optimize contacts for LLM
+- `prepareOpportunitiesForLLM(opportunities, fields)` - Optimize deals for LLM
+- `prepareConversationsForLLM(conversations, fields)` - Optimize messages for LLM
+- `formatSavingsReport(savings)` - Pretty-print savings metrics
+- `calculateMonthlySavings(requests, avgSize, savingsPercent)` - ROI calculator
+
+**Use Cases for TOON in Other Services:**
+- **Conversations** - Analyze chat histories with AI sentiment analysis
+- **Voice AI** - Process call transcriptions with LLM
+- **Campaigns** - AI-powered campaign performance analysis
+- **Workflows** - Optimize workflow triggers with AI
+- **Emails** - AI email content analysis and suggestions
+
 ## Error Handling
 
 The SDK uses a custom `GHLError` class that provides detailed error information:
@@ -348,6 +533,7 @@ The SDK provides access to all HighLevel API services:
 - **forms** - Form management
 - **funnels** - Funnel operations
 - **invoices** - Invoice management
+- **leadIntelligence** - AI-powered lead scoring and predictive analytics with TOON integration (40-60% token savings)
 - **links** - Link management
 - **locations** - Location management
 - **marketplace** - Marketplace operations
