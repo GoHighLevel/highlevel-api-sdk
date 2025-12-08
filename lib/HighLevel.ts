@@ -641,12 +641,15 @@ export class HighLevel {
           // Try to extract resourceId from the original request using stored security requirements
           const securityRequirements = originalRequest.__secutiryRequirements || [];
           const preferredTokenType = originalRequest.__preferredTokenType;
+          // Even if the data was originally passed in as a plain object, it will be stringified by axios in the intercepter.
+          // See https://github.com/axios/axios/issues/4994
+          const originalData = typeof originalRequest.data === "string" ? JSON.parse(originalRequest.data) : originalRequest.data;
           
           const resourceId = this.extractResourceId(
             securityRequirements,
             originalRequest.headers || {},
             { ...originalRequest.params || {}, ...originalRequest.__pathParams || {} },
-            originalRequest.data || {},
+            originalData || {},
             preferredTokenType
           );
           
