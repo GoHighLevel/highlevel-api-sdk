@@ -1,3 +1,9 @@
+## v2.3.0 - 2026-05-01
+
+### SDK changes
+
+- feat: ed25519 signature support added in webhook, axios version bumped (f58cb4f)
+
 ## v2.2.2 - 2025-11-07
 
 ### Specs changes
