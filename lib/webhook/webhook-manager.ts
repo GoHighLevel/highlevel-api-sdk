@@ -78,27 +78,42 @@ export class WebhookManager {
         (req as any).skippedSignatureVerification = false;
         (req as any).isSignatureValid = false;
 
-        // Verify webhook signature
-        const signature = req.headers['x-wh-signature'] as string;
-        const publicKey = process.env.WEBHOOK_PUBLIC_KEY;
+        const requestBody = req.body as InstallWebhookRequest;
 
-        if (signature && publicKey) {
-          const payload = JSON.stringify(req.body);
-          const isValid = this.verifySignature(payload, signature, publicKey);
+        const ghlSignature = req.headers['x-ghl-signature'] as string;
+        const whSignature = req.headers['x-wh-signature'] as string;
+        const payload = JSON.stringify(req.body);
+
+        const ed25519PublicKey = process.env.WEBHOOK_SIGNATURE_PUBLIC_KEY;
+        const publicKey = process.env.WEBHOOK_PUBLIC_KEY;
+        if (ghlSignature && ed25519PublicKey) {
+          const isValid = this.verifyEd25519Signature(
+            payload,
+            ghlSignature,
+            ed25519PublicKey
+          );
 
           (req as any).isSignatureValid = isValid;
-
           if (!isValid) {
-            this.logger.warn('Invalid webhook signature');
+            this.logger.warn('Invalid webhook signature from x-ghl-signature');
+            return next();
+          }
+        } else if (whSignature && publicKey) {
+          const isValid = this.verifySignature(payload, whSignature, publicKey);
+
+          (req as any).isSignatureValid = isValid;
+          if (!isValid) {
+            this.logger.warn('Invalid webhook signature from x-wh-signature');
             return next();
           }
         } else {
           this.logger.warn(
-            'Skipping signature verification - missing signature or public key'
+            'Skipping signature verification - no supported webhook signature header found or missing public key'
           );
           (req as any).skippedSignatureVerification = true;
+          return next();
         }
-        const requestBody = req.body as InstallWebhookRequest;
+
         const companyId = requestBody.companyId;
         const locationId = requestBody.locationId;
         switch (requestBody.type) {
@@ -146,6 +161,35 @@ export class WebhookManager {
       return verifier.verify(publicKey, signature, 'base64');
     } catch (error) {
       this.logger.error('Error verifying webhook signature:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Verify webhook signature using Ed25519 public key
+   * @param payload - The JSON stringified request body
+   * @param signature - The signature from x-ghl-signature header
+   * @param publicKey - The public key from environment variable
+   * @returns True if signature is valid, false otherwise
+   */
+  public verifyEd25519Signature(
+    payload: string,
+    signature: string,
+    publicKey: string
+  ): boolean {
+    try {
+      this.logger.debug('Verifying webhook Ed25519 signature');
+      
+      const signatureBuffer = Buffer.from(signature, 'base64');
+      const payloadBuffer = Buffer.from(payload, 'utf8');
+      return crypto.verify(
+        null,
+        payloadBuffer,
+        { key: publicKey },
+        signatureBuffer
+      );
+    } catch (error) {
+      this.logger.error('Error verifying webhook Ed25519 signature:', error);
       return false;
     }
   }

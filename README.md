@@ -185,9 +185,21 @@ app.post('/webhooks/ghl', async (req, res) => {
 
 // you can also use SDK to verify signature
 ghl.webhooks.verifySignature(payload, signature, ghlPublicKey)
+ghl.webhooks.verifyEd25519Signature(payload, signature, newGhlPublicKey)
 ```
 
 The SDK automatically handles signature verification, if it is valid then you will get the flag `isSignatureValid` as true.
+
+Use these environment variables for webhook signature verification in your application:
+
+- `x-ghl-signature` (Ed25519, preferred): set `WEBHOOK_SIGNATURE_PUBLIC_KEY` in environment variable
+- `x-wh-signature` (legacy fallback): set `WEBHOOK_PUBLIC_KEY` in environment variable
+
+Verification order is:
+1. If `x-ghl-signature` is present, SDK validates it using `WEBHOOK_SIGNATURE_PUBLIC_KEY` and does not fall back to `x-wh-signature`.
+2. If `x-ghl-signature` is absent, SDK checks `x-wh-signature` using `WEBHOOK_PUBLIC_KEY`.
+
+For `INSTALL` and `UNINSTALL` webhooks, if the required signature header or corresponding public key is missing, SDK skips processing those events.
 
 ## Usage Examples
 
@@ -238,7 +250,7 @@ try {
 #### Locations
 ```typescript
 // Get all locations
-const locations = await ghl.locations.getLocations();
+const locations = await ghl.locations.searchLocations();
 
 // As getLocation supports both agency and location token, you can pass which token you want to use using preferredTokenType
 const location = await ghl.locations.getLocation(
