@@ -61,6 +61,7 @@ export interface UserSchema {
   roles?: RoleSchema;
   deleted?: boolean;
   lcPhone?: any;
+  platformLanguage?: string;
 }
 
 export interface SearchUserSuccessfulResponseDto {
@@ -70,7 +71,7 @@ export interface SearchUserSuccessfulResponseDto {
 
 export interface FilterByEmailDto {
   companyId: string;
-  emails: string[];
+  emails: string;
   deleted?: boolean;
   skip?: string;
   limit?: string;
@@ -93,6 +94,7 @@ export interface UserSuccessfulResponseDto {
   scopes?: string;
   roles?: RoleSchema;
   lcPhone?: any;
+  platformLanguage?: string;
 }
 
 export interface CreateUserDto {
@@ -109,13 +111,14 @@ export interface CreateUserDto {
   scopes?: string[];
   scopesAssignedToOnly?: string[];
   profilePhoto?: string;
+  twilioPhone?: any;
+  platformLanguage?: string;
 }
 
 export interface UpdateUserDto {
   firstName?: string;
   lastName?: string;
   email?: string;
-  emailChangeOTP?: string;
   password?: string;
   phone?: string;
   type?: string;
@@ -126,6 +129,8 @@ export interface UpdateUserDto {
   scopes?: string[];
   scopesAssignedToOnly?: string[];
   profilePhoto?: string;
+  twilioPhone?: any;
+  platformLanguage?: string;
 }
 
 export interface DeleteUserSuccessfulResponseDto {

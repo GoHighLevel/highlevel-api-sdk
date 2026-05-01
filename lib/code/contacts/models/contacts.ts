@@ -3,75 +3,6 @@
 export interface SearchBodyV2DTO {
 }
 
-export interface CustomFieldSchema {
-  id?: string;
-  value?: string;
-}
-
-export interface DndSettingSchema {
-  status: string;
-  message?: string;
-  code?: string;
-}
-
-export interface DndSettingsSchema {
-  Call?: DndSettingSchema;
-  Email?: DndSettingSchema;
-  SMS?: DndSettingSchema;
-  WhatsApp?: DndSettingSchema;
-  GMB?: DndSettingSchema;
-  FB?: DndSettingSchema;
-}
-
-export interface ContactOpportunity {
-  id: string;
-  pipeline_id: string;
-  pipeline_stage_id: string;
-  monetary_value: number;
-  status: string;
-}
-
-export interface Contact {
-  id?: string;
-  phoneLabel?: string;
-  country?: string;
-  address?: string;
-  source?: string;
-  type?: string;
-  locationId?: string;
-  dnd?: boolean;
-  state?: string;
-  businessName?: string;
-  customFields?: CustomFieldSchema[];
-  tags?: string[];
-  dateAdded?: string;
-  additionalEmails?: string[];
-  phone?: string;
-  companyName?: string;
-  additionalPhones?: string[];
-  dateUpdated?: string;
-  city?: string;
-  dateOfBirth?: string;
-  firstName?: string;
-  lastName?: string;
-  firstNameLowerCase?: string;
-  lastNameLowerCase?: string;
-  email?: string;
-  assignedTo?: string;
-  followers?: string[];
-  validEmail?: boolean;
-  dndSettings?: DndSettingsSchema;
-  opportunities?: ContactOpportunity[];
-  postalCode?: string;
-  businessId?: string;
-  searchAfter?: string[];
-}
-
-export interface SearchContactSuccessResponseDto {
-  contacts: Contact[];
-  total: number;
-}
-
 export interface TaskSchema {
   id?: string;
   title?: string;
@@ -156,6 +87,9 @@ export interface GetNoteSchema {
   userId?: string;
   dateAdded?: string;
   contactId?: string;
+  title?: string;
+  color?: string;
+  pinned?: boolean;
 }
 
 export interface GetNotesListSuccessfulResponseDto {
@@ -165,10 +99,21 @@ export interface GetNotesListSuccessfulResponseDto {
 export interface NotesDTO {
   userId?: string;
   body: string;
+  title?: string;
+  color?: string;
+  pinned?: boolean;
 }
 
 export interface GetCreateUpdateNoteSuccessfulResponseDto {
   note?: GetNoteSchema;
+}
+
+export interface UpdateNoteDTO {
+  userId?: string;
+  body?: string;
+  title?: string;
+  color?: string;
+  pinned?: boolean;
 }
 
 export interface DeleteNoteSuccessfulResponseDto {
@@ -197,6 +142,26 @@ export interface ContactsBusinessUpdate {
 export interface ContactsBulkUpateResponse {
   success: boolean;
   ids: string[];
+}
+
+export interface DndSettingSchema {
+  status: string;
+  message?: string;
+  code?: string;
+}
+
+export interface DndSettingsSchema {
+  Call?: DndSettingSchema;
+  Email?: DndSettingSchema;
+  SMS?: DndSettingSchema;
+  WhatsApp?: DndSettingSchema;
+  GMB?: DndSettingSchema;
+  FB?: DndSettingSchema;
+}
+
+export interface CustomFieldSchema {
+  id?: string;
+  value?: string;
 }
 
 export interface AttributionSource {
@@ -365,6 +330,7 @@ export interface CreateContactDto {
   tags?: string[];
   customFields?: any[];
   source?: string;
+  dateOfBirth?: any;
   country?: string;
   companyName?: string;
   assignedTo?: string;
@@ -431,6 +397,7 @@ export interface UpdateContactDto {
   tags?: string[];
   customFields?: any[];
   source?: string;
+  dateOfBirth?: any;
   country?: string;
   assignedTo?: string;
 }
@@ -460,9 +427,11 @@ export interface UpsertContactDto {
   tags?: string[];
   customFields?: any[];
   source?: string;
+  dateOfBirth?: any;
   country?: string;
   companyName?: string;
   assignedTo?: string;
+  createNewIfDuplicateAllowed?: boolean;
 }
 
 export interface UpsertContactsSuccessfulResponseDto {

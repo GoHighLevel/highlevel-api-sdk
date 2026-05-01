@@ -38,10 +38,12 @@ export class Conversations {
       scoreProfile?: string;
       scoreProfileMin?: number;
       scoreProfileMax?: number;
+      startDate?: number;
+      endDate?: number;
     },
     options?: AxiosRequestConfig
   ): Promise<Models.SendConversationResponseDto> {
-    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'query'},{name: 'contactId', in: 'query'},{name: 'assignedTo', in: 'query'},{name: 'followers', in: 'query'},{name: 'mentions', in: 'query'},{name: 'query', in: 'query'},{name: 'sort', in: 'query'},{name: 'startAfterDate', in: 'query'},{name: 'id', in: 'query'},{name: 'limit', in: 'query'},{name: 'lastMessageType', in: 'query'},{name: 'lastMessageAction', in: 'query'},{name: 'lastMessageDirection', in: 'query'},{name: 'status', in: 'query'},{name: 'sortBy', in: 'query'},{name: 'sortScoreProfile', in: 'query'},{name: 'scoreProfile', in: 'query'},{name: 'scoreProfileMin', in: 'query'},{name: 'scoreProfileMax', in: 'query'}];
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'query'},{name: 'contactId', in: 'query'},{name: 'assignedTo', in: 'query'},{name: 'followers', in: 'query'},{name: 'mentions', in: 'query'},{name: 'query', in: 'query'},{name: 'sort', in: 'query'},{name: 'startAfterDate', in: 'query'},{name: 'id', in: 'query'},{name: 'limit', in: 'query'},{name: 'lastMessageType', in: 'query'},{name: 'lastMessageAction', in: 'query'},{name: 'lastMessageDirection', in: 'query'},{name: 'status', in: 'query'},{name: 'sortBy', in: 'query'},{name: 'sortScoreProfile', in: 'query'},{name: 'scoreProfile', in: 'query'},{name: 'scoreProfileMin', in: 'query'},{name: 'scoreProfileMax', in: 'query'},{name: 'startDate', in: 'query'},{name: 'endDate', in: 'query'}];
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
@@ -173,6 +175,184 @@ export class Conversations {
   }
 
   /**
+   * Get All Custom Subtypes
+   * Get all custom subtypes for a location
+   */
+  async getAllCustomSubtypes(
+    params: {
+      locationId: string;
+    },
+    options?: AxiosRequestConfig
+  ): Promise<any> {
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = [];
+    
+    const config: RequestConfig = {
+      method: 'GET',
+      url: buildUrl('/conversations/preferences/custom-subtypes', extracted.path),
+      params: extracted.query,
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
+      __pathParams: extracted.path,
+      ...options
+    };
+
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
+    }
+
+    const response: AxiosResponse<any> = await this.client.request(config);
+    return response.data;
+  }
+
+  /**
+   * Create Custom Subtype
+   * Create a new custom subtype for a location. Requires agency or account admin role.
+   */
+  async createCustomSubtype(
+    params: {
+      locationId: string;
+    },
+    requestBody: Models.CreateCustomSubtypeDto,
+    options?: AxiosRequestConfig
+  ): Promise<any> {
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = [];
+    
+    const config: RequestConfig = {
+      method: 'POST',
+      url: buildUrl('/conversations/preferences/custom-subtypes', extracted.path),
+      params: extracted.query,
+      headers: { ...extracted.header, ...options?.headers },
+      data: requestBody,
+      __secutiryRequirements: requirements,
+      
+      __pathParams: extracted.path,
+      ...options
+    };
+
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
+    }
+
+    const response: AxiosResponse<any> = await this.client.request(config);
+    return response.data;
+  }
+
+  /**
+   * Update Custom Subtype
+   * Update or archive a custom subtype. Requires agency or account admin role.
+   */
+  async updateCustomSubtype(
+    params: {
+      id: string;
+      locationId: string;
+    },
+    requestBody: Models.UpdateCustomSubtypeDto,
+    options?: AxiosRequestConfig
+  ): Promise<any> {
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'id', in: 'path'},{name: 'locationId', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = [];
+    
+    const config: RequestConfig = {
+      method: 'PUT',
+      url: buildUrl('/conversations/preferences/custom-subtypes/{id}', extracted.path),
+      params: extracted.query,
+      headers: { ...extracted.header, ...options?.headers },
+      data: requestBody,
+      __secutiryRequirements: requirements,
+      
+      __pathParams: extracted.path,
+      ...options
+    };
+
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
+    }
+
+    const response: AxiosResponse<any> = await this.client.request(config);
+    return response.data;
+  }
+
+  /**
+   * Get Contact Unsubscription Status
+   * Get all subscription statuses for a contact (all emails or specific email)
+   */
+  async getContactUnsubscriptionStatus(
+    params: {
+      locationId: string;
+      contactId: string;
+      email?: string;
+    },
+    options?: AxiosRequestConfig
+  ): Promise<any> {
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'query'},{name: 'contactId', in: 'query'},{name: 'email', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = [];
+    
+    const config: RequestConfig = {
+      method: 'GET',
+      url: buildUrl('/conversations/preferences/unsubscriptions/status', extracted.path),
+      params: extracted.query,
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
+      __pathParams: extracted.path,
+      ...options
+    };
+
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
+    }
+
+    const response: AxiosResponse<any> = await this.client.request(config);
+    return response.data;
+  }
+
+  /**
+   * User Subscription Change
+   * Process subscription change initiated by a user (admin/agent). Supports individual custom subscription changes and resub all functionality. Legal forms are automatically created for user-initiated resubscribe actions on custom subscriptions.
+   */
+  async userSubscriptionChange(
+    requestBody: Models.UserSubscriptionChangeDto,
+    options?: AxiosRequestConfig
+  ): Promise<any> {
+    const paramDefs: Array<{name: string, in: string}> = [];
+    const extracted = extractParams(null, paramDefs);
+    const requirements: string[] = [];
+    
+    const config: RequestConfig = {
+      method: 'POST',
+      url: buildUrl('/conversations/preferences/unsubscriptions/user-change', extracted.path),
+      params: extracted.query,
+      headers: { ...extracted.header, ...options?.headers },
+      data: requestBody,
+      __secutiryRequirements: requirements,
+      
+      __pathParams: extracted.path,
+      ...options
+    };
+
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
+    }
+
+    const response: AxiosResponse<any> = await this.client.request(config);
+    return response.data;
+  }
+
+  /**
    * Get email by Id
    * Get email by Id
    */
@@ -236,6 +416,50 @@ export class Conversations {
     }
 
     const response: AxiosResponse<Models.CancelScheduledResponseDto> = await this.client.request(config);
+    return response.data;
+  }
+
+  /**
+   * Export messages by location ID
+   * Export messages for a specific location with cursor-based pagination support. Response includes messageType (string), source, and subType fields. The channel parameter is optional - if not provided, all non-email message types will be returned including activity messages (opportunity updates, appointments, etc.).
+   */
+  async exportMessagesByLocation(
+    params: {
+      locationId: string;
+      limit?: number;
+      cursor?: string;
+      sortBy?: string;
+      sortOrder?: string;
+      conversationId?: string;
+      contactId?: string;
+      channel?: string;
+      startDate?: string;
+      endDate?: string;
+    },
+    options?: AxiosRequestConfig
+  ): Promise<Models.ExportMessagesResponseDto> {
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'query'},{name: 'limit', in: 'query'},{name: 'cursor', in: 'query'},{name: 'sortBy', in: 'query'},{name: 'sortOrder', in: 'query'},{name: 'conversationId', in: 'query'},{name: 'contactId', in: 'query'},{name: 'channel', in: 'query'},{name: 'startDate', in: 'query'},{name: 'endDate', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
+    
+    const config: RequestConfig = {
+      method: 'GET',
+      url: buildUrl('/conversations/messages/export', extracted.path),
+      params: extracted.query,
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
+      __pathParams: extracted.path,
+      ...options
+    };
+
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
+    }
+
+    const response: AxiosResponse<Models.ExportMessagesResponseDto> = await this.client.request(config);
     return response.data;
   }
 
@@ -409,6 +633,39 @@ export class Conversations {
   }
 
   /**
+   * Send a review reply to Google My Business
+   * Post a reply to a customer review on Google My Business
+   */
+  async sendReviewReply(
+    requestBody: Models.SendReviewReplyDto,
+    options?: AxiosRequestConfig
+  ): Promise<Models.SendMessageResponseDto> {
+    const paramDefs: Array<{name: string, in: string}> = [];
+    const extracted = extractParams(null, paramDefs);
+    const requirements: string[] = ["bearer"];
+    
+    const config: RequestConfig = {
+      method: 'POST',
+      url: buildUrl('/conversations/messages/review-reply', extracted.path),
+      params: extracted.query,
+      headers: { ...extracted.header, ...options?.headers },
+      data: requestBody,
+      __secutiryRequirements: requirements,
+      
+      __pathParams: extracted.path,
+      ...options
+    };
+
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
+    }
+
+    const response: AxiosResponse<Models.SendMessageResponseDto> = await this.client.request(config);
+    return response.data;
+  }
+
+  /**
    * Cancel a scheduled message.
    * Post the messageId for the API to delete a scheduled message. &lt;br /&gt;
    */
@@ -477,6 +734,72 @@ export class Conversations {
   }
 
   /**
+   * Initiate file upload to GCS
+   * Generates a signed URL for direct file upload to Google Cloud Storage. Returns a signed URL valid for 15 minutes. Upload file via PUT request, then call /complete to finalize.
+   */
+  async initiateFileUpload(
+    requestBody: Models.InitiateFileUploadDto,
+    options?: AxiosRequestConfig
+  ): Promise<Models.InitiateFileUploadResponseDto> {
+    const paramDefs: Array<{name: string, in: string}> = [];
+    const extracted = extractParams(null, paramDefs);
+    const requirements: string[] = ["bearer"];
+    
+    const config: RequestConfig = {
+      method: 'POST',
+      url: buildUrl('/conversations/messages/upload/initiate', extracted.path),
+      params: extracted.query,
+      headers: { ...extracted.header, ...options?.headers },
+      data: requestBody,
+      __secutiryRequirements: requirements,
+      
+      __pathParams: extracted.path,
+      ...options
+    };
+
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
+    }
+
+    const response: AxiosResponse<Models.InitiateFileUploadResponseDto> = await this.client.request(config);
+    return response.data;
+  }
+
+  /**
+   * Complete file upload
+   * Validates the uploaded file in GCS and returns the public URL. Call this endpoint after successfully uploading the file to the signed URL.
+   */
+  async completeFileUpload(
+    requestBody: Models.CompleteFileUploadDto,
+    options?: AxiosRequestConfig
+  ): Promise<Models.CompleteFileUploadResponseDto> {
+    const paramDefs: Array<{name: string, in: string}> = [];
+    const extracted = extractParams(null, paramDefs);
+    const requirements: string[] = ["bearer"];
+    
+    const config: RequestConfig = {
+      method: 'POST',
+      url: buildUrl('/conversations/messages/upload/complete', extracted.path),
+      params: extracted.query,
+      headers: { ...extracted.header, ...options?.headers },
+      data: requestBody,
+      __secutiryRequirements: requirements,
+      
+      __pathParams: extracted.path,
+      ...options
+    };
+
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
+    }
+
+    const response: AxiosResponse<Models.CompleteFileUploadResponseDto> = await this.client.request(config);
+    return response.data;
+  }
+
+  /**
    * Update message status
    * Post the necessary fields for the API to update message status.
    */
@@ -509,6 +832,42 @@ export class Conversations {
     }
 
     const response: AxiosResponse<Models.SendMessageResponseDto> = await this.client.request(config);
+    return response.data;
+  }
+
+  /**
+   * Add message attachments
+   * Set attachments on an existing message (replaces existing). Maximum 5 URLs. Supported for TYPE_CUSTOM_CALL (34) and TYPE_CALL (1) with subType EXTERNAL_CALL.
+   */
+  async addMessageAttachments(
+    params: {
+      messageId: string;
+    },
+    requestBody: Models.AddMessageAttachmentsDto,
+    options?: AxiosRequestConfig
+  ): Promise<any> {
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'messageId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
+    
+    const config: RequestConfig = {
+      method: 'PUT',
+      url: buildUrl('/conversations/messages/{messageId}/attachments', extracted.path),
+      params: extracted.query,
+      headers: { ...extracted.header, ...options?.headers },
+      data: requestBody,
+      __secutiryRequirements: requirements,
+      
+      __pathParams: extracted.path,
+      ...options
+    };
+
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
+    }
+
+    const response: AxiosResponse<any> = await this.client.request(config);
     return response.data;
   }
 

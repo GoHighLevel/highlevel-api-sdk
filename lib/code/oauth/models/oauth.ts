@@ -23,6 +23,8 @@ export interface GetAccessCodeSuccessfulResponseDto {
   userId: string;
   planId?: string;
   isBulkInstallation?: boolean;
+  installToFutureLocations?: boolean;
+  approveAllLocations?: boolean;
 }
 
 export interface GetLocationAccessCodeBodyDto {
@@ -38,6 +40,8 @@ export interface GetLocationAccessTokenSuccessfulResponseDto {
   locationId?: string;
   planId?: string;
   userId: string;
+  appId?: string;
+  versionId?: string;
 }
 
 export interface InstalledLocationSchema {
@@ -45,6 +49,8 @@ export interface InstalledLocationSchema {
   name: string;
   address: string;
   isInstalled?: boolean;
+  versionId?: string;
+  installedAt?: string;
 }
 
 export interface GetInstalledLocationsSuccessfulResponseDto {

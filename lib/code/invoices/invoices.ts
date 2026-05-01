@@ -670,6 +670,42 @@ export class Invoices {
   }
 
   /**
+   * Get Invoice Settings
+   * Get the invoice settings for the given location
+   */
+  async getInvoiceSettings(
+    params: {
+      altId: string;
+      altType: string;
+    },
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
+  ): Promise<Models.GetInvoiceSettingsResponseDto> {
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'altId', in: 'query'},{name: 'altType', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["Location-Access","Agency-Access"];
+    
+    const config: RequestConfig = {
+      method: 'GET',
+      url: buildUrl('/invoices/settings', extracted.path),
+      params: extracted.query,
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
+      ...options
+    };
+
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {}, options?.preferredTokenType);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
+    }
+
+    const response: AxiosResponse<Models.GetInvoiceSettingsResponseDto> = await this.client.request(config);
+    return response.data;
+  }
+
+  /**
    * Get invoice
    * API to get invoice by invoice id
    */

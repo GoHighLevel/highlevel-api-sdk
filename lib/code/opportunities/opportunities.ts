@@ -14,6 +14,47 @@ export class Opportunities {
   }
 
   /**
+   * Get lost reason
+   * Get lost reason
+   */
+  async getLostReason(
+    params: {
+      locationId: string;
+      name?: string;
+      deleted?: boolean;
+      query?: string;
+      skip?: number;
+      limit?: number;
+      getCount?: boolean;
+    },
+    options?: AxiosRequestConfig
+  ): Promise<Models.LostReasonsResponseSchema> {
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'query'},{name: 'name', in: 'query'},{name: 'deleted', in: 'query'},{name: 'query', in: 'query'},{name: 'skip', in: 'query'},{name: 'limit', in: 'query'},{name: 'getCount', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
+    
+    const config: RequestConfig = {
+      method: 'GET',
+      url: buildUrl('/opportunities/lost-reason', extracted.path),
+      params: extracted.query,
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
+      __pathParams: extracted.path,
+      ...options
+    };
+
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
+    }
+
+    const response: AxiosResponse<Models.LostReasonsResponseSchema> = await this.client.request(config);
+    return response.data;
+  }
+
+  /**
    * Search Opportunity
    * Search Opportunity
    */
@@ -64,6 +105,39 @@ export class Opportunities {
     }
 
     const response: AxiosResponse<Models.SearchSuccessfulResponseDto> = await this.client.request(config);
+    return response.data;
+  }
+
+  /**
+   * Search Opportunities
+   * Search Opportunities based on combinations of advanced filters. Documentation Link - https://doc.clickup.com/8631005/d/h/87cpx-424216/7bf11bc9b94f80f
+   */
+  async searchOpportunitiesAdvanced(
+    requestBody: Models.OpportunitySearchBodyDTO,
+    options?: AxiosRequestConfig
+  ): Promise<Models.PostSearchSuccessfulResponseDto> {
+    const paramDefs: Array<{name: string, in: string}> = [];
+    const extracted = extractParams(null, paramDefs);
+    const requirements: string[] = ["bearer"];
+    
+    const config: RequestConfig = {
+      method: 'POST',
+      url: buildUrl('/opportunities/search', extracted.path),
+      params: extracted.query,
+      headers: { ...extracted.header, ...options?.headers },
+      data: requestBody,
+      __secutiryRequirements: requirements,
+      
+      __pathParams: extracted.path,
+      ...options
+    };
+
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
+    }
+
+    const response: AxiosResponse<Models.PostSearchSuccessfulResponseDto> = await this.client.request(config);
     return response.data;
   }
 
@@ -315,16 +389,17 @@ export class Opportunities {
 
   /**
    * Remove Followers
-   * Remove Followers
+   * Allows removal of one or all followers from an opportunity.
    */
   async removeFollowersOpportunity(
     params: {
       id: string;
+      isRemoveAllFollowers?: boolean;
     },
     requestBody: Models.FollowersDTO,
     options?: AxiosRequestConfig
   ): Promise<Models.DeleteFollowersSuccessfulResponseDto> {
-    const paramDefs: Array<{name: string, in: string}> = [{name: 'id', in: 'path'}];
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'id', in: 'path'},{name: 'isRemoveAllFollowers', in: 'query'}];
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     

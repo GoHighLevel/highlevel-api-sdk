@@ -1168,6 +1168,256 @@ export class Calendars {
   }
 
   /**
+   * List user availability schedule
+   * Retrieve user availability schedules based on various filters including location, calendar, and user. Supports pagination.
+   */
+  async getAllSchedules(
+    params: {
+      locationId: string;
+      userId: string;
+      calendarId?: string;
+      skip?: number;
+      limit?: number;
+    },
+    options?: AxiosRequestConfig
+  ): Promise<Models.GetAllSchedulesResponseDTO> {
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'query'},{name: 'userId', in: 'query'},{name: 'calendarId', in: 'query'},{name: 'skip', in: 'query'},{name: 'limit', in: 'query'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
+    
+    const config: RequestConfig = {
+      method: 'GET',
+      url: buildUrl('/calendars/schedules/search', extracted.path),
+      params: extracted.query,
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
+      __pathParams: extracted.path,
+      ...options
+    };
+
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
+    }
+
+    const response: AxiosResponse<Models.GetAllSchedulesResponseDTO> = await this.client.request(config);
+    return response.data;
+  }
+
+  /**
+   * Get user availability schedule
+   * Retrieve a specific schedule by its unique identifier. Returns detailed information including rules, timezone, and associated calendars/users.
+   */
+  async getScheduleById(
+    params: {
+      id: string;
+    },
+    options?: AxiosRequestConfig
+  ): Promise<Models.ScheduleResponseDTO> {
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'id', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
+    
+    const config: RequestConfig = {
+      method: 'GET',
+      url: buildUrl('/calendars/schedules/{id}', extracted.path),
+      params: extracted.query,
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
+      __pathParams: extracted.path,
+      ...options
+    };
+
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
+    }
+
+    const response: AxiosResponse<Models.ScheduleResponseDTO> = await this.client.request(config);
+    return response.data;
+  }
+
+  /**
+   * Update user availability schedule
+   * Modify an existing schedule by updating its rules, timezone, and name All fields are optional - only provided fields will be updated.
+   */
+  async updateSchedule(
+    params: {
+      id: string;
+    },
+    requestBody: Models.UpdateScheduleDTO,
+    options?: AxiosRequestConfig
+  ): Promise<Models.ScheduleResponseDTO> {
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'id', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
+    
+    const config: RequestConfig = {
+      method: 'PUT',
+      url: buildUrl('/calendars/schedules/{id}', extracted.path),
+      params: extracted.query,
+      headers: { ...extracted.header, ...options?.headers },
+      data: requestBody,
+      __secutiryRequirements: requirements,
+      
+      __pathParams: extracted.path,
+      ...options
+    };
+
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
+    }
+
+    const response: AxiosResponse<Models.ScheduleResponseDTO> = await this.client.request(config);
+    return response.data;
+  }
+
+  /**
+   * Delete user availability schedule
+   * Permanently remove a schedule and all its associated rules. This action cannot be undone.
+   */
+  async deleteSchedule(
+    params: {
+      id: string;
+    },
+    options?: AxiosRequestConfig
+  ): Promise<any> {
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'id', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
+    
+    const config: RequestConfig = {
+      method: 'DELETE',
+      url: buildUrl('/calendars/schedules/{id}', extracted.path),
+      params: extracted.query,
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
+      __pathParams: extracted.path,
+      ...options
+    };
+
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
+    }
+
+    const response: AxiosResponse<any> = await this.client.request(config);
+    return response.data;
+  }
+
+  /**
+   * Create user availability schedule
+   * Create new schedule with specified rules, timezone, location, user and calendar associations.
+   */
+  async createSchedule(
+    requestBody: Models.CreateScheduleDTO,
+    options?: AxiosRequestConfig
+  ): Promise<Models.ScheduleResponseDTO> {
+    const paramDefs: Array<{name: string, in: string}> = [];
+    const extracted = extractParams(null, paramDefs);
+    const requirements: string[] = ["bearer"];
+    
+    const config: RequestConfig = {
+      method: 'POST',
+      url: buildUrl('/calendars/schedules', extracted.path),
+      params: extracted.query,
+      headers: { ...extracted.header, ...options?.headers },
+      data: requestBody,
+      __secutiryRequirements: requirements,
+      
+      __pathParams: extracted.path,
+      ...options
+    };
+
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
+    }
+
+    const response: AxiosResponse<Models.ScheduleResponseDTO> = await this.client.request(config);
+    return response.data;
+  }
+
+  /**
+   * Apply user availability schedule to a calendar
+   * Associates a calendar with the given schedule by adding the calendarId to a schedule
+   */
+  async addCalendarToSchedule(
+    params: {
+      id: string;
+      calendarId: string;
+    },
+    options?: AxiosRequestConfig
+  ): Promise<any> {
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'id', in: 'path'},{name: 'calendarId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
+    
+    const config: RequestConfig = {
+      method: 'PUT',
+      url: buildUrl('/calendars/schedules/{id}/associations/{calendarId}', extracted.path),
+      params: extracted.query,
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
+      __pathParams: extracted.path,
+      ...options
+    };
+
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
+    }
+
+    const response: AxiosResponse<any> = await this.client.request(config);
+    return response.data;
+  }
+
+  /**
+   * Remove user availability schedule from a calendar
+   * Removes the association between a team calendar and the given schedule by removing the calendarId from the schedule
+   */
+  async removeCalendarFromSchedule(
+    params: {
+      id: string;
+      calendarId: string;
+    },
+    options?: AxiosRequestConfig
+  ): Promise<any> {
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'id', in: 'path'},{name: 'calendarId', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
+    
+    const config: RequestConfig = {
+      method: 'DELETE',
+      url: buildUrl('/calendars/schedules/{id}/associations/{calendarId}', extracted.path),
+      params: extracted.query,
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
+      __pathParams: extracted.path,
+      ...options
+    };
+
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
+    }
+
+    const response: AxiosResponse<any> = await this.client.request(config);
+    return response.data;
+  }
+
+  /**
    * Get Calendars
    * Get all calendars in a location.
    */

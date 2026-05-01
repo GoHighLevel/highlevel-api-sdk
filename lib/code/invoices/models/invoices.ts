@@ -54,7 +54,7 @@ export interface TipsConfigurationDto {
 }
 
 export interface LateFeesFrequencyDto {
-  intervalCount?: number;
+  intervalCount: number;
   interval: string;
 }
 
@@ -442,6 +442,7 @@ export interface AutoPaymentDetailsDto {
   bacsDirectDebit?: BacsDirectDebitDTO;
   becsDirectDebit?: BecsDirectDebitDTO;
   cardId?: string;
+  provider?: any;
 }
 
 export interface ScheduleInvoiceScheduleDto {
@@ -580,6 +581,108 @@ export interface GenerateInvoiceNumberResponseDto {
   invoiceNumber?: number;
 }
 
+export interface CustomNotificationItemDto {
+  enabled: boolean;
+  emailTemplate: string;
+  smsTemplate: string;
+  fromName?: string;
+  fromEmail?: string;
+  emailSubject?: string;
+  defaultEmailTemplateId?: string;
+}
+
+export interface CustomNotificationDto {
+  customerSendInvoice: CustomNotificationItemDto;
+  teamPaymentSuccess: CustomNotificationItemDto;
+  customerPaymentSuccess: CustomNotificationItemDto;
+  teamAutoPaymentSuccess: CustomNotificationItemDto;
+  customerAutoPaymentSuccess: CustomNotificationItemDto;
+  teamPaymentFailure: CustomNotificationItemDto;
+  customerPaymentFailure: CustomNotificationItemDto;
+  teamAutoPaymentFailure: CustomNotificationItemDto;
+  customerAutoPaymentFailure: CustomNotificationItemDto;
+  customerAutoPaymentInfo: CustomNotificationItemDto;
+  customerAutoPaymentAmountChanged: CustomNotificationItemDto;
+  teamAutoPaymentSkip: CustomNotificationItemDto;
+  teamRecurringSendInvoiceFailed: CustomNotificationItemDto;
+  customerSendEstimate: CustomNotificationItemDto;
+  teamEstimateAccepted: CustomNotificationItemDto;
+  teamEstimateDeclined: CustomNotificationItemDto;
+}
+
+export interface Address {
+  addressLine1?: string;
+  addressLine2?: string;
+  city?: string;
+  state?: string;
+  countryCode?: string;
+  postalCode?: string;
+}
+
+export interface InvoiceSettingsBusinessDetailsDto {
+  logoUrl?: string;
+  name: string;
+  phoneNo?: string;
+  address?: Address;
+  website?: string;
+  customValues?: string[];
+}
+
+export interface InvoiceSettingsSenderConfigurationDto {
+  fromName?: string;
+  fromEmail?: string;
+}
+
+export interface InvoiceProductSettingsDto {
+  enableImportProductDescription?: boolean;
+  descriptionOptional?: boolean;
+}
+
+export interface ReminderDto {
+  enabled: boolean;
+  emailTemplate: string;
+  smsTemplate: string;
+  emailSubject: string;
+  reminderId: string;
+  reminderName: string;
+  reminderTime: string;
+  intervalType: string;
+  maxReminders: number;
+  reminderInvoiceCondition: string;
+  reminderNumber: number;
+  startTime?: string;
+  endTime?: string;
+  timezone?: string;
+}
+
+export interface ReminderSettingsDto {
+  defaultEmailTemplateId: string;
+  reminders: ReminderDto[];
+}
+
+export interface GetInvoiceSettingsResponseDto {
+  altId?: string;
+  altType?: string;
+  termsNote?: string;
+  estimatesTermsNote?: string;
+  title?: string;
+  estimatesTitle?: string;
+  invoiceNumberPrefix?: string;
+  estimateNumberPrefix?: string;
+  dueAfterXDays?: number;
+  estimatesExpireAfterXDays?: number;
+  minimumPercentagePartialPayment?: number;
+  customFields?: string[];
+  customNotification?: any;
+  businessDetails?: any;
+  senderConfiguration?: any;
+  productSettings?: any;
+  reminderSettings?: any;
+  lateFeesConfiguration?: any;
+  tipsConfiguration?: any;
+  paymentMethods?: any;
+}
+
 export interface CreateInvoiceDto {
   altId: string;
   altType: string;
@@ -642,28 +745,6 @@ export interface TotalSummaryDto {
 }
 
 export interface ReminderExecutionDetailsList {
-}
-
-export interface ReminderDto {
-  enabled: boolean;
-  emailTemplate: string;
-  smsTemplate: string;
-  emailSubject: string;
-  reminderId: string;
-  reminderName: string;
-  reminderTime: string;
-  intervalType: string;
-  maxReminders: number;
-  reminderInvoiceCondition: string;
-  reminderNumber: number;
-  startTime?: string;
-  endTime?: string;
-  timezone?: string;
-}
-
-export interface ReminderSettingsDto {
-  defaultEmailTemplateId: string;
-  reminders: ReminderDto[];
 }
 
 export interface RemindersConfigurationDto {
@@ -814,11 +895,6 @@ export interface VoidInvoiceResponseDto {
   paymentSchedule?: any;
 }
 
-export interface InvoiceSettingsSenderConfigurationDto {
-  fromName?: string;
-  fromEmail?: string;
-}
-
 export interface SendInvoiceDto {
   altId: string;
   altType: string;
@@ -861,6 +937,22 @@ export interface PatchInvoiceStatsLastViewedDto {
   invoiceId: string;
 }
 
+export interface EstimateLineItemDto {
+  name: string;
+  description?: string;
+  productId?: string;
+  priceId?: string;
+  currency: string;
+  amount: number;
+  qty: number;
+  taxes?: ItemTaxDto[];
+  automaticTaxCategoryId?: string;
+  isSetupFeeItem?: boolean;
+  type?: string;
+  taxInclusive?: boolean;
+  attachments?: string[];
+}
+
 export interface SendEstimateDto {
   altId: string;
   altType: string;
@@ -898,7 +990,7 @@ export interface CreateEstimatesDto {
   name: string;
   businessDetails: BusinessDetailsDto;
   currency: string;
-  items: InvoiceItemDto[];
+  items: EstimateLineItemDto[];
   liveMode?: boolean;
   discount: DiscountDto;
   termsNotes?: string;
@@ -975,7 +1067,7 @@ export interface UpdateEstimateDto {
   name: string;
   businessDetails: BusinessDetailsDto;
   currency: string;
-  items: InvoiceItemDto[];
+  items: EstimateLineItemDto[];
   liveMode?: boolean;
   discount: DiscountDto;
   termsNotes?: string;

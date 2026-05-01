@@ -64,11 +64,11 @@ export class Users {
    */
   async filterUsersByEmail(
     requestBody: Models.FilterByEmailDto,
-    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
+    options?: AxiosRequestConfig
   ): Promise<Models.SearchUserSuccessfulResponseDto> {
     const paramDefs: Array<{name: string, in: string}> = [];
     const extracted = extractParams(null, paramDefs);
-    const requirements: string[] = ["Agency-Access","Location-Access"];
+    const requirements: string[] = ["Agency-Access"];
     
     const config: RequestConfig = {
       method: 'POST',
@@ -77,12 +77,12 @@ export class Users {
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
       __secutiryRequirements: requirements,
-      __preferredTokenType: options?.preferredTokenType,
+      
       __pathParams: extracted.path,
       ...options
     };
 
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody, options?.preferredTokenType);
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
     if (authToken) {
       config.headers = { ...config.headers, Authorization: authToken };
     }
@@ -193,7 +193,8 @@ export class Users {
 
   /**
    * Get User by Location
-   * Get User by Location
+   * Deprecated. Use &#x60;GET /users/search&#x60; instead. Pass &#x60;locationId&#x60; as a query parameter to filter results by location, along with the required &#x60;companyId&#x60; and other search filters as needed.
+   * @deprecated Deprecated. Use &#x60;GET /users/search&#x60; instead instead.
    */
   async getUserByLocation(
     params: {
