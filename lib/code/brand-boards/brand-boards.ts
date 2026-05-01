@@ -1,12 +1,12 @@
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import * as Models from './models/businesses';
+import * as Models from './models/brand-boards';
 import { buildUrl, extractParams, getAuthToken, RequestConfig } from '../../utils/request-utils';
 
 /**
- * Businesses Service
- * Documentation for business API
+ * BrandBoards Service
+ * Documentation for Brand Boards API
  */
-export class Businesses {
+export class BrandBoards {
   private client: AxiosInstance;
 
   constructor(httpClient: AxiosInstance) {
@@ -14,23 +14,99 @@ export class Businesses {
   }
 
   /**
-   * Update Business
-   * Update Business
+   * Get Brand Boards
+   * Retrieves all Brand Boards for a specific location
    */
-  async updateBusiness(
+  async getBrandBoardsByLocation(
     params: {
-      businessId: string;
+      locationId: string;
+      limit?: number;
+      offset?: number;
+      search?: string;
+      deleted?: boolean;
     },
-    requestBody: Models.UpdateBusinessDto,
     options?: AxiosRequestConfig
-  ): Promise<Models.UpdateBusinessResponseDto> {
-    const paramDefs: Array<{name: string, in: string}> = [{name: 'businessId', in: 'path'}];
+  ): Promise<Models.GetBrandBoardsByLocationSuccessDTO> {
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'},{name: 'limit', in: 'query'},{name: 'offset', in: 'query'},{name: 'search', in: 'query'},{name: 'deleted', in: 'query'},];
     const extracted = extractParams(params, paramDefs);
-    const requirements: string[] = ["bearer"];
+    const requirements: string[] = ["Location-Access"];
     
     const config: RequestConfig = {
-      method: 'PUT',
-      url: buildUrl('/businesses/{businessId}', extracted.path),
+      method: 'GET',
+      url: buildUrl('/brand-boards/{locationId}', extracted.path),
+      params: extracted.query,
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
+      __pathParams: extracted.path,
+      ...options
+    };
+
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
+    }
+
+    const response: AxiosResponse<Models.GetBrandBoardsByLocationSuccessDTO> = await this.client.request(config);
+    return response.data;
+  }
+
+  /**
+   * Get Brand Board
+   * Retrieves a specific Brand Board by its ID
+   */
+  async getBrandBoardById(
+    params: {
+      locationId: string;
+      id: string;
+    },
+    options?: AxiosRequestConfig
+  ): Promise<Models.GetBrandBoardSuccessDTO> {
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'},{name: 'id', in: 'path'},];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["Location-Access"];
+    
+    const config: RequestConfig = {
+      method: 'GET',
+      url: buildUrl('/brand-boards/{locationId}/{id}', extracted.path),
+      params: extracted.query,
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
+      __pathParams: extracted.path,
+      ...options
+    };
+
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
+    }
+
+    const response: AxiosResponse<Models.GetBrandBoardSuccessDTO> = await this.client.request(config);
+    return response.data;
+  }
+
+  /**
+   * Update a Brand Board
+   * Updates an existing Brand Board
+   */
+  async updateBrandBoard(
+    params: {
+      locationId: string;
+      id: string;
+    },
+    requestBody: Models.UpdateBrandBoardBody,
+    options?: AxiosRequestConfig
+  ): Promise<Models.GetBrandBoardSuccessDTO> {
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'},{name: 'id', in: 'path'},];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["Location-Access"];
+    
+    const config: RequestConfig = {
+      method: 'PATCH',
+      url: buildUrl('/brand-boards/{locationId}/{id}', extracted.path),
       params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
@@ -45,27 +121,28 @@ export class Businesses {
       config.headers = { ...config.headers, Authorization: authToken };
     }
 
-    const response: AxiosResponse<Models.UpdateBusinessResponseDto> = await this.client.request(config);
+    const response: AxiosResponse<Models.GetBrandBoardSuccessDTO> = await this.client.request(config);
     return response.data;
   }
 
   /**
-   * Delete Business
-   * Delete Business
+   * Delete a Brand Board
+   * Deletes a Brand Board
    */
-  async deleteBusiness(
+  async deleteBrandBoard(
     params: {
-      businessId: string;
+      locationId: string;
+      id: string;
     },
     options?: AxiosRequestConfig
-  ): Promise<Models.DeleteBusinessResponseDto> {
-    const paramDefs: Array<{name: string, in: string}> = [{name: 'businessId', in: 'path'}];
+  ): Promise<Models.GetBrandBoardSuccessDTO> {
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'},{name: 'id', in: 'path'},];
     const extracted = extractParams(params, paramDefs);
-    const requirements: string[] = ["bearer"];
+    const requirements: string[] = ["Location-Access"];
     
     const config: RequestConfig = {
       method: 'DELETE',
-      url: buildUrl('/businesses/{businessId}', extracted.path),
+      url: buildUrl('/brand-boards/{locationId}/{id}', extracted.path),
       params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
@@ -80,97 +157,25 @@ export class Businesses {
       config.headers = { ...config.headers, Authorization: authToken };
     }
 
-    const response: AxiosResponse<Models.DeleteBusinessResponseDto> = await this.client.request(config);
+    const response: AxiosResponse<Models.GetBrandBoardSuccessDTO> = await this.client.request(config);
     return response.data;
   }
 
   /**
-   * Get Business
-   * Get Business
+   * Create a new brand board
+   * Creates a new brand board with logos, colors, and fonts
    */
-  async getBusiness(
-    params: {
-      businessId: string;
-    },
+  async createBrandBoard(
+    requestBody: Models.CreateBrandBoardParam,
     options?: AxiosRequestConfig
-  ): Promise<Models.GetBusinessByIdResponseDto> {
-    const paramDefs: Array<{name: string, in: string}> = [{name: 'businessId', in: 'path'}];
-    const extracted = extractParams(params, paramDefs);
-    const requirements: string[] = ["bearer"];
-    
-    const config: RequestConfig = {
-      method: 'GET',
-      url: buildUrl('/businesses/{businessId}', extracted.path),
-      params: extracted.query,
-      headers: { ...extracted.header, ...options?.headers },
-      
-      __secutiryRequirements: requirements,
-      
-      __pathParams: extracted.path,
-      ...options
-    };
-
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
-    if (authToken) {
-      config.headers = { ...config.headers, Authorization: authToken };
-    }
-
-    const response: AxiosResponse<Models.GetBusinessByIdResponseDto> = await this.client.request(config);
-    return response.data;
-  }
-
-  /**
-   * Get Businesses by Location
-   * Get Businesses by Location
-   */
-  async getBusinessesByLocation(
-    params: {
-      locationId: string;
-      limit?: string;
-      skip?: string;
-    },
-    options?: AxiosRequestConfig
-  ): Promise<Models.GetBusinessByLocationResponseDto> {
-    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'query'},{name: 'limit', in: 'query'},{name: 'skip', in: 'query'}];
-    const extracted = extractParams(params, paramDefs);
-    const requirements: string[] = ["bearer"];
-    
-    const config: RequestConfig = {
-      method: 'GET',
-      url: buildUrl('/businesses/', extracted.path),
-      params: extracted.query,
-      headers: { ...extracted.header, ...options?.headers },
-      
-      __secutiryRequirements: requirements,
-      
-      __pathParams: extracted.path,
-      ...options
-    };
-
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
-    if (authToken) {
-      config.headers = { ...config.headers, Authorization: authToken };
-    }
-
-    const response: AxiosResponse<Models.GetBusinessByLocationResponseDto> = await this.client.request(config);
-    return response.data;
-  }
-
-  /**
-   * Create Business
-   * Create Business
-   */
-  async createBusiness(
-    requestBody: Models.CreateBusinessDto,
-    options?: AxiosRequestConfig
-  ): Promise<Models.UpdateBusinessResponseDto> {
+  ): Promise<Models.GetBrandBoardSuccessDTO> {
     const paramDefs: Array<{name: string, in: string}> = [];
     const extracted = extractParams(null, paramDefs);
-    const requirements: string[] = ["bearer"];
+    const requirements: string[] = ["Location-Access"];
     
     const config: RequestConfig = {
       method: 'POST',
-      url: buildUrl('/businesses/', extracted.path),
+      url: buildUrl('/brand-boards/', extracted.path),
       params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       data: requestBody,
@@ -185,10 +190,10 @@ export class Businesses {
       config.headers = { ...config.headers, Authorization: authToken };
     }
 
-    const response: AxiosResponse<Models.UpdateBusinessResponseDto> = await this.client.request(config);
+    const response: AxiosResponse<Models.GetBrandBoardSuccessDTO> = await this.client.request(config);
     return response.data;
   }
 
 }
 
-export default Businesses; 
+export default BrandBoards; 

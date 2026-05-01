@@ -65,6 +65,7 @@ export interface OrderResponseSchema {
   fulfillmentStatus?: string;
   onetimeProducts?: number;
   recurringProducts?: number;
+  createdBy?: string;
 }
 
 export interface ListOrdersResponseDto {
@@ -109,6 +110,7 @@ export interface GetOrderResponseSchema {
   traceId?: string;
   automaticTaxesCalculated?: boolean;
   taxCalculationProvider?: any;
+  createdBy?: string;
 }
 
 export interface CardDto {
@@ -166,36 +168,20 @@ export interface ProductVariantDto {
   options: ProductVariantOptionDto[];
 }
 
-export interface ProductMediaDto {
-  id: string;
-  title?: string;
-  url: string;
-  type: string;
-  isFeatured?: boolean;
-  priceIds?: any[][];
-}
-
 export interface ProductLabelDto {
   title: string;
   startDate?: string;
   endDate?: string;
 }
 
-export interface ProductSEODto {
-  title?: string;
-  description?: string;
-}
-
 export interface DefaultProductResponseDto {
   _id: string;
   description?: string;
   variants?: ProductVariantDto[];
-  medias?: ProductMediaDto[];
   locationId: string;
   name: string;
   productType: string;
   availableInStore?: boolean;
-  userId?: string;
   createdAt: string;
   updatedAt: string;
   statementDescriptor?: string;
@@ -204,10 +190,8 @@ export interface DefaultProductResponseDto {
   isTaxesEnabled?: boolean;
   taxes?: string[];
   automaticTaxCategoryId?: string;
-  isLabelEnabled?: boolean;
   label?: any;
   slug?: string;
-  seo?: any;
 }
 
 export interface MembershipOfferDto {
@@ -299,6 +283,7 @@ export interface TxnResponseSchema {
   amountRefunded?: number;
   paymentMethod?: any;
   fulfilledAt: string;
+  createdBy?: string;
 }
 
 export interface ListTxnsResponseDto {
@@ -336,6 +321,7 @@ export interface GetTxnResponseSchema {
   qboResponse?: any;
   traceId?: string;
   mergedFromContactId?: string;
+  createdBy?: string;
 }
 
 export interface SubscriptionResponseSchema {
@@ -362,6 +348,7 @@ export interface SubscriptionResponseSchema {
   ipAddress?: string;
   createdAt: string;
   updatedAt: string;
+  createdBy?: string;
 }
 
 export interface ListSubscriptionResponseDto {
@@ -417,6 +404,7 @@ export interface GetSubscriptionResponseSchema {
   canceledAt?: string;
   canceledBy?: string;
   traceId?: string;
+  createdBy?: string;
 }
 
 export interface ApplyToFuturePaymentsConfigDto {

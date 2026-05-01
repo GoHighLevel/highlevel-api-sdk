@@ -1,11 +1,16 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError, InternalAxiosRequestConfig } from 'axios';
+import { AdManager } from './code/ad-manager/ad-manager';
+import { AffiliateManager } from './code/affiliate-manager/affiliate-manager';
+import { AgentStudio } from './code/agent-studio/agent-studio';
 import { Associations } from './code/associations/associations';
 import { Blogs } from './code/blogs/blogs';
+import { BrandBoards } from './code/brand-boards/brand-boards';
 import { Businesses } from './code/businesses/businesses';
 import { Calendars } from './code/calendars/calendars';
 import { Campaigns } from './code/campaigns/campaigns';
 import { Companies } from './code/companies/companies';
 import { Contacts } from './code/contacts/contacts';
+import { ConversationAi } from './code/conversation-ai/conversation-ai';
 import { Conversations } from './code/conversations/conversations';
 import { Courses } from './code/courses/courses';
 import { CustomFields } from './code/custom-fields/custom-fields';
@@ -15,6 +20,7 @@ import { Emails } from './code/emails/emails';
 import { Forms } from './code/forms/forms';
 import { Funnels } from './code/funnels/funnels';
 import { Invoices } from './code/invoices/invoices';
+import { KnowledgeBase } from './code/knowledge-base/knowledge-base';
 import { Links } from './code/links/links';
 import { Locations } from './code/locations/locations';
 import { Marketplace } from './code/marketplace/marketplace';
@@ -38,6 +44,17 @@ import { SessionStorage, MemorySessionStorage, type ISessionData } from './stora
 import { Logger, LogLevelType } from './logging';
 import { WebhookManager } from './webhook';
 import { UserType } from './constants';
+
+import * as fs from 'fs';
+import * as path from 'path';
+
+let SDK_VERSION = 'unknown';
+try {
+  const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, '..', '..', 'package.json'), 'utf8')) as { version?: string };
+  SDK_VERSION = pkg.version || 'unknown';
+} catch {
+  // version unavailable
+}
 
 // Extend AxiosRequestConfig to support retry tracking and security requirements
 declare module 'axios' {
@@ -109,13 +126,18 @@ export class HighLevel {
   private logger: Logger;
   
   // Service instances
+  public adManager!: AdManager;
+  public affiliateManager!: AffiliateManager;
+  public agentStudio!: AgentStudio;
   public associations!: Associations;
   public blogs!: Blogs;
+  public brandBoards!: BrandBoards;
   public businesses!: Businesses;
   public calendars!: Calendars;
   public campaigns!: Campaigns;
   public companies!: Companies;
   public contacts!: Contacts;
+  public conversationAi!: ConversationAi;
   public conversations!: Conversations;
   public courses!: Courses;
   public customFields!: CustomFields;
@@ -125,6 +147,7 @@ export class HighLevel {
   public forms!: Forms;
   public funnels!: Funnels;
   public invoices!: Invoices;
+  public knowledgeBase!: KnowledgeBase;
   public links!: Links;
   public locations!: Locations;
   public marketplace!: Marketplace;
@@ -161,7 +184,7 @@ export class HighLevel {
 
     // Set default configuration
     this.config = {
-      apiVersion: config.apiVersion || '2021-07-28',
+      apiVersion: config.apiVersion || '2023-02-21',
       privateIntegrationToken: config.privateIntegrationToken,
       agencyAccessToken: config.agencyAccessToken,
       locationAccessToken: config.locationAccessToken,
@@ -209,7 +232,8 @@ export class HighLevel {
   private getDefaultHeaders(): Record<string, string> {
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
-      'Version': this.config.apiVersion
+      'Version': this.config.apiVersion,
+      'x-sdk-version': SDK_VERSION
     };
 
     // Priority 1: privateIntegrationToken (with Bearer prefix)
@@ -760,10 +784,18 @@ export class HighLevel {
    * Initialize all service instances with the shared HTTP client
    */
   private initializeServices(): void {
+    // Create adManager service with the shared HTTP client
+    this.adManager = new AdManager(this.httpClient);
+    // Create affiliateManager service with the shared HTTP client
+    this.affiliateManager = new AffiliateManager(this.httpClient);
+    // Create agentStudio service with the shared HTTP client
+    this.agentStudio = new AgentStudio(this.httpClient);
     // Create associations service with the shared HTTP client
     this.associations = new Associations(this.httpClient);
     // Create blogs service with the shared HTTP client
     this.blogs = new Blogs(this.httpClient);
+    // Create brandBoards service with the shared HTTP client
+    this.brandBoards = new BrandBoards(this.httpClient);
     // Create businesses service with the shared HTTP client
     this.businesses = new Businesses(this.httpClient);
     // Create calendars service with the shared HTTP client
@@ -774,6 +806,8 @@ export class HighLevel {
     this.companies = new Companies(this.httpClient);
     // Create contacts service with the shared HTTP client
     this.contacts = new Contacts(this.httpClient);
+    // Create conversationAi service with the shared HTTP client
+    this.conversationAi = new ConversationAi(this.httpClient);
     // Create conversations service with the shared HTTP client
     this.conversations = new Conversations(this.httpClient);
     // Create courses service with the shared HTTP client
@@ -792,6 +826,8 @@ export class HighLevel {
     this.funnels = new Funnels(this.httpClient);
     // Create invoices service with the shared HTTP client
     this.invoices = new Invoices(this.httpClient);
+    // Create knowledgeBase service with the shared HTTP client
+    this.knowledgeBase = new KnowledgeBase(this.httpClient);
     // Create links service with the shared HTTP client
     this.links = new Links(this.httpClient);
     // Create locations service with the shared HTTP client

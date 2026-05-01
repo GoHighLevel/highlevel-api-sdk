@@ -1,22 +1,5 @@
 // Conversations Models
 
-export interface BadRequestDTO {
-  statusCode?: number;
-  message?: string;
-}
-
-export interface UnauthorizedDTO {
-  statusCode?: number;
-  message?: string;
-  error?: string;
-}
-
-export interface ForbiddenDTO {
-  statusCode?: number;
-  message?: string;
-  error?: string;
-}
-
 export interface StartAfterNumberSchema {
   startAfterDate?: number;
 }
@@ -108,6 +91,36 @@ export interface DeleteConversationSuccessfulResponse {
   success: boolean;
 }
 
+export interface CreateCustomSubtypeDto {
+  name: string;
+  description?: string;
+  channel: string;
+  language: string;
+}
+
+export interface UpdateCustomSubtypeDto {
+  name?: string;
+  description?: string;
+  archived?: boolean;
+  resubscription_legal_form_id?: string;
+}
+
+export interface SubscriptionActionDto {
+  type: string;
+  subtype_name?: string;
+  subtype_id?: string;
+  subtype_status: string;
+}
+
+export interface UserSubscriptionChangeDto {
+  locationId: string;
+  contactId: string;
+  email: string;
+  subscription_action: any;
+  legal_reason?: string;
+  legal_description?: string;
+}
+
 export interface GetEmailMessageResponseDto {
   id: string;
   altId?: string;
@@ -145,7 +158,6 @@ export interface MessageMeta {
 
 export interface GetMessageResponseDto {
   id: string;
-  altId?: string;
   type: number;
   messageType: string;
   locationId: string;
@@ -164,12 +176,33 @@ export interface GetMessageResponseDto {
   chatWidgetId?: string;
 }
 
+export interface ExportMessagesResponseDto {
+  messages: GetMessageResponseDto[];
+  nextCursor?: string;
+  total: number;
+}
+
 export interface GetMessagesByConversationResponseDto {
-  messages: any;
+  lastMessageId: string;
+  nextPage: boolean;
+  messages: GetMessageResponseDto[];
+}
+
+export interface ForwardConfigDto {
+  isForwarded: boolean;
+  forwardWholeThread?: boolean;
+  messageId?: string;
+  emailMessageId?: string;
+  sourceContactId?: string;
+  sourceConversationId?: string;
+  toEmail?: string;
+  recipientContactId?: string;
+  recipientConversationId?: string;
 }
 
 export interface SendMessageBodyDto {
   type: string;
+  subType: any;
   contactId: string;
   appointmentId?: string;
   attachments?: string[];
@@ -185,9 +218,25 @@ export interface SendMessageBodyDto {
   scheduledTimestamp?: number;
   conversationProviderId?: string;
   emailTo?: string;
+  customSubtypeId?: string;
   emailReplyMode?: string;
   fromNumber?: string;
   toNumber?: string;
+  forward?: any;
+  status: string;
+  usesNativeSchedulingAi?: boolean;
+  optimizationPeriod?: string;
+}
+
+export interface ForwardResponseDto {
+  forwardWholeThread?: boolean;
+  messageId?: string;
+  emailMessageId?: string;
+  sourceContactId?: string;
+  sourceConversationId?: string;
+  forwardToEmail?: string;
+  recipientContactId?: string;
+  recipientConversationId?: string;
 }
 
 export interface SendMessageResponseDto {
@@ -196,6 +245,8 @@ export interface SendMessageResponseDto {
   messageId: string;
   messageIds?: string[];
   msg?: string;
+  forwardData?: any;
+  status: string;
 }
 
 export interface CallDataDTO {
@@ -209,6 +260,7 @@ export interface ProcessMessageBodyDto {
   attachments?: string[];
   message?: string;
   conversationId: string;
+  contactId: string;
   conversationProviderId: string;
   html?: string;
   subject?: string;
@@ -243,19 +295,59 @@ export interface ProcessOutboundMessageBodyDto {
   call?: any;
 }
 
-export interface UploadFilesDto {
+export interface SendReviewReplyDto {
   conversationId: string;
   locationId: string;
+  message: string;
+}
+
+export interface UploadFilesDto {
+  conversationId: string;
+  contactId: string;
+  locationId: string;
   attachmentUrls: string[];
+  chatServiceSid?: string;
+  isGroupSms?: string;
 }
 
 export interface UploadFilesResponseDto {
   uploadedFiles: any;
+  twilioMediaSids?: string[];
 }
 
 export interface UploadFilesErrorResponseDto {
   status: number;
   message: string;
+}
+
+export interface InitiateFileUploadDto {
+  locationId: string;
+  conversationId: string;
+  filename: string;
+  contentType: string;
+  fileSize?: number;
+  channel: string;
+}
+
+export interface InitiateFileUploadResponseDto {
+  uploadUrl: string;
+  uploadId: string;
+  filePath: string;
+  expiresAt: number;
+  maxFileSize: number;
+}
+
+export interface CompleteFileUploadDto {
+  uploadId: string;
+  filePath: string;
+  locationId: string;
+  conversationId: string;
+  filename: string;
+}
+
+export interface CompleteFileUploadResponseDto {
+  uploadedFiles: any;
+  metadata: any;
 }
 
 export interface ErrorDto {
@@ -269,6 +361,10 @@ export interface UpdateMessageStatusDto {
   error?: any;
   emailMessageId?: string;
   recipients?: string[];
+}
+
+export interface AddMessageAttachmentsDto {
+  attachments: string[];
 }
 
 export interface GetMessageTranscriptionResponseDto {

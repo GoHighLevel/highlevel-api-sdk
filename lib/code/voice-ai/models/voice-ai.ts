@@ -32,7 +32,7 @@ export interface TranslationDTO {
 }
 
 export interface AgentCreationRequestDTO {
-  locationId?: string;
+  locationId: string;
   agentName?: string;
   businessName?: string;
   welcomeMessage?: string;
@@ -175,7 +175,7 @@ export interface CallTransferActionParameters {
   triggerPrompt: string;
   transferToType: string;
   transferToValue: string;
-  triggerMessage?: string;
+  triggerMessage: string;
   hearWhisperMessage?: boolean;
 }
 
@@ -235,23 +235,20 @@ export interface CustomActionApiDetailsDTO {
 
 export interface CustomActionParameters {
   triggerPrompt: string;
-  triggerMessage?: string;
+  triggerMessage: string;
   apiDetails: any;
   selectedPaths?: string[];
 }
 
 export interface KnowledgeBaseParameters {
-  triggerPrompt?: string;
-  triggerMessage: string;
+  triggerPrompt: string;
   knowledgeBaseId: string;
-  parameters?: CustomActionParameterDTO[];
 }
 
 export interface CallActionSchema {
   actionId?: string;
   actionType: string;
   actionName: string;
-  description?: string;
   actionParameters?: any;
   executedAt?: string;
   triggerReceivedAt?: string;

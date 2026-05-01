@@ -161,12 +161,13 @@ export class Oauth {
       versionId?: string;
       onTrial?: boolean;
       planId?: string;
+      locationId?: string;
     },
     options?: AxiosRequestConfig
   ): Promise<Models.GetInstalledLocationsSuccessfulResponseDto> {
-    const paramDefs: Array<{name: string, in: string}> = [{name: 'skip', in: 'query'},{name: 'limit', in: 'query'},{name: 'query', in: 'query'},{name: 'isInstalled', in: 'query'},{name: 'companyId', in: 'query'},{name: 'appId', in: 'query'},{name: 'versionId', in: 'query'},{name: 'onTrial', in: 'query'},{name: 'planId', in: 'query'},];
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'skip', in: 'query'},{name: 'limit', in: 'query'},{name: 'query', in: 'query'},{name: 'isInstalled', in: 'query'},{name: 'companyId', in: 'query'},{name: 'appId', in: 'query'},{name: 'versionId', in: 'query'},{name: 'onTrial', in: 'query'},{name: 'planId', in: 'query'},{name: 'locationId', in: 'query'},];
     const extracted = extractParams(params, paramDefs);
-    const requirements: string[] = ["Agency-Access"];
+    const requirements: string[] = ["Agency-Access-Only"];
     
     
     const config: RequestConfig = {

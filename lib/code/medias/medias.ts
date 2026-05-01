@@ -15,7 +15,7 @@ export class Medias {
 
   /**
    * Get List of Files/ Folders
-   * Fetches list of files and folders from the media library
+   * Fetches list of files and folders from the media storage
    */
   async fetchMediaContent(
     params: {
@@ -58,7 +58,7 @@ export class Medias {
   }
 
   /**
-   * Upload File into Media Library
+   * Upload File into Media Storage
    * If hosted is set to true then fileUrl is required. Else file is required. If adding a file, maximum allowed is 25 MB
    */
   async uploadMediaContent(
@@ -92,7 +92,7 @@ export class Medias {
 
   /**
    * Delete File or Folder
-   * Deletes specific file or folder from the media library
+   * Deletes specific file or folder from the media storage
    */
   async deleteMediaContent(
     params: {
@@ -165,7 +165,7 @@ export class Medias {
 
   /**
    * Create Folder
-   * Creates a new folder in the media library
+   * Creates a new folder in the media storage
    */
   async createMediaFolder(
     requestBody: Models.CreateFolderParams,

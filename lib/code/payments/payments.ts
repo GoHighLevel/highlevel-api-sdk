@@ -92,20 +92,21 @@ export class Payments {
     params: {
       locationId?: string;
       altId: string;
-      altType: string;
       status?: string;
+      paymentStatus?: string;
       paymentMode?: string;
       startAt?: string;
       endAt?: string;
       search?: string;
       contactId?: string;
       funnelProductIds?: string;
+      sourceId?: string;
       limit?: number;
       offset?: number;
     },
     options?: AxiosRequestConfig
   ): Promise<Models.ListOrdersResponseDto> {
-    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'query'},{name: 'altId', in: 'query'},{name: 'altType', in: 'query'},{name: 'status', in: 'query'},{name: 'paymentMode', in: 'query'},{name: 'startAt', in: 'query'},{name: 'endAt', in: 'query'},{name: 'search', in: 'query'},{name: 'contactId', in: 'query'},{name: 'funnelProductIds', in: 'query'},{name: 'limit', in: 'query'},{name: 'offset', in: 'query'}];
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'query'},{name: 'altId', in: 'query'},{name: 'status', in: 'query'},{name: 'paymentStatus', in: 'query'},{name: 'paymentMode', in: 'query'},{name: 'startAt', in: 'query'},{name: 'endAt', in: 'query'},{name: 'search', in: 'query'},{name: 'contactId', in: 'query'},{name: 'funnelProductIds', in: 'query'},{name: 'sourceId', in: 'query'},{name: 'limit', in: 'query'},{name: 'offset', in: 'query'}];
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access"];
     
@@ -200,42 +201,6 @@ export class Payments {
     }
 
     const response: AxiosResponse<Models.PostRecordOrderPaymentResponse> = await this.client.request(config);
-    return response.data;
-  }
-
-  /**
-   * migration Endpoint for Order Payment Status
-   * Process to migrate all the older orders and based on the statuses introduce the payment statuses as well
-   */
-  async postMigrateOrderPaymentStatus(
-    params: {
-      locationId?: string;
-      altId: string;
-    },
-    options?: AxiosRequestConfig
-  ): Promise<any> {
-    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'query'},{name: 'altId', in: 'query'}];
-    const extracted = extractParams(params, paramDefs);
-    const requirements: string[] = ["Location-Access"];
-    
-    const config: RequestConfig = {
-      method: 'POST',
-      url: buildUrl('/payments/orders/migrate-order-ps', extracted.path),
-      params: extracted.query,
-      headers: { ...extracted.header, ...options?.headers },
-      
-      __secutiryRequirements: requirements,
-      
-      __pathParams: extracted.path,
-      ...options
-    };
-
-    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
-    if (authToken) {
-      config.headers = { ...config.headers, Authorization: authToken };
-    }
-
-    const response: AxiosResponse<any> = await this.client.request(config);
     return response.data;
   }
 
@@ -453,10 +418,11 @@ export class Payments {
       id?: string;
       limit?: number;
       offset?: number;
+      getPaymentsCollectedCount?: boolean;
     },
     options?: AxiosRequestConfig
   ): Promise<Models.ListSubscriptionResponseDto> {
-    const paramDefs: Array<{name: string, in: string}> = [{name: 'altId', in: 'query'},{name: 'altType', in: 'query'},{name: 'entityId', in: 'query'},{name: 'paymentMode', in: 'query'},{name: 'startAt', in: 'query'},{name: 'endAt', in: 'query'},{name: 'entitySourceType', in: 'query'},{name: 'search', in: 'query'},{name: 'contactId', in: 'query'},{name: 'id', in: 'query'},{name: 'limit', in: 'query'},{name: 'offset', in: 'query'}];
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'altId', in: 'query'},{name: 'altType', in: 'query'},{name: 'entityId', in: 'query'},{name: 'paymentMode', in: 'query'},{name: 'startAt', in: 'query'},{name: 'endAt', in: 'query'},{name: 'entitySourceType', in: 'query'},{name: 'search', in: 'query'},{name: 'contactId', in: 'query'},{name: 'id', in: 'query'},{name: 'limit', in: 'query'},{name: 'offset', in: 'query'},{name: 'getPaymentsCollectedCount', in: 'query'}];
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access"];
     

@@ -233,15 +233,51 @@ export class Marketplace {
     params: {
       appId: string;
     },
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.GetInstallerDetailsResponseDTO> {
-    const paramDefs: Array<{name: string, in: string}> = [{name: 'appId', in: 'path'}];
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'appId', in: 'path'},];
     const extracted = extractParams(params, paramDefs);
-    const requirements: string[] = [];
+    const requirements: string[] = ["Location-Access-Only","Agency-Access-Only"];
     
     const config: RequestConfig = {
       method: 'GET',
       url: buildUrl('/marketplace/app/{appId}/installations', extracted.path),
+      params: extracted.query,
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      __preferredTokenType: options?.preferredTokenType,
+      __pathParams: extracted.path,
+      ...options
+    };
+
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {}, options?.preferredTokenType);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
+    }
+
+    const response: AxiosResponse<Models.GetInstallerDetailsResponseDTO> = await this.client.request(config);
+    return response.data;
+  }
+
+  /**
+   * Get rebilling config for an app subscription and usage plans
+   * Get rebilling config for an app subscription and usage plans for the authenticated sub-account. This endpoint returns the subscription and usage plans for an app.
+   */
+  async getRebillingConfigForApp(
+    params: {
+      appId: string;
+      locationId: string;
+    },
+    options?: AxiosRequestConfig
+  ): Promise<Models.GetRebillingConfigResponseDTO> {
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'appId', in: 'path'},{name: 'locationId', in: 'path'},];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["Location-Access-Only"];
+    
+    const config: RequestConfig = {
+      method: 'GET',
+      url: buildUrl('/marketplace/app/{appId}/rebilling-config/location/{locationId}', extracted.path),
       params: extracted.query,
       headers: { ...extracted.header, ...options?.headers },
       
@@ -256,7 +292,40 @@ export class Marketplace {
       config.headers = { ...config.headers, Authorization: authToken };
     }
 
-    const response: AxiosResponse<Models.GetInstallerDetailsResponseDTO> = await this.client.request(config);
+    const response: AxiosResponse<Models.GetRebillingConfigResponseDTO> = await this.client.request(config);
+    return response.data;
+  }
+
+  /**
+   * Migrate external authentication connection
+   * Migrates an external authentication connection credentials (basic or oauth2) for a specific app and location. This endpoint validates the app configuration, stores credentials safely in CRM&#x27;s native encrypted storage. With this the lifecycle of the token is managed by CRM.
+   */
+  async migrateConnection(
+    requestBody: Models.MigrateConnectionDto,
+    options?: AxiosRequestConfig
+  ): Promise<Models.MigrateConnectionResponseDto> {
+    const paramDefs: Array<{name: string, in: string}> = [];
+    const extracted = extractParams(null, paramDefs);
+    const requirements: string[] = ["Location-Access","Location-Access-Only"];
+    
+    const config: RequestConfig = {
+      method: 'POST',
+      url: buildUrl('/marketplace/external-auth/migration', extracted.path),
+      params: extracted.query,
+      headers: { ...extracted.header, ...options?.headers },
+      data: requestBody,
+      __secutiryRequirements: requirements,
+      
+      __pathParams: extracted.path,
+      ...options
+    };
+
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, requestBody);
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
+    }
+
+    const response: AxiosResponse<Models.MigrateConnectionResponseDto> = await this.client.request(config);
     return response.data;
   }
 

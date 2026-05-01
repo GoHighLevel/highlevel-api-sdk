@@ -523,7 +523,7 @@ export class Contacts {
       contactId: string;
       id: string;
     },
-    requestBody: Models.NotesDTO,
+    requestBody: Models.UpdateNoteDTO,
     options?: AxiosRequestConfig
   ): Promise<Models.GetCreateUpdateNoteSuccessfulResponseDto> {
     const paramDefs: Array<{name: string, in: string}> = [{name: 'contactId', in: 'path'},{name: 'id', in: 'path'}];
@@ -592,14 +592,11 @@ export class Contacts {
    * Allows you to update tags to multiple contacts at once, you can add or remove tags from the contacts
    */
   async createAssociation(
-    params: {
-      type: string;
-    },
     requestBody: Models.UpdateTagsDTO,
     options?: AxiosRequestConfig
   ): Promise<Models.UpdateTagsResponseDTO> {
-    const paramDefs: Array<{name: string, in: string}> = [{name: 'type', in: 'path'}];
-    const extracted = extractParams(params, paramDefs);
+    const paramDefs: Array<{name: string, in: string}> = [];
+    const extracted = extractParams(null, paramDefs);
     const requirements: string[] = [];
     
     const config: RequestConfig = {
@@ -1125,8 +1122,8 @@ export class Contacts {
    * Get Contacts
    * Get Contacts
 
- **Note:** This API endpoint is deprecated. Please use the [Search Contacts](https://highlevel.stoplight.io/docs/integrations/dbe4f3a00a106-search-contacts) endpoint instead.
-   * @deprecated deprecated. Use the [Search Contacts](https://highlevel instead.
+ **Note:** This API endpoint is deprecated. Please use the [Search Contacts](https://marketplace.gohighlevel.com/docs/ghl/contacts/search-contacts-advanced) endpoint instead.
+   * @deprecated deprecated. Use the [Search Contacts](https://marketplace instead.
    */
   async getContacts(
     params: {

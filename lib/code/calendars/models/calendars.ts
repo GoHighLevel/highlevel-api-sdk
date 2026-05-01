@@ -581,3 +581,51 @@ export interface CalendarNotificationDeleteResponseDTO {
   message: string;
 }
 
+export interface ScheduleIntervalDTO {
+  from: string;
+  to: string;
+}
+
+export interface ScheduleRuleDTO {
+  type: string;
+  intervals: ScheduleIntervalDTO[];
+  date?: string;
+  day?: string;
+}
+
+export interface ScheduleObjectResponseDTO {
+  id: string;
+  name: string;
+  locationId: string;
+  rules: ScheduleRuleDTO[];
+  timezone: string;
+  dateAdded: string;
+  dateUpdated: string;
+  userId: string;
+  calendarIds?: string[];
+  deleted: boolean;
+}
+
+export interface GetAllSchedulesResponseDTO {
+  schedules: ScheduleObjectResponseDTO[];
+}
+
+export interface ScheduleResponseDTO {
+  schedule: any;
+}
+
+export interface CreateScheduleDTO {
+  rules?: ScheduleRuleDTO[];
+  timezone: string;
+  locationId: string;
+  name: string;
+  userId: string;
+  calendarIds?: string[];
+}
+
+export interface UpdateScheduleDTO {
+  name?: string;
+  rules?: ScheduleRuleDTO[];
+  timezone?: string;
+}
+

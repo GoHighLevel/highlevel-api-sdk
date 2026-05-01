@@ -1,5 +1,18 @@
 // Opportunities Models
 
+export interface LostReasonResponseSchema {
+  id?: string;
+  name?: string;
+  locationId?: string;
+  updatedAt?: string;
+  createdAt?: string;
+}
+
+export interface LostReasonsResponseSchema {
+  lostReasons?: LostReasonResponseSchema[];
+  total?: number;
+}
+
 export interface SearchOpportunitiesContactResponseSchema {
   id?: string;
   name?: string;
@@ -32,11 +45,13 @@ export interface SearchOpportunitiesResponseSchema {
   contactId?: string;
   locationId?: string;
   contact?: SearchOpportunitiesContactResponseSchema;
-  notes?: string[];
-  tasks?: string[];
-  calendarEvents?: string[];
+  notes?: any[][];
+  tasks?: any[][];
+  calendarEvents?: any[][];
+  lostReasonId?: string;
   customFields?: CustomFieldResponseSchema[];
   followers?: any[][];
+  externalObjectId?: string;
 }
 
 export interface SearchMetaResponseSchema {
@@ -55,6 +70,28 @@ export interface SearchSuccessfulResponseDto {
   aggregations?: any;
 }
 
+export interface AdditionalDetailsDTO {
+  notes: boolean;
+  tasks: boolean;
+  calendarEvents: boolean;
+  unReadConversations: boolean;
+}
+
+export interface OpportunitySearchBodyDTO {
+  locationId: string;
+  query: string;
+  limit: number;
+  page: number;
+  searchAfter: string[];
+  additionalDetails: AdditionalDetailsDTO;
+}
+
+export interface PostSearchSuccessfulResponseDto {
+  opportunities?: SearchOpportunitiesResponseSchema[];
+  total: number;
+  aggregations?: any;
+}
+
 export interface PipelinesResponseSchema {
   id?: string;
   name?: string;
@@ -62,6 +99,7 @@ export interface PipelinesResponseSchema {
   showInFunnel?: boolean;
   showInPieChart?: boolean;
   locationId?: string;
+  colorRenderMode?: string;
 }
 
 export interface GetPipelinesSuccessfulResponseDto {
@@ -78,6 +116,7 @@ export interface DeleteUpdateOpportunitySuccessfulResponseDto {
 
 export interface UpdateStatusDto {
   status: string;
+  lostReasonId?: string;
 }
 
 export interface customFieldsInputArraySchema {
@@ -121,14 +160,18 @@ export interface UpdateOpportunityDto {
 }
 
 export interface UpsertOpportunityDto {
+  id?: string;
   pipelineId: string;
   locationId: string;
-  contactId: string;
+  followers: string[];
+  isRemoveAllFollowers: boolean;
+  followersActionType: string;
   name?: string;
   status?: string;
   pipelineStageId?: string;
-  monetaryValue?: number;
+  monetaryValue?: any;
   assignedTo?: string;
+  lostReasonId?: string;
 }
 
 export interface UpsertOpportunitySuccessfulResponseDto {
