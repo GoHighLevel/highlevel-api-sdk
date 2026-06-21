@@ -146,6 +146,7 @@ export interface CreateDto {
   contactId: string;
   monetaryValue?: number;
   assignedTo?: string;
+  source?: string;
   customFields?: any[];
 }
 
