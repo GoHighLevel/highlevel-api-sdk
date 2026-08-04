@@ -591,13 +591,16 @@ export class Contacts {
    * Update Contacts Tags
    * Allows you to update tags to multiple contacts at once, you can add or remove tags from the contacts
    */
-  async createAssociation(
+  async updateContactsTags(
+    params: {
+      type: 'add' | 'remove';
+    },
     requestBody: Models.UpdateTagsDTO,
     options?: AxiosRequestConfig
   ): Promise<Models.UpdateTagsResponseDTO> {
-    const paramDefs: Array<{name: string, in: string}> = [];
-    const extracted = extractParams(null, paramDefs);
-    const requirements: string[] = [];
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'type', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
     
     const config: RequestConfig = {
       method: 'POST',
@@ -618,6 +621,41 @@ export class Contacts {
 
     const response: AxiosResponse<Models.UpdateTagsResponseDTO> = await this.client.request(config);
     return response.data;
+  }
+
+  /**
+   * @deprecated Use updateContactsTags instead.
+   */
+  async createAssociation(
+    requestBody: Models.UpdateTagsDTO,
+    options?: AxiosRequestConfig
+  ): Promise<Models.UpdateTagsResponseDTO>;
+  /**
+   * @deprecated Use updateContactsTags instead.
+   */
+  async createAssociation(
+    params: {
+      type: 'add' | 'remove';
+    },
+    requestBody: Models.UpdateTagsDTO,
+    options?: AxiosRequestConfig
+  ): Promise<Models.UpdateTagsResponseDTO>;
+  async createAssociation(
+    paramsOrBody: { type: 'add' | 'remove' } | Models.UpdateTagsDTO,
+    requestBodyOrOptions?: Models.UpdateTagsDTO | AxiosRequestConfig,
+    options?: AxiosRequestConfig
+  ): Promise<Models.UpdateTagsResponseDTO> {
+    if (typeof (paramsOrBody as any)?.type === 'string') {
+      return this.updateContactsTags(
+        paramsOrBody as { type: 'add' | 'remove' },
+        requestBodyOrOptions as Models.UpdateTagsDTO,
+        options
+      );
+    }
+
+    throw new Error(
+      'Contacts.createAssociation is deprecated and now requires a `type` path param. Use updateContactsTags({ type }, requestBody, options).'
+    );
   }
 
   /**
