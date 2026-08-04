@@ -593,7 +593,7 @@ export class Contacts {
    */
   async updateContactsTags(
     params: {
-      type: string;
+      type: 'add' | 'remove';
     },
     requestBody: Models.UpdateTagsDTO,
     options?: AxiosRequestConfig
@@ -635,19 +635,19 @@ export class Contacts {
    */
   async createAssociation(
     params: {
-      type: string;
+      type: 'add' | 'remove';
     },
     requestBody: Models.UpdateTagsDTO,
     options?: AxiosRequestConfig
   ): Promise<Models.UpdateTagsResponseDTO>;
   async createAssociation(
-    paramsOrBody: { type: string } | Models.UpdateTagsDTO,
+    paramsOrBody: { type: 'add' | 'remove' } | Models.UpdateTagsDTO,
     requestBodyOrOptions?: Models.UpdateTagsDTO | AxiosRequestConfig,
     options?: AxiosRequestConfig
   ): Promise<Models.UpdateTagsResponseDTO> {
     if (typeof (paramsOrBody as any)?.type === 'string') {
       return this.updateContactsTags(
-        paramsOrBody as { type: string },
+        paramsOrBody as { type: 'add' | 'remove' },
         requestBodyOrOptions as Models.UpdateTagsDTO,
         options
       );
