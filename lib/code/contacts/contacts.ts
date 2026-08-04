@@ -627,13 +627,35 @@ export class Contacts {
    * @deprecated Use updateContactsTags instead.
    */
   async createAssociation(
+    requestBody: Models.UpdateTagsDTO,
+    options?: AxiosRequestConfig
+  ): Promise<Models.UpdateTagsResponseDTO>;
+  /**
+   * @deprecated Use updateContactsTags instead.
+   */
+  async createAssociation(
     params: {
       type: string;
     },
     requestBody: Models.UpdateTagsDTO,
     options?: AxiosRequestConfig
+  ): Promise<Models.UpdateTagsResponseDTO>;
+  async createAssociation(
+    paramsOrBody: { type: string } | Models.UpdateTagsDTO,
+    requestBodyOrOptions?: Models.UpdateTagsDTO | AxiosRequestConfig,
+    options?: AxiosRequestConfig
   ): Promise<Models.UpdateTagsResponseDTO> {
-    return this.updateContactsTags(params, requestBody, options);
+    if (typeof (paramsOrBody as any)?.type === 'string') {
+      return this.updateContactsTags(
+        paramsOrBody as { type: string },
+        requestBodyOrOptions as Models.UpdateTagsDTO,
+        options
+      );
+    }
+
+    throw new Error(
+      'Contacts.createAssociation is deprecated and now requires a `type` path param. Use updateContactsTags({ type }, requestBody, options).'
+    );
   }
 
   /**
