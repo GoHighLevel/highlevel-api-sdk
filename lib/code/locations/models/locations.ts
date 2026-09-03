@@ -1,3 +1,5 @@
+// @generated
+// File generated from our OpenAPI spec
 // Locations Models
 
 export interface SettingsSchema {

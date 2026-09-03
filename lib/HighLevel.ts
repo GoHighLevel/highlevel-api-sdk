@@ -1,3 +1,5 @@
+// @generated
+// File generated from our OpenAPI spec
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { AdManager } from './code/ad-manager/ad-manager';
 import { AffiliateManager } from './code/affiliate-manager/affiliate-manager';
@@ -8,6 +10,7 @@ import { BrandBoards } from './code/brand-boards/brand-boards';
 import { Businesses } from './code/businesses/businesses';
 import { Calendars } from './code/calendars/calendars';
 import { Campaigns } from './code/campaigns/campaigns';
+import { ChatWidget } from './code/chat-widget/chat-widget';
 import { Companies } from './code/companies/companies';
 import { Contacts } from './code/contacts/contacts';
 import { ConversationAi } from './code/conversation-ai/conversation-ai';
@@ -17,6 +20,7 @@ import { CustomFields } from './code/custom-fields/custom-fields';
 import { CustomMenus } from './code/custom-menus/custom-menus';
 import { EmailIsv } from './code/email-isv/email-isv';
 import { Emails } from './code/emails/emails';
+import { Files } from './code/files/files';
 import { Forms } from './code/forms/forms';
 import { Funnels } from './code/funnels/funnels';
 import { Invoices } from './code/invoices/invoices';
@@ -44,6 +48,10 @@ import { SessionStorage, MemorySessionStorage, type ISessionData } from './stora
 import { Logger, LogLevelType } from './logging';
 import { WebhookManager } from './webhook';
 import { UserType } from './constants';
+import { GHLError, GHLNetworkError, createGHLError } from './errors';
+import { registerTokenProvider, type TokenProvider } from './utils/request-utils';
+import { redactSensitive } from './utils/redact';
+import { parseRateLimitHeaders, type RateLimitInfo } from './utils/rate-limit';
 
 import * as fs from 'fs';
 import * as path from 'path';
@@ -60,9 +68,25 @@ try {
 declare module 'axios' {
   interface AxiosRequestConfig {
     __isRetryRequest?: boolean;
+    __rateLimitAttempt?: number;
     __secutiryRequirements?: string[];
     __preferredTokenType?: 'company' | 'location';
   }
+}
+
+/**
+ * Opt-in automatic retry of requests rejected by the burst rate limit (429).
+ * The wait is the burst window reported in x-ratelimit-interval-milliseconds;
+ * exponential backoff is used only when the response carries no rate limit
+ * headers. A 429 caused by the daily limit is never retried.
+ */
+export interface RateLimitRetryConfig {
+  /** Maximum number of retries after the first 429 (default 3) */
+  maxRetries?: number;
+  /** Base delay for the exponential backoff fallback (default 1000 ms) */
+  baseDelayMs?: number;
+  /** Upper bound for any single wait, including the reported burst window (default 30000 ms) */
+  maxDelayMs?: number;
 }
 
 // Configuration interface for HighLevel SDK
@@ -75,27 +99,32 @@ export interface HighLevelConfig {
   clientSecret?: string;
   sessionStorage?: SessionStorage;
   logLevel?: LogLevelType;
+  /**
+   * Ed25519 public key used to verify webhook signatures (x-ghl-signature header).
+   * Falls back to the WEBHOOK_SIGNATURE_PUBLIC_KEY environment variable.
+   */
+  webhookPublicKey?: string;
+  /**
+   * Retry requests that fail with 429 Too Many Requests. Disabled by default;
+   * pass `true` for the defaults or an object to tune them.
+   */
+  rateLimitRetry?: boolean | RateLimitRetryConfig;
+  /**
+   * By default Authorization headers, tokens and secrets are redacted from debug
+   * logs and from the request attached to errors. Set to `true` to log them as-is.
+   */
+  logSensitiveData?: boolean;
 }
 
-// Type guard to ensure valid configuration
-export type ValidConfig = 
-  | { privateIntegrationToken: string; clientId?: string; clientSecret?: string; agencyAccessToken?: string; locationAccessToken?: string; apiVersion?: string; sessionStorage?: SessionStorage; logLevel?: LogLevelType; }
-  | { clientId: string; clientSecret: string; privateIntegrationToken?: undefined; agencyAccessToken?: string; locationAccessToken?: string; apiVersion?: string; sessionStorage?: SessionStorage; logLevel?: LogLevelType; };
+// Either a private integration token or OAuth client credentials are required
+export type ValidConfig = HighLevelConfig & (
+  | { privateIntegrationToken: string }
+  | { clientId: string; clientSecret: string }
+);
 
-// Custom error class for GHL API errors
-export class GHLError extends Error {
-  public statusCode?: number;
-  public response?: any;
-  public request?: any;
-
-  constructor(message: string, statusCode?: number, response?: any, request?: any) {
-    super(message);
-    this.name = 'GHLError';
-    this.statusCode = statusCode;
-    this.response = response;
-    this.request = request;
-  }
-}
+// Errors live in ./errors; GHLError is re-exported here only so existing deep imports
+// of lib/HighLevel keep working. Import errors from the package root instead.
+export { GHLError } from './errors';
 
 // Interceptor interfaces
 export interface RequestInterceptor {
@@ -109,21 +138,19 @@ export interface ResponseInterceptor {
 }
 
 /** HighLevel SDK Client */
-export class HighLevel {
+export class HighLevel implements TokenProvider {
   private static readonly BASE_URL = 'https://services.leadconnectorhq.com';
   
-  private config: Required<Omit<HighLevelConfig, 'privateIntegrationToken' | 'agencyAccessToken' | 'locationAccessToken' | 'clientId' | 'clientSecret' | 'sessionStorage' | 'logLevel'>> & { 
-    privateIntegrationToken?: string;
-    agencyAccessToken?: string;
-    locationAccessToken?: string;
-    clientId?: string;
-    clientSecret?: string;
+  private config: Omit<HighLevelConfig, 'apiVersion'> & {
+    apiVersion: string;
     agencyRefreshToken?: string | undefined;
     locationRefreshToken?: string | undefined;
   };
   private httpClient: AxiosInstance;
   private sessionStorage: SessionStorage;
   private logger: Logger;
+  // One refresh per resource at a time; concurrent callers await the same promise
+  private refreshInFlight: Map<string, Promise<string | null>> = new Map();
   
   // Service instances
   public adManager!: AdManager;
@@ -135,6 +162,7 @@ export class HighLevel {
   public businesses!: Businesses;
   public calendars!: Calendars;
   public campaigns!: Campaigns;
+  public chatWidget!: ChatWidget;
   public companies!: Companies;
   public contacts!: Contacts;
   public conversationAi!: ConversationAi;
@@ -144,6 +172,7 @@ export class HighLevel {
   public customMenus!: CustomMenus;
   public emailIsv!: EmailIsv;
   public emails!: Emails;
+  public files!: Files;
   public forms!: Forms;
   public funnels!: Funnels;
   public invoices!: Invoices;
@@ -190,6 +219,9 @@ export class HighLevel {
       locationAccessToken: config.locationAccessToken,
       clientId: config.clientId,
       clientSecret: config.clientSecret,
+      webhookPublicKey: config.webhookPublicKey,
+      rateLimitRetry: config.rateLimitRetry,
+      logSensitiveData: config.logSensitiveData ?? false,
       // Refresh tokens are not part of user input - set via setter methods only
       agencyRefreshToken: undefined,
       locationRefreshToken: undefined
@@ -213,8 +245,8 @@ export class HighLevel {
       headers: this.getDefaultHeaders()
     });
 
-    // Inject reference to HighLevel instance for token selection
-    (this.httpClient as any).__ghlInstance = this;
+    // Register this instance as the token provider for the shared HTTP client
+    registerTokenProvider(this.httpClient, this);
 
     // Setup default interceptors
     this.setupDefaultInterceptors();
@@ -282,7 +314,7 @@ export class HighLevel {
           return `Bearer ${accessToken}`;
         }
       } catch (error) {
-        console.warn(`[GHL SDK] Failed to get token from storage for ${resourceId}:`, error);
+        this.logger.warn(`Failed to get token from storage for ${resourceId}:`, error);
       }
     }
 
@@ -332,12 +364,28 @@ export class HighLevel {
   }
 
   /**
-   * Refresh token if expired and store the new token
+   * Refresh token if expired and store the new token.
+   * Concurrent calls for the same resource share a single refresh so a rotated
+   * refresh token is never used twice.
    * @param resourceId - Resource ID for the session
    * @param sessionData - Current session data
    * @returns New Bearer token if successful, null otherwise
    */
-  private async refreshTokenIfNeeded(resourceId: string, sessionData: ISessionData): Promise<string | null> {
+  private refreshTokenIfNeeded(resourceId: string, sessionData: ISessionData): Promise<string | null> {
+    const inFlight = this.refreshInFlight.get(resourceId);
+    if (inFlight) {
+      this.logger.debug(`Token refresh already in progress for ${resourceId}, waiting for it`);
+      return inFlight;
+    }
+
+    const refreshPromise = this.performTokenRefresh(resourceId, sessionData).finally(() => {
+      this.refreshInFlight.delete(resourceId);
+    });
+    this.refreshInFlight.set(resourceId, refreshPromise);
+    return refreshPromise;
+  }
+
+  private async performTokenRefresh(resourceId: string, sessionData: ISessionData): Promise<string | null> {
     if (!sessionData.refresh_token) {
       this.logger.warn(`No refresh token available for ${resourceId}`);
       return null;
@@ -632,12 +680,12 @@ export class HighLevel {
           config.headers.Version = this.config.apiVersion;
         }
 
-        // Log request in development mode or when debug level is enabled
-        this.logger.debug(`${config.method?.toUpperCase()} ${config.url}`, {
+        // Log request in development mode or when debug level is enabled (credentials redacted)
+        this.logger.debug(`${config.method?.toUpperCase()} ${config.url}`, this.redact({
           headers: config.headers,
           params: config.params,
           data: config.data
-        });
+        }));
 
         return config;
       },
@@ -650,16 +698,36 @@ export class HighLevel {
     // Response interceptor - handle errors and responses
     this.httpClient.interceptors.response.use(
       (response) => {
-        // Log response in debug mode
-        this.logger.debug(`Response ${response.status}:`, response.data);
+        // Log response in debug mode (credentials redacted)
+        this.logger.debug(`Response ${response.status}:`, this.redact(response.data));
 
         return response;
       },
       async (error: AxiosError) => {
         const originalRequest = error.config as any;
+
+        // Handle 429 errors with opt-in retry (burst limit only)
+        if (error.response?.status === 429 && originalRequest) {
+          const retryPolicy = this.getRateLimitRetryPolicy();
+          const attempt: number = originalRequest.__rateLimitAttempt || 0;
+          if (retryPolicy && attempt < retryPolicy.maxRetries) {
+            const rateLimit = parseRateLimitHeaders(error.response.headers);
+            if (rateLimit?.scope === 'daily') {
+              this.logger.warn('429 Too Many Requests - daily rate limit exhausted, not retrying', rateLimit);
+            } else {
+              const delayMs = this.getRateLimitRetryDelay(rateLimit, attempt, retryPolicy);
+              this.logger.warn(`429 Too Many Requests - burst limit reached, retrying in ${delayMs}ms (attempt ${attempt + 1} of ${retryPolicy.maxRetries})`, rateLimit);
+              originalRequest.__rateLimitAttempt = attempt + 1;
+              await this.sleep(delayMs);
+              return this.httpClient.request(originalRequest);
+            }
+          }
+        }
         
         // Handle 401 errors with automatic token refresh
-        if (error.response?.status === 401 && !originalRequest.__isRetryRequest) {
+        if (error.response?.status === 401 && originalRequest && !originalRequest.__isRetryRequest) {
+          // Mark before retrying so the retried request carries the flag and a second 401 is not retried again
+          originalRequest.__isRetryRequest = true;
           this.logger.warn('401 Unauthorized - Attempting token refresh');
           
           // Try to extract resourceId from the original request using stored security requirements
@@ -679,9 +747,19 @@ export class HighLevel {
               const sessionData = await this.sessionStorage.getSession(resourceId);
               
               if (sessionData) {
-                this.logger.info(`Token expired for ${resourceId}, attempting refresh`);
-                
-                const newToken = await this.refreshTokenIfNeeded(resourceId, sessionData);
+                let newToken: string | null = null;
+                const usedToken = originalRequest.headers?.Authorization;
+                const storedToken = sessionData.access_token ? `Bearer ${sessionData.access_token}` : null;
+
+                if (storedToken && usedToken && storedToken !== usedToken && !this.shouldRefreshToken(sessionData)) {
+                  // Another request already refreshed this token; reuse it instead of refreshing again
+                  this.logger.debug(`Token for ${resourceId} was already refreshed, retrying with the stored token`);
+                  newToken = storedToken;
+                } else {
+                  this.logger.info(`Token expired for ${resourceId}, attempting refresh`);
+                  newToken = await this.refreshTokenIfNeeded(resourceId, sessionData);
+                }
+
                 if (newToken) {
                   originalRequest.headers = originalRequest.headers || {};
                   originalRequest.headers.Authorization = newToken;
@@ -692,8 +770,6 @@ export class HighLevel {
               }
             } catch (refreshError) {
               this.logger.error('Failed to refresh token on 401:', refreshError);
-            } finally {
-              originalRequest.__isRetryRequest = true;
             }
           }
         }
@@ -708,25 +784,22 @@ export class HighLevel {
    */
   private handleResponseError(error: AxiosError): Promise<never> {
     let ghlError: GHLError;
+    const safeRequest = this.sanitizeRequestConfig(error.config);
 
     if (error.response) {
       // The request was made and the server responded with a status code
-      const { status, data } = error.response;
+      const { status, data, headers } = error.response;
       const message = this.extractErrorMessage(data, status);
-      
-      ghlError = new GHLError(
-        message,
-        status,
-        data,
-        error.config
-      );
+      const rateLimit = status === 429 ? parseRateLimitHeaders(headers) : undefined;
+
+      ghlError = createGHLError(message, status, data, safeRequest, rateLimit);
     } else if (error.request) {
       // The request was made but no response was received
-      ghlError = new GHLError(
+      ghlError = new GHLNetworkError(
         'Network error: No response received from server',
         undefined,
         undefined,
-        error.config
+        safeRequest
       );
     } else {
       // Something happened in setting up the request
@@ -734,12 +807,66 @@ export class HighLevel {
         `Request setup error: ${error.message}`,
         undefined,
         undefined,
-        error.config
+        safeRequest,
+        'REQUEST'
       );
     }
 
     this.logger.error('Error:', ghlError);
     return Promise.reject(ghlError);
+  }
+
+  /**
+   * Redact credentials unless the user opted into logging sensitive data
+   */
+  private redact<T>(value: T): T {
+    return this.config.logSensitiveData ? value : redactSensitive(value);
+  }
+
+  /**
+   * Copy of the request config with credentials redacted (unless logSensitiveData is set), safe to attach to errors and logs
+   */
+  private sanitizeRequestConfig(config: AxiosRequestConfig | undefined): AxiosRequestConfig | undefined {
+    if (!config) return config;
+    const headers: any = config.headers;
+    const plainHeaders = headers && typeof headers.toJSON === 'function' ? headers.toJSON() : headers;
+    return {
+      ...config,
+      headers: this.redact(plainHeaders),
+      data: this.redact(config.data)
+    };
+  }
+
+  /**
+   * Effective rate-limit retry policy, or null when retries are disabled
+   */
+  private getRateLimitRetryPolicy(): Required<RateLimitRetryConfig> | null {
+    const setting = this.config.rateLimitRetry;
+    if (!setting) return null;
+    const custom: RateLimitRetryConfig = setting === true ? {} : setting;
+    return {
+      maxRetries: custom.maxRetries ?? 3,
+      baseDelayMs: custom.baseDelayMs ?? 1000,
+      maxDelayMs: custom.maxDelayMs ?? 30000
+    };
+  }
+
+  /**
+   * Delay before the next retry: the burst window reported by the API when present,
+   * otherwise exponential backoff with jitter
+   */
+  private getRateLimitRetryDelay(rateLimit: RateLimitInfo | undefined, attempt: number, policy: Required<RateLimitRetryConfig>): number {
+    if (rateLimit?.intervalMs !== undefined && rateLimit.intervalMs > 0) {
+      return Math.min(rateLimit.intervalMs, policy.maxDelayMs);
+    }
+
+    const backoff = policy.baseDelayMs * Math.pow(2, attempt);
+    const jitter = Math.floor(Math.random() * Math.min(100, policy.baseDelayMs));
+    return Math.min(backoff + jitter, policy.maxDelayMs);
+  }
+
+  private sleep(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   /**
@@ -802,6 +929,8 @@ export class HighLevel {
     this.calendars = new Calendars(this.httpClient);
     // Create campaigns service with the shared HTTP client
     this.campaigns = new Campaigns(this.httpClient);
+    // Create chatWidget service with the shared HTTP client
+    this.chatWidget = new ChatWidget(this.httpClient);
     // Create companies service with the shared HTTP client
     this.companies = new Companies(this.httpClient);
     // Create contacts service with the shared HTTP client
@@ -820,6 +949,8 @@ export class HighLevel {
     this.emailIsv = new EmailIsv(this.httpClient);
     // Create emails service with the shared HTTP client
     this.emails = new Emails(this.httpClient);
+    // Create files service with the shared HTTP client
+    this.files = new Files(this.httpClient);
     // Create forms service with the shared HTTP client
     this.forms = new Forms(this.httpClient);
     // Create funnels service with the shared HTTP client
@@ -868,7 +999,11 @@ export class HighLevel {
     this.workflows = new Workflows(this.httpClient);
     
     // Initialize webhook manager
-    this.webhooks = new WebhookManager(this.logger, this.sessionStorage, this.oauth);
+    this.webhooks = new WebhookManager(this.logger, this.sessionStorage, this.oauth, {
+      clientId: this.config.clientId,
+      publicKey: this.config.webhookPublicKey,
+      logSensitiveData: this.config.logSensitiveData
+    });
   }
 
   /**

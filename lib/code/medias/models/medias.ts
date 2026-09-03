@@ -1,3 +1,5 @@
+// @generated
+// File generated from our OpenAPI spec
 // Medias Models
 
 export interface GetFilesResponseDTO {

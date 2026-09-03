@@ -1,3 +1,5 @@
+// @generated
+// File generated from our OpenAPI spec
 // Contacts Models
 
 export interface SearchBodyV2DTO {

@@ -8,7 +8,9 @@ The official TypeScript/JavaScript SDK for the HighLevel (GoHighLevel) API. This
 - [Authentication](#authentication)
 - [Getting Started](#getting-started)
 - [Token Management](#token-management)
+- [Rate Limit Retry](#rate-limit-retry)
 - [Webhooks](#webhooks)
+- [Logging](#logging)
 - [Usage Examples](#usage-examples)
 - [Error Handling](#error-handling)
 - [TypeScript Support](#typescript-support)
@@ -64,11 +66,13 @@ const ghl = new HighLevel({
 const ghl = new HighLevel({
   clientId: 'your-oauth-client-id',
   clientSecret: 'your-oauth-client-secret',
-  sessionStorage: new MongoDBSessionStorage({
-    dbUrl: 'mongodb://localhost:27017',
-    dbName: 'ghl_sessions'
-  }),
-  logLevel: LogLevel.WARN
+  sessionStorage: new MongoDBSessionStorage(
+    'mongodb://localhost:27017', // connection string
+    'ghl_sessions',              // database name
+    'application_sessions'       // collection name (optional, this is the default)
+  ),
+  logLevel: LogLevel.WARN,
+  rateLimitRetry: true // retry requests rejected by the burst rate limit, see Rate Limit Retry
 });
 ```
 
@@ -104,14 +108,27 @@ import { HighLevel, MongoDBSessionStorage } from '@gohighlevel/api-client';
 const ghl = new HighLevel({
   clientId: 'your-client-id',
   clientSecret: 'your-client-secret',
-  sessionStorage: new MongoDBSessionStorage({
-    dbUrl: 'mongodb://localhost:27017',
-    dbName: 'ghl_sessions'
-  })
+  sessionStorage: new MongoDBSessionStorage(
+    'mongodb://localhost:27017',
+    'ghl_sessions',
+    'application_sessions' // optional collection name
+  )
 });
 ```
 
-**⚠️ Warning**: Without MongoDB storage, data will be stored in memory by default and will be lost on application restart. This is not recommended for production.
+The `mongodb` driver is only loaded when `MongoDBSessionStorage` is used, so applications with a custom storage do not pay for it at startup.
+
+**⚠️ Warning**: Without MongoDB storage, data will be stored in memory by default (`MemorySessionStorage`) and will be lost on application restart. This is not recommended for production. If you do use it, cap its size so it cannot grow without bound:
+
+```typescript
+import { HighLevel, MemorySessionStorage } from '@gohighlevel/api-client';
+
+const ghl = new HighLevel({
+  clientId: 'your-client-id',
+  clientSecret: 'your-client-secret',
+  sessionStorage: new MemorySessionStorage(undefined, { maxEntries: 1000 }) // least recently used sessions are evicted first
+});
+```
 
 ### Custom Storage Implementation
 
@@ -159,47 +176,169 @@ The SDK automatically attempts to refresh expired tokens when:
 - Valid refresh tokens are available
 - OAuth client credentials are configured
 
+The failed request is retried once with the new token. Concurrent requests that receive a 401 for the same location or company share a single refresh call, so a burst of requests never triggers parallel refreshes for the same resource.
+
+## Rate Limit Retry
+
+The API enforces a burst limit (a maximum number of requests per short interval) and a daily limit, and reports the current state on every response:
+
+| Header | Meaning |
+|--------|---------|
+| `X-RateLimit-Max` | Requests allowed per burst interval |
+| `X-RateLimit-Interval-Milliseconds` | Length of the burst interval |
+| `X-RateLimit-Remaining` | Requests left in the current interval |
+| `X-RateLimit-Limit-Daily` | Requests allowed per day |
+| `X-RateLimit-Daily-Remaining` | Requests left today |
+
+When a limit is exceeded the API responds with `429 Too Many Requests`. Retrying is opt-in and off by default, so existing applications keep their current behaviour. Enable it with `rateLimitRetry`:
+
+```typescript
+// Defaults: up to 3 retries, never wait more than 30 seconds for a single retry
+const ghl = new HighLevel({
+  clientId: 'your-client-id',
+  clientSecret: 'your-client-secret',
+  sessionStorage,
+  rateLimitRetry: true
+});
+
+// Or tune it
+const ghl = new HighLevel({
+  clientId: 'your-client-id',
+  clientSecret: 'your-client-secret',
+  sessionStorage,
+  rateLimitRetry: {
+    maxRetries: 3,     // retries after the first 429 (default 3)
+    maxDelayMs: 10000, // upper bound for a single wait in ms (default 30000)
+    baseDelayMs: 1000  // starting delay in ms when the response has no rate limit headers (default 1000)
+  }
+});
+```
+
+What happens on a 429:
+
+1. **Burst limit reached** (`X-RateLimit-Daily-Remaining` is above zero): the SDK waits for the interval in `X-RateLimit-Interval-Milliseconds`, capped at `maxDelayMs`, and sends the same request again, up to `maxRetries` times.
+2. **Daily limit exhausted** (`X-RateLimit-Daily-Remaining` is `0`): a retry cannot succeed, so the error is thrown immediately.
+3. **No rate limit headers** on the response: the SDK falls back to exponential backoff starting at `baseDelayMs` with jitter, capped at `maxDelayMs`.
+
+Each retry is logged at `WARN` level together with the parsed headers. When the retries are used up, or when retry is disabled, the call rejects with a `GHLRateLimitError` whose `rateLimit` field holds the parsed headers:
+
+```typescript
+import { GHLRateLimitError } from '@gohighlevel/api-client';
+
+try {
+  await ghl.contacts.getContact({ contactId }, { headers: { locationId } });
+} catch (error) {
+  if (error instanceof GHLRateLimitError) {
+    console.log(error.rateLimit);
+    // {
+    //   scope: 'burst',            // 'burst' | 'daily' | 'unknown'
+    //   intervalMs: 10000,
+    //   max: 100,
+    //   remaining: 0,
+    //   dailyLimit: 200000,
+    //   dailyRemaining: 199642,
+    //   dailyResetMs: 84322000     // only when the API reports it
+    // }
+    if (error.rateLimit?.scope === 'daily') {
+      // stop sending requests until the daily limit resets
+    }
+  }
+}
+```
+
+Example: 125 `getContact` calls fired at once against a limit of 100 requests per 10 seconds. The calls over the limit receive a 429, wait for the reported 10 second interval and succeed on their first retry:
+
+```typescript
+const results = await Promise.allSettled(
+  Array.from({ length: 125 }, () =>
+    ghl.contacts.getContact({ contactId }, { headers: { locationId } })
+  )
+);
+// [GHL SDK] WARN: 429 Too Many Requests - burst limit reached, retrying in 10000ms (attempt 1 of 3) { scope: 'burst', intervalMs: 10000, max: 100, remaining: 0, ... }
+// results: 125 fulfilled, 0 rejected, in about 11.5 seconds
+```
+
 ## Webhooks
 
-Handle HighLevel webhooks with built-in signature verification and handles INSTALL and UNINSTALL events for your application.
+Handle HighLevel webhooks with built-in signature verification. The middleware also handles the INSTALL and UNINSTALL events for your application:
 - INSTALL: In case of bulk installation, it will generate and store the token for all the locations for which installation was triggered
-- UNINSTALL: If your app is uninstalled at any location or company, it will remove token for that from the storage which is used by SDK.
+- UNINSTALL: If your app is uninstalled at any location or company, it will remove the token for that resource from the storage used by the SDK
 
-**NOTE**: The endpoint which you use should be the one which is configured in `Default Webhook URL` for your application in marketplace. We send INSTALL and UNINSTALL events to default url only.
+**NOTE**: The endpoint you use should be the one configured as `Default Webhook URL` for your application in the marketplace. INSTALL and UNINSTALL events are sent to the default URL only.
+
+The middleware works with Express and with any framework that calls it as `(req, res, next)` with `req.headers` and `req.body`. Express is not a dependency of the SDK.
 
 ```typescript
 import express from 'express';
 
 const app = express();
 
-// SDK middleware processes webhook 
-app.use(bodyParser.json()) // This is required to parse the request body properly
+// Keep the raw body so the signature is checked against the exact bytes HighLevel signed
+app.use(express.json({ verify: (req, _res, buf) => { req.rawBody = buf; } }));
+
+// SDK middleware processes the webhook first
 app.use('/webhooks/ghl', ghl.webhooks.subscribe());
 
 // Your handler runs after SDK processing
 app.post('/webhooks/ghl', async (req, res) => {
-  console.log(req.isSignatureValid)
-  // your logic for webhook goes here
+  if (req.skippedSignatureVerification) {
+    // no x-ghl-signature header on the request, or no public key configured
+  }
+  if (req.isSignatureValid === false && !req.skippedSignatureVerification) {
+    return res.status(401).json({ success: false }); // signature present but invalid
+  }
+  if (req.installTokenError) {
+    // INSTALL webhook was verified but the location token could not be generated
+  }
+  // your logic for the webhook goes here
   res.json({ success: true });
 });
-
-// you can also use SDK to verify signature
-ghl.webhooks.verifySignature(payload, signature, ghlPublicKey)
-ghl.webhooks.verifyEd25519Signature(payload, signature, newGhlPublicKey)
 ```
 
-The SDK automatically handles signature verification, if it is valid then you will get the flag `isSignatureValid` as true.
+### Signature verification
 
-Use these environment variables for webhook signature verification in your application:
+HighLevel signs every webhook with Ed25519 and sends the signature in the `x-ghl-signature` header. Provide the public key from the marketplace either in the constructor or through the `WEBHOOK_SIGNATURE_PUBLIC_KEY` environment variable. PEM, raw base64 and hex encodings are accepted:
 
-- `x-ghl-signature` (Ed25519, preferred): set `WEBHOOK_SIGNATURE_PUBLIC_KEY` in environment variable
-- `x-wh-signature` (legacy fallback): set `WEBHOOK_PUBLIC_KEY` in environment variable
+```typescript
+const ghl = new HighLevel({
+  clientId: 'your-client-id',
+  clientSecret: 'your-client-secret',
+  sessionStorage,
+  webhookPublicKey: process.env.WEBHOOK_SIGNATURE_PUBLIC_KEY
+});
+```
 
-Verification order is:
-1. If `x-ghl-signature` is present, SDK validates it using `WEBHOOK_SIGNATURE_PUBLIC_KEY` and does not fall back to `x-wh-signature`.
-2. If `x-ghl-signature` is absent, SDK checks `x-wh-signature` using `WEBHOOK_PUBLIC_KEY`.
+The middleware sets these flags on the request for your handler:
 
-For `INSTALL` and `UNINSTALL` webhooks, if the required signature header or corresponding public key is missing, SDK skips processing those events.
+| Flag | Meaning |
+|------|---------|
+| `isSignatureValid` | `true` when `x-ghl-signature` verified against the configured public key |
+| `skippedSignatureVerification` | `true` when the header or the public key was missing, so nothing was verified |
+| `installTokenError` | Set when an INSTALL webhook verified but generating the location token failed |
+
+INSTALL and UNINSTALL are only processed when the signature is valid. Webhooks whose `appId` does not belong to your `clientId` are passed through without processing. The middleware never ends the response, so your handler always runs and decides what to return.
+
+To verify a signature yourself:
+
+```typescript
+const isValid = ghl.webhooks.verifyEd25519Signature(rawBody, req.headers['x-ghl-signature'] as string, publicKey);
+```
+
+The legacy `x-wh-signature` header (RSA) is no longer sent by HighLevel and is not checked by the middleware. The `WEBHOOK_PUBLIC_KEY` environment variable is no longer read, and `verifySignature()` is deprecated and kept only for backward compatibility.
+
+## Logging
+
+`logLevel` controls how much the SDK logs (`LogLevel.ERROR`, `LogLevel.WARN`, `LogLevel.INFO`, `LogLevel.DEBUG`). At `DEBUG` every request, response and webhook payload is logged.
+
+Authorization headers, tokens, client secrets and similar values are replaced with `[REDACTED]` in those logs and in the `request` attached to thrown errors. To see the real values, for example while debugging authentication locally, opt in with `logSensitiveData`:
+
+```typescript
+const ghl = new HighLevel({
+  privateIntegrationToken: 'your-token',
+  logLevel: LogLevel.DEBUG,
+  logSensitiveData: true // default false. Do not enable in production
+});
+```
 
 ## Usage Examples
 
@@ -273,43 +412,58 @@ const campaigns = await ghl.campaigns.getCampaigns({
 
 ## Error Handling
 
-The SDK uses a custom `GHLError` class that provides detailed error information:
+Every error thrown by the SDK is a `GHLError` with `message`, `statusCode`, the API `response`, the sanitized `request` and a machine-readable `code`. HTTP failures are thrown as a subclass so you can branch with `instanceof`:
+
+| Class | `code` | Thrown for |
+|-------|--------|------------|
+| `GHLAuthenticationError` | `AUTHENTICATION` | 401 when the token is invalid and could not be refreshed |
+| `GHLForbiddenError` | `FORBIDDEN` | 403 |
+| `GHLNotFoundError` | `NOT_FOUND` | 404 |
+| `GHLValidationError` | `VALIDATION` | 400 and 422 |
+| `GHLRateLimitError` | `RATE_LIMIT` | 429, with the parsed headers in `rateLimit` (see [Rate Limit Retry](#rate-limit-retry)) |
+| `GHLServerError` | `SERVER` | 5xx |
+| `GHLNetworkError` | `NETWORK` | No response received (timeout, DNS failure, connection refused) |
+| `GHLError` | `REQUEST`, `UNKNOWN` | The request could not be sent, or any other status code |
 
 ```typescript
-import { GHLError } from '@gohighlevel/api-client';
+import {
+  GHLError,
+  GHLAuthenticationError,
+  GHLNotFoundError,
+  GHLRateLimitError,
+  GHLNetworkError
+} from '@gohighlevel/api-client';
 
 try {
   const contact = await ghl.contacts.getContact({
     contactId: 'invalid-contact-id'
   });
 } catch (error) {
-  if (error instanceof GHLError) {
+  if (error instanceof GHLNotFoundError) {
+    console.log('Contact not found');
+  } else if (error instanceof GHLAuthenticationError) {
+    console.log('Authentication failed - check your tokens');
+  } else if (error instanceof GHLRateLimitError) {
+    console.log('Rate limited', error.rateLimit);
+  } else if (error instanceof GHLNetworkError) {
+    console.log('Could not reach the API', error.message);
+  } else if (error instanceof GHLError) {
     console.error('GHL API Error:', {
+      code: error.code,
       message: error.message,
       statusCode: error.statusCode,
       response: error.response,
       request: error.request
     });
-    
-    // Handle specific error codes
-    switch (error.statusCode) {
-      case 401:
-        console.log('Authentication failed - check your tokens');
-        break;
-      case 404:
-        console.log('Contact not found');
-        break;
-      case 429:
-        console.log('Rate limit exceeded - retry after delay');
-        break;
-      default:
-        console.log('Other API error occurred');
-    }
   } else {
     console.error('Unexpected error:', error);
   }
 }
 ```
+
+Code written against earlier versions keeps working: every subclass extends `GHLError`, reports `name === 'GHLError'` and still exposes `statusCode`, so `switch (error.statusCode)` style handling is unchanged.
+
+Authorization headers and other secrets are removed from `error.request` unless `logSensitiveData` is enabled (see [Logging](#logging)).
 
 ## TypeScript Support
 
@@ -318,7 +472,11 @@ The SDK is built with TypeScript and provides full type definitions:
 ```typescript
 import HighLevel, { 
   HighLevelConfig, 
+  ValidConfig,
+  RateLimitRetryConfig,
+  RateLimitInfo,
   GHLError,
+  GHLErrorCode,
   RequestInterceptor,
   ResponseInterceptor 
 } from '@gohighlevel/api-client';
@@ -343,23 +501,32 @@ const contact: ContactsByIdSuccessfulResponseDto = await ghl.contacts.getContact
 
 ## API Reference
 
-The SDK provides access to all HighLevel API services:
+The SDK provides access to all HighLevel API services. Each one is available as a property on the `HighLevel` instance:
 
-- **associations** - Manage contact associations
+- **adManager** - Ad publishing and reporting
+- **affiliateManager** - Affiliate manager
+- **agentStudio** - Agent Studio
+- **associations** - Contact associations
 - **blogs** - Blog management
+- **brandBoards** - Brand boards
 - **businesses** - Business operations
 - **calendars** - Calendar and appointment management
 - **campaigns** - Marketing campaigns
+- **chatWidget** - Chat widget management
 - **companies** - Company/agency management
 - **contacts** - Contact management
-- **conversations** - Conversation and messaging
+- **conversationAi** - Conversation AI
+- **conversations** - Conversations and messaging
 - **courses** - Course management
 - **customFields** - Custom field definitions
 - **customMenus** - Custom menu management
-- **emails** - Email operations
+- **emailIsv** - Email verification
+- **emails** - Email templates and campaigns
+- **files** - File access
 - **forms** - Form management
 - **funnels** - Funnel operations
 - **invoices** - Invoice management
+- **knowledgeBase** - Knowledge base
 - **links** - Link management
 - **locations** - Location management
 - **marketplace** - Marketplace operations
@@ -368,13 +535,19 @@ The SDK provides access to all HighLevel API services:
 - **objects** - Custom object management
 - **opportunities** - Pipeline and opportunity management
 - **payments** - Payment processing
+- **phoneSystem** - Phone numbers and number pools
 - **products** - Product management
-- **saas** - SaaS management
+- **proposals** - Proposals and estimates
+- **saasApi** - SaaS management
 - **snapshots** - Snapshot operations
-- **socialPlanner** - Social media planning
+- **socialMediaPosting** - Social planner
+- **store** - Online store settings
 - **surveys** - Survey management
 - **users** - User management
+- **voiceAi** - Voice AI
 - **workflows** - Workflow automation
+
+The webhook middleware is available as `ghl.webhooks` (see [Webhooks](#webhooks)).
 
 ### Configuration Methods
 

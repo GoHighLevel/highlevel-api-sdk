@@ -1,3 +1,5 @@
+// @generated
+// File generated from our OpenAPI spec
 // Opportunities Models
 
 export interface LostReasonResponseSchema {

@@ -1,3 +1,5 @@
+// @generated
+// File generated from our OpenAPI spec
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as Models from './models/users';
 import { buildUrl, extractParams, getAuthToken, RequestConfig } from '../../utils/request-utils';
@@ -131,11 +133,14 @@ export class Users {
    * Update User
    */
   async updateUser(
+    params: {
+      userId: string;
+    },
     requestBody: Models.UpdateUserDto,
     options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.UserSuccessfulResponseDto> {
-    const paramDefs: Array<{name: string, in: string}> = [];
-    const extracted = extractParams(null, paramDefs);
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'userId', in: 'path'},];
+    const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Agency-Access","Location-Access"];
     
     const config: RequestConfig = {
@@ -164,10 +169,13 @@ export class Users {
    * Delete User
    */
   async deleteUser(
+    params: {
+      userId: string;
+    },
     options?: AxiosRequestConfig & { preferredTokenType?: 'company' | 'location' }
   ): Promise<Models.DeleteUserSuccessfulResponseDto> {
-    const paramDefs: Array<{name: string, in: string}> = [];
-    const extracted = extractParams(null, paramDefs);
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'userId', in: 'path'},];
+    const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Agency-Access","Location-Access"];
     
     const config: RequestConfig = {

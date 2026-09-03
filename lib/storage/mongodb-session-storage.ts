@@ -1,7 +1,24 @@
-import { MongoClient, Db, Collection } from 'mongodb';
+import type { MongoClient, Db, Collection } from 'mongodb';
 import { SessionStorage } from './session-storage';
 import { ISessionData } from './interfaces';
 import { Logger } from '../logging';
+
+type MongoDriver = typeof import('mongodb');
+
+/**
+ * The mongodb driver is only loaded when a MongoDBSessionStorage is initialized,
+ * so consumers that use another storage never pay for loading it.
+ */
+function loadMongoDriver(): MongoDriver {
+  try {
+    return require('mongodb');
+  } catch (error) {
+    throw new Error(
+      "MongoDBSessionStorage requires the 'mongodb' package. Install it with `npm install mongodb`."
+    );
+  }
+}
+
 /**
  * MongoDB implementation of SessionStorage
  * Provides MongoDB-based storage for sessions, tokens, and related data
@@ -14,6 +31,8 @@ export class MongoDBSessionStorage extends SessionStorage {
   private collectionName: string;
   private clientId: string = '';
   private isConnected: boolean = false;
+  // Collections already verified to exist, so the hot path skips the listCollections round trip
+  private ensuredCollections: Set<string> = new Set();
 
   constructor(
     dbUrl: string,
@@ -61,9 +80,11 @@ export class MongoDBSessionStorage extends SessionStorage {
    */
   async init(): Promise<void> {
     try {
-      this.client = new MongoClient(this.dbUrl);
+      const { MongoClient: MongoClientConstructor } = loadMongoDriver();
+      this.client = new MongoClientConstructor(this.dbUrl);
       await this.client.connect();
       this.db = this.client.db(this.dbName);
+      this.ensuredCollections.clear();
       await this.createCollection(this.collectionName);
       this.isConnected = true;
 
@@ -84,6 +105,7 @@ export class MongoDBSessionStorage extends SessionStorage {
         this.isConnected = false;
         this.db = null;
         this.client = null;
+        this.ensuredCollections.clear();
         this.logger.info('Disconnected from MongoDB');
       }
     } catch (error) {
@@ -124,6 +146,7 @@ export class MongoDBSessionStorage extends SessionStorage {
           `MongoDB collection already exists: ${collectionName}`
         );
       }
+      this.ensuredCollections.add(collectionName);
     } catch (error) {
       this.logger.error(`Error creating collection ${collectionName}:`, error);
       throw error;
@@ -139,8 +162,10 @@ export class MongoDBSessionStorage extends SessionStorage {
       throw new Error('Database not initialized. Call init() first.');
     }
 
-    // Ensure collection exists
-    await this.createCollection(collectionName);
+    // Ensure collection exists (once per connection)
+    if (!this.ensuredCollections.has(collectionName)) {
+      await this.createCollection(collectionName);
+    }
 
     return this.db.collection(collectionName);
   }

@@ -2,18 +2,34 @@ import { SessionStorage } from './session-storage';
 import { ISessionData } from './interfaces';
 import { Logger } from '../logging';
 
+export interface MemorySessionStorageOptions {
+  /**
+   * Maximum number of sessions to keep. When exceeded, the least recently used
+   * session is evicted. Unlimited when omitted.
+   */
+  maxEntries?: number;
+}
+
+type StoredSession = ISessionData & { createdAt: Date; updatedAt: Date };
+
 /**
  * In-memory implementation of SessionStorage
  * Provides fast, non-persistent storage for sessions, tokens, and related data
  * Data is lost when the application restarts
  */
 export class MemorySessionStorage extends SessionStorage {
-  private sessions: Map<string, ISessionData & { createdAt: Date; updatedAt: Date }> = new Map();
+  // Map preserves insertion order; entries are re-inserted on access so the first key is the least recently used
+  private sessions: Map<string, StoredSession> = new Map();
   private clientId: string = '';
   private isInitialized: boolean = false;
+  private maxEntries?: number;
 
-  constructor(logger?: Logger) {
+  constructor(logger?: Logger, options: MemorySessionStorageOptions = {}) {
     super(logger ? logger.child('Memory') : new Logger('warn', 'GHL SDK Memory'));
+    if (options.maxEntries !== undefined && (!Number.isInteger(options.maxEntries) || options.maxEntries < 1)) {
+      throw new Error('maxEntries must be a positive integer');
+    }
+    this.maxEntries = options.maxEntries;
   }
 
   /**
@@ -47,6 +63,31 @@ export class MemorySessionStorage extends SessionStorage {
   private generateUniqueKey(resourceId: string): string {
     const applicationId = this.getApplicationId();
     return `${applicationId}:${resourceId}`;
+  }
+
+  /**
+   * Look up a session and mark it as most recently used
+   */
+  private touch(uniqueKey: string): StoredSession | undefined {
+    const sessionDocument = this.sessions.get(uniqueKey);
+    if (sessionDocument) {
+      this.sessions.delete(uniqueKey);
+      this.sessions.set(uniqueKey, sessionDocument);
+    }
+    return sessionDocument;
+  }
+
+  /**
+   * Drop least recently used sessions until the configured cap is respected
+   */
+  private evictIfNeeded(): void {
+    if (this.maxEntries === undefined) return;
+    while (this.sessions.size > this.maxEntries) {
+      const oldestKey = this.sessions.keys().next().value;
+      if (oldestKey === undefined) break;
+      this.sessions.delete(oldestKey);
+      this.logger.debug(`Evicted least recently used session: ${oldestKey}`);
+    }
   }
 
   /**
@@ -91,14 +132,16 @@ export class MemorySessionStorage extends SessionStorage {
     try {
       const uniqueKey = this.generateUniqueKey(resourceId);
       
-      const sessionDocument = {
+      const sessionDocument: StoredSession = {
         ...sessionData,
         expire_at: this.calculateExpireAt(sessionData.expires_in),
         createdAt: new Date(),
         updatedAt: new Date()
       };
 
+      this.sessions.delete(uniqueKey);
       this.sessions.set(uniqueKey, sessionDocument);
+      this.evictIfNeeded();
 
       this.logger.debug(`Session stored in memory: ${uniqueKey}`);
     } catch (error) {
@@ -116,7 +159,7 @@ export class MemorySessionStorage extends SessionStorage {
     try {
       const uniqueKey = this.generateUniqueKey(resourceId);
       
-      const sessionDocument = this.sessions.get(uniqueKey);
+      const sessionDocument = this.touch(uniqueKey);
       
       if (!sessionDocument) {
         return null;
@@ -162,7 +205,7 @@ export class MemorySessionStorage extends SessionStorage {
   async getAccessToken(resourceId: string): Promise<string | null> {
     try {
       const uniqueKey = this.generateUniqueKey(resourceId);
-      const sessionDocument = this.sessions.get(uniqueKey);
+      const sessionDocument = this.touch(uniqueKey);
       
       return sessionDocument?.access_token || null;
     } catch (error) {
@@ -179,7 +222,7 @@ export class MemorySessionStorage extends SessionStorage {
   async getRefreshToken(resourceId: string): Promise<string | null> {
     try {
       const uniqueKey = this.generateUniqueKey(resourceId);
-      const sessionDocument = this.sessions.get(uniqueKey);
+      const sessionDocument = this.touch(uniqueKey);
       
       return sessionDocument?.refresh_token || null;
     } catch (error) {
@@ -244,4 +287,4 @@ export class MemorySessionStorage extends SessionStorage {
     this.sessions.clear();
     this.logger.debug(`Cleared ${count} sessions from memory`);
   }
-} 
+}

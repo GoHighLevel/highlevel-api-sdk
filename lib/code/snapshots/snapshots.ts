@@ -1,3 +1,5 @@
+// @generated
+// File generated from our OpenAPI spec
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as Models from './models/snapshots';
 import { buildUrl, extractParams, getAuthToken, RequestConfig } from '../../utils/request-utils';

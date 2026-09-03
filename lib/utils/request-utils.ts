@@ -8,6 +8,38 @@ export interface RequestConfig extends AxiosRequestConfig {
   __pathParams?: RequestParams;
 }
 
+/**
+ * Resolves the Authorization header value for a request from the endpoint's
+ * security requirements. HighLevel implements this and registers itself for the
+ * shared Axios instance so generated services can resolve tokens without
+ * holding a reference to the client.
+ */
+export interface TokenProvider {
+  getTokenForSecurity(
+    securityRequirements: string[],
+    headers?: RequestParams,
+    query?: RequestParams,
+    body?: any,
+    preferredTokenType?: 'company' | 'location'
+  ): Promise<string>;
+}
+
+const tokenProviders = new WeakMap<AxiosInstance, TokenProvider>();
+
+/**
+ * Associate a token provider with an Axios instance
+ */
+export function registerTokenProvider(client: AxiosInstance, provider: TokenProvider): void {
+  tokenProviders.set(client, provider);
+}
+
+/**
+ * Look up the token provider registered for an Axios instance
+ */
+export function getTokenProvider(client: AxiosInstance): TokenProvider | undefined {
+  return tokenProviders.get(client);
+}
+
 export function buildUrl(template: string, pathParams: RequestParams): string {
   let url = template;
   for (const [key, value] of Object.entries(pathParams)) {
@@ -46,7 +78,13 @@ export function extractParams(params: any, paramDefs: Array<{name: string, in: s
 
 export async function getAuthToken(client: AxiosInstance, requirements: string[], headers: RequestParams, query: RequestParams, body: any, preferredType?: string): Promise<string | null> {
   if (!requirements.length) return null;
-  const ghlInstance = (client as any).__ghlInstance;
-  if (!ghlInstance?.getTokenForSecurity) return null;
-  return await ghlInstance.getTokenForSecurity(requirements, headers, query, body, preferredType);
+  const provider = getTokenProvider(client);
+  if (!provider) return null;
+  return await provider.getTokenForSecurity(
+    requirements,
+    headers,
+    query,
+    body,
+    preferredType as 'company' | 'location' | undefined
+  );
 }

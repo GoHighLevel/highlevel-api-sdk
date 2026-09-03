@@ -1,3 +1,5 @@
+// @generated
+// File generated from our OpenAPI spec
 // AgentStudio Models
 
 export interface InternalServerErrorDTO {
