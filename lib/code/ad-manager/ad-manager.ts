@@ -1,3 +1,5 @@
+// @generated
+// File generated from our OpenAPI spec
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as Models from './models/ad-manager';
 import { buildUrl, extractParams, getAuthToken, RequestConfig } from '../../utils/request-utils';
@@ -3223,12 +3225,13 @@ export class AdManager {
    */
   async liCreateLeadForm(
     params: {
+      accountId: string;
       locationId: string;
     },
     requestBody: Models.LinkedInCreateLeadFormBodyDTO,
     options?: AxiosRequestConfig
   ): Promise<any> {
-    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'query'}];
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'accountId', in: 'path'},{name: 'locationId', in: 'query'}];
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     

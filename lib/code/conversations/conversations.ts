@@ -1,3 +1,5 @@
+// @generated
+// File generated from our OpenAPI spec
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as Models from './models/conversations';
 import { buildUrl, extractParams, getAuthToken, RequestConfig } from '../../utils/request-utils';
@@ -357,10 +359,13 @@ export class Conversations {
    * Get email by Id
    */
   async getEmailById(
+    params: {
+      id: string;
+    },
     options?: AxiosRequestConfig
   ): Promise<Models.GetEmailMessageResponseDto> {
-    const paramDefs: Array<{name: string, in: string}> = [];
-    const extracted = extractParams(null, paramDefs);
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'id', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
     const requirements: string[] = [];
     
     const config: RequestConfig = {
@@ -468,10 +473,13 @@ export class Conversations {
    * Get message by message id.
    */
   async getMessage(
+    params: {
+      id: string;
+    },
     options?: AxiosRequestConfig
   ): Promise<Models.GetMessageResponseDto> {
-    const paramDefs: Array<{name: string, in: string}> = [];
-    const extracted = extractParams(null, paramDefs);
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'id', in: 'path'},];
+    const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
     const config: RequestConfig = {

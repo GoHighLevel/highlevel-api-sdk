@@ -1,3 +1,5 @@
+// @generated
+// File generated from our OpenAPI spec
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as Models from './models/blogs';
 import { buildUrl, extractParams, getAuthToken, RequestConfig } from '../../utils/request-utils';
@@ -55,11 +57,14 @@ export class Blogs {
    * The &quot;Update Blog Post&quot; API allows you update blog post for any given blog site. Please use blogs/post-update.write
    */
   async updateBlogPost(
+    params: {
+      postId: string;
+    },
     requestBody: Models.UpdateBlogPostParams,
     options?: AxiosRequestConfig
   ): Promise<Models.BlogPostUpdateResponseWrapperDTO> {
-    const paramDefs: Array<{name: string, in: string}> = [];
-    const extracted = extractParams(null, paramDefs);
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'postId', in: 'path'},];
+    const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["Location-Access"];
     
     const config: RequestConfig = {

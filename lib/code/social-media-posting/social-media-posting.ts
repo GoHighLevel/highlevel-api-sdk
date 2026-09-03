@@ -1,3 +1,5 @@
+// @generated
+// File generated from our OpenAPI spec
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as Models from './models/social-media-posting';
 import { buildUrl, extractParams, getAuthToken, RequestConfig } from '../../utils/request-utils';
@@ -347,11 +349,14 @@ Note:
                    it is recommended to be cautious of this operation.
    */
   async bulkDeleteSocialPlannerPosts(
+    params: {
+      locationId: string;
+    },
     requestBody: Models.DeletePostsDto,
     options?: AxiosRequestConfig
   ): Promise<Models.BulkDeleteResponseDto> {
-    const paramDefs: Array<{name: string, in: string}> = [];
-    const extracted = extractParams(null, paramDefs);
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'locationId', in: 'path'},];
+    const extracted = extractParams(params, paramDefs);
     const requirements: string[] = [];
     
     const config: RequestConfig = {

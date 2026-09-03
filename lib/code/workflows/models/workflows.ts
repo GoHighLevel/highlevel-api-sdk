@@ -1,3 +1,5 @@
+// @generated
+// File generated from our OpenAPI spec
 // Workflows Models
 
 export interface WorkflowSchema {

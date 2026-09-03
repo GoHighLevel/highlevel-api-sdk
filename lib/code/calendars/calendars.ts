@@ -1,3 +1,5 @@
+// @generated
+// File generated from our OpenAPI spec
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as Models from './models/calendars';
 import { buildUrl, extractParams, getAuthToken, RequestConfig } from '../../utils/request-utils';
@@ -735,12 +737,13 @@ export class Calendars {
    */
   async updateAppointmentNote(
     params: {
+      noteId: string;
       appointmentId: string;
     },
     requestBody: Models.NotesDTO,
     options?: AxiosRequestConfig
   ): Promise<Models.GetCreateUpdateNoteSuccessfulResponseDto> {
-    const paramDefs: Array<{name: string, in: string}> = [{name: 'appointmentId', in: 'path'}];
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'noteId', in: 'path'},{name: 'appointmentId', in: 'path'}];
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     
@@ -771,11 +774,12 @@ export class Calendars {
    */
   async deleteAppointmentNote(
     params: {
+      noteId: string;
       appointmentId: string;
     },
     options?: AxiosRequestConfig
   ): Promise<Models.DeleteNoteSuccessfulResponseDto> {
-    const paramDefs: Array<{name: string, in: string}> = [{name: 'appointmentId', in: 'path'}];
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'noteId', in: 'path'},{name: 'appointmentId', in: 'path'}];
     const extracted = extractParams(params, paramDefs);
     const requirements: string[] = ["bearer"];
     

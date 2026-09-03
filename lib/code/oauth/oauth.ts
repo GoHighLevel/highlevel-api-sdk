@@ -1,3 +1,5 @@
+// @generated
+// File generated from our OpenAPI spec
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as Models from './models/oauth';
 import { UserType, UserTypeValue } from '../../constants';
@@ -11,11 +13,9 @@ export class Oauth {
   private readonly MARKETPLACE_URL = 'https://marketplace.gohighlevel.com';
   
   private client: AxiosInstance;
-  private config: { baseUrl?: string };
 
-  constructor(httpClient: AxiosInstance, config: { baseUrl?: string } = {}) {
+  constructor(httpClient: AxiosInstance, _config: { baseUrl?: string } = {}) {
     this.client = httpClient;
-    this.config = config;
   }
 
   /**

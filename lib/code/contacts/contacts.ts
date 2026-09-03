@@ -1,3 +1,5 @@
+// @generated
+// File generated from our OpenAPI spec
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as Models from './models/contacts';
 import { buildUrl, extractParams, getAuthToken, RequestConfig } from '../../utils/request-utils';
@@ -592,11 +594,14 @@ export class Contacts {
    * Allows you to update tags to multiple contacts at once, you can add or remove tags from the contacts
    */
   async createAssociation(
+    params: {
+      type: string;
+    },
     requestBody: Models.UpdateTagsDTO,
     options?: AxiosRequestConfig
   ): Promise<Models.UpdateTagsResponseDTO> {
-    const paramDefs: Array<{name: string, in: string}> = [];
-    const extracted = extractParams(null, paramDefs);
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'type', in: 'path'},];
+    const extracted = extractParams(params, paramDefs);
     const requirements: string[] = [];
     
     const config: RequestConfig = {

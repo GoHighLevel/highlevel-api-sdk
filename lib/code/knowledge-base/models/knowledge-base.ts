@@ -1,3 +1,5 @@
+// @generated
+// File generated from our OpenAPI spec
 // KnowledgeBase Models
 
 export interface BadRequestDTO {
