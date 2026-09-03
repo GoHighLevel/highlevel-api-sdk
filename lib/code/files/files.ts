@@ -1,0 +1,55 @@
+// @generated
+// File generated from our OpenAPI spec
+import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import * as Models from './models/files';
+import { buildUrl, extractParams, getAuthToken, RequestConfig } from '../../utils/request-utils';
+
+/**
+ * Files Service
+ * Documentation for the Files API
+ */
+export class Files {
+  private client: AxiosInstance;
+
+  constructor(httpClient: AxiosInstance) {
+    this.client = httpClient;
+  }
+
+  /**
+   * Get File
+   * Get the file by slug.
+   */
+  async getFileBySlug(
+    params: {
+      slug: string;
+    },
+    options?: AxiosRequestConfig
+  ): Promise<Models.FileResponseDto> {
+    const paramDefs: Array<{name: string, in: string}> = [{name: 'slug', in: 'path'}];
+    const extracted = extractParams(params, paramDefs);
+    const requirements: string[] = ["bearer"];
+    
+    const config: RequestConfig = {
+      method: 'GET',
+      url: buildUrl('/files/d/{slug}', extracted.path),
+      params: extracted.query,
+      headers: { ...extracted.header, ...options?.headers },
+      
+      __secutiryRequirements: requirements,
+      
+      __pathParams: extracted.path,
+      ...options
+    };
+
+    const authToken = await getAuthToken(this.client, requirements, config.headers || {}, { ...config.params || {}, ...config.__pathParams }, {});
+    if (authToken) {
+      config.headers = { ...config.headers, Authorization: authToken };
+    }
+
+    const response: AxiosResponse<Models.FileResponseDto> = await this.client.request(config);
+    return response.data;
+  }
+
+}
+
+export default Files; 
