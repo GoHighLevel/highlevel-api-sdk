@@ -1,3 +1,10 @@
+## v3.1.0 - 2026-09-03
+
+### SDK changes
+
+- feat: add chatWidget and files services (50e527a)
+- feat: rate limit retry, Ed25519-only webhooks, error subclasses, log redaction (c822cf3)
+
 ## v3.0.0 - 2026-05-01
 
 ### Specs changes
