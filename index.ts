@@ -15,6 +15,7 @@ export {
 export {
   GHLError,
   GHLAuthenticationError,
+  GHLRefreshTokenInvalidError,
   GHLForbiddenError,
   GHLNotFoundError,
   GHLValidationError,

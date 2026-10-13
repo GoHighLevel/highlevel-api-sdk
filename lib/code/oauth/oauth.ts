@@ -39,13 +39,15 @@ export class Oauth {
    * @param clientSecret OAuth client secret
    * @param grantType Grant type (must be 'refresh_token')
    * @param userType User type (UserType.Location or UserType.Company)
+   * @param options Optional request config (e.g. timeout)
    */
   public async refreshToken(
     refreshToken: string,
     clientId: string,
     clientSecret: string,
     grantType: 'refresh_token',
-    userType: UserTypeValue | string
+    userType: UserTypeValue | string,
+    options?: AxiosRequestConfig
   ): Promise<any> {
     if (grantType !== 'refresh_token') {
       throw new Error('grantType must be "refresh_token"');
@@ -61,7 +63,7 @@ export class Oauth {
       client_secret: clientSecret,
       grant_type: grantType,
       user_type: userType
-    });
+    }, options);
   }
 
   /**

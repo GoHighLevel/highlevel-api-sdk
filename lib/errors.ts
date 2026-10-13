@@ -39,6 +39,9 @@ export class GHLAuthenticationError extends GHLError {
   }
 }
 
+/** The refresh token was rejected (already used, revoked or the app was uninstalled); the app must be reconnected */
+export class GHLRefreshTokenInvalidError extends GHLAuthenticationError {}
+
 /** 403 - the token does not have the required scopes or access */
 export class GHLForbiddenError extends GHLError {
   constructor(message: string, statusCode?: number, response?: any, request?: any) {
