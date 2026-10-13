@@ -48,7 +48,7 @@ import { SessionStorage, MemorySessionStorage, type ISessionData } from './stora
 import { Logger, LogLevelType } from './logging';
 import { WebhookManager } from './webhook';
 import { UserType } from './constants';
-import { GHLError, GHLNetworkError, createGHLError } from './errors';
+import { GHLError, GHLNetworkError, GHLRefreshTokenInvalidError, createGHLError } from './errors';
 import { registerTokenProvider, type TokenProvider } from './utils/request-utils';
 import { redactSensitive } from './utils/redact';
 import { parseRateLimitHeaders, type RateLimitInfo } from './utils/rate-limit';
@@ -63,6 +63,11 @@ try {
 } catch {
   // version unavailable
 }
+
+// The OAuth server replays a successful refresh response for 30 seconds, so a refresh whose response was lost
+// is retried quickly: the retry gets the same tokens back instead of failing on the already-used refresh token
+const TOKEN_REFRESH_TIMEOUT_MS = 10000;
+const TOKEN_REFRESH_RETRY_DELAYS_MS = [1000, 2000];
 
 // Extend AxiosRequestConfig to support retry tracking and security requirements
 declare module 'axios' {
@@ -151,6 +156,8 @@ export class HighLevel implements TokenProvider {
   private logger: Logger;
   // One refresh per resource at a time; concurrent callers await the same promise
   private refreshInFlight: Map<string, Promise<string | null>> = new Map();
+  // Refresh token the OAuth server rejected, per resource; it is never sent again
+  private rejectedRefreshTokens: Map<string, string> = new Map();
   
   // Service instances
   public adManager!: AdManager;
@@ -345,6 +352,7 @@ export class HighLevel implements TokenProvider {
       
       return sessionData.access_token ? `Bearer ${sessionData.access_token}` : null;
           } catch (error) {
+        if (error instanceof GHLRefreshTokenInvalidError) throw error;
         this.logger.warn(`Failed to get token from storage for ${resourceId}:`, error);
         return null;
       }
@@ -361,6 +369,35 @@ export class HighLevel implements TokenProvider {
     // Refresh if token expires within 30 seconds
     const bufferTime = 30 * 1000; // 30 seconds in milliseconds
     return Date.now() + bufferTime >= sessionData.expire_at;
+  }
+
+  /**
+   * Check if the stored access token has expired (or expires within 30 seconds).
+   * Expired when either expire_at or the token's own exp claim has passed; when neither is known the token is treated as expired.
+   * @param sessionData - Session data containing the token and expiration info
+   * @returns True if the token has expired or its expiry is unknown
+   */
+  private isTokenExpired(sessionData: ISessionData): boolean {
+    const tokenExpireAt = this.getTokenExpireAt(sessionData.access_token);
+    if (!sessionData.expire_at && tokenExpireAt === null) return true;
+
+    const expiredByExpireAt = this.shouldRefreshToken(sessionData);
+    const expiredByToken = tokenExpireAt !== null && this.shouldRefreshToken({ ...sessionData, expire_at: tokenExpireAt });
+    return expiredByExpireAt || expiredByToken;
+  }
+
+  /**
+   * Read the expiry from the access token's exp claim (the token is decoded, not verified)
+   * @param accessToken - Access token (JWT)
+   * @returns Expiry in milliseconds since epoch, or null when the token is not a JWT with an exp claim
+   */
+  private getTokenExpireAt(accessToken?: string): number | null {
+    try {
+      const payload = JSON.parse(Buffer.from((accessToken || '').split('.')[1], 'base64url').toString('utf8'));
+      return typeof payload?.exp === 'number' ? payload.exp * 1000 : null;
+    } catch {
+      return null;
+    }
   }
 
   /**
@@ -396,6 +433,11 @@ export class HighLevel implements TokenProvider {
       return null;
     }
 
+    if (this.rejectedRefreshTokens.get(resourceId) === sessionData.refresh_token) {
+      this.logger.warn(`Refresh token for ${resourceId} was already rejected, skipping token refresh`);
+      return this.handleRejectedRefreshToken(resourceId, sessionData);
+    }
+
     try {
       this.logger.info(`Refreshing token for ${resourceId}`);
       
@@ -403,13 +445,7 @@ export class HighLevel implements TokenProvider {
       const userType = sessionData.userType || UserType.Location;
       
       // Use the OAuth service to refresh the token
-      const newTokenData = await this.oauth.refreshToken(
-        sessionData.refresh_token,
-        this.config.clientId,
-        this.config.clientSecret,
-        'refresh_token',
-        userType
-      );
+      const newTokenData = await this.requestTokenRefresh(sessionData.refresh_token, userType);
       
       // Store the new token data
       await this.sessionStorage.setSession(resourceId, {
@@ -423,6 +459,12 @@ export class HighLevel implements TokenProvider {
     } catch (error) {
       this.logger.error(`Failed to refresh token for ${resourceId}:`, error);
       
+      // invalid_grant: the refresh token was already used, revoked or the app was uninstalled
+      if (error instanceof GHLError && error.statusCode === 400 && error.response?.error === 'invalid_grant') {
+        this.rejectedRefreshTokens.set(resourceId, sessionData.refresh_token);
+        return this.handleRejectedRefreshToken(resourceId, sessionData, error.response);
+      }
+
       // If this is a location token refresh failure, try fallback to company token
       if (sessionData.userType === UserType.Location && sessionData.companyId) {
         this.logger.info(`Attempting fallback to company token for location ${resourceId}`);
@@ -431,6 +473,56 @@ export class HighLevel implements TokenProvider {
       
       return null;
     }
+  }
+
+  /**
+   * Call the refresh token API, retrying when no response arrived (network error, timeout) or the server
+   * failed (5xx). A retry within 30 seconds of a refresh the server completed returns the same tokens.
+   * @param refreshToken - Refresh token to exchange
+   * @param userType - User type of the session
+   * @returns Token response from the OAuth server
+   */
+  private async requestTokenRefresh(refreshToken: string, userType: string): Promise<any> {
+    for (let attempt = 0; ; attempt++) {
+      try {
+        return await this.oauth.refreshToken(
+          refreshToken,
+          this.config.clientId!,
+          this.config.clientSecret!,
+          'refresh_token',
+          userType,
+          { timeout: TOKEN_REFRESH_TIMEOUT_MS }
+        );
+      } catch (error) {
+        const retryable = error instanceof GHLNetworkError || (error instanceof GHLError && (error.statusCode ?? 0) >= 500);
+        if (!retryable || attempt >= TOKEN_REFRESH_RETRY_DELAYS_MS.length) throw error;
+        const delayMs = TOKEN_REFRESH_RETRY_DELAYS_MS[attempt];
+        this.logger.warn(`Token refresh failed without a usable response, retrying in ${delayMs}ms (attempt ${attempt + 1} of ${TOKEN_REFRESH_RETRY_DELAYS_MS.length})`);
+        await this.sleep(delayMs);
+      }
+    }
+  }
+
+  /**
+   * Handle a refresh token the OAuth server rejected: try the company token fallback for a
+   * location, otherwise throw, since only reconnecting the app issues a new refresh token
+   * @param resourceId - Resource ID for the session
+   * @param sessionData - Current session data
+   * @param response - OAuth server error response, when the rejection just happened
+   * @returns New Bearer token from the company token fallback
+   */
+  private async handleRejectedRefreshToken(resourceId: string, sessionData: ISessionData, response?: any): Promise<string> {
+    if (sessionData.userType === UserType.Location && sessionData.companyId) {
+      this.logger.info(`Attempting fallback to company token for location ${resourceId}`);
+      const fallbackToken = await this.handleLocationTokenFallback(resourceId, sessionData);
+      if (fallbackToken) return fallbackToken;
+    }
+
+    throw new GHLRefreshTokenInvalidError(
+      `Refresh token for ${resourceId} is no longer valid (already used, revoked or the app was uninstalled). Reconnect the app to get new tokens.`,
+      401,
+      response
+    );
   }
 
   /**
@@ -465,13 +557,7 @@ export class HighLevel implements TokenProvider {
 
         try {
           // Refresh company token
-          const newCompanyTokenData = await this.oauth.refreshToken(
-            companySessionData.refresh_token,
-            this.config.clientId!,
-            this.config.clientSecret!,
-            'refresh_token',
-            UserType.Company
-          );
+          const newCompanyTokenData = await this.requestTokenRefresh(companySessionData.refresh_token, UserType.Company);
 
           // Store the refreshed company token
           await this.sessionStorage.setSession(locationSessionData.companyId, {
@@ -728,7 +814,7 @@ export class HighLevel implements TokenProvider {
         if (error.response?.status === 401 && originalRequest && !originalRequest.__isRetryRequest) {
           // Mark before retrying so the retried request carries the flag and a second 401 is not retried again
           originalRequest.__isRetryRequest = true;
-          this.logger.warn('401 Unauthorized - Attempting token refresh');
+          this.logger.warn('401 Unauthorized - Checking whether the token has expired');
           
           // Try to extract resourceId from the original request using stored security requirements
           const securityRequirements = originalRequest.__secutiryRequirements || [];
@@ -755,9 +841,12 @@ export class HighLevel implements TokenProvider {
                   // Another request already refreshed this token; reuse it instead of refreshing again
                   this.logger.debug(`Token for ${resourceId} was already refreshed, retrying with the stored token`);
                   newToken = storedToken;
-                } else {
+                } else if (this.isTokenExpired(sessionData)) {
+                  // Refresh only when the token has expired (or its expiry is unknown); a refresh cannot fix any other 401
                   this.logger.info(`Token expired for ${resourceId}, attempting refresh`);
                   newToken = await this.refreshTokenIfNeeded(resourceId, sessionData);
+                } else {
+                  this.logger.warn(`Token for ${resourceId} has not expired, skipping token refresh`);
                 }
 
                 if (newToken) {
@@ -770,6 +859,9 @@ export class HighLevel implements TokenProvider {
               }
             } catch (refreshError) {
               this.logger.error('Failed to refresh token on 401:', refreshError);
+              if (refreshError instanceof GHLRefreshTokenInvalidError) {
+                return Promise.reject(refreshError);
+              }
             }
           }
         }
