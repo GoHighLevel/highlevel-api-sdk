@@ -1,3 +1,9 @@
+## v3.1.1 - 2026-10-13
+
+### SDK changes
+
+- fix: harden OAuth token refresh (7b8a40e)
+
 ## v3.1.0 - 2026-09-03
 
 ### SDK changes
